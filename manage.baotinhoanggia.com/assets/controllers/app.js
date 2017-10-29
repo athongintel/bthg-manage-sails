@@ -8,16 +8,13 @@ navigation.config(['$locationProvider', function($locationProvider) {
 
 navigation.config(function ($routeProvider) {
   
-  console.log('reached navigation');
-  
   $routeProvider
-    
-    .when('/admin/rt-home', {
-      templateUrl: '/rt-home',
+    .when('/admin/home', {
+      templateUrl: '/admin/home',
       controller: 'homeCtrl'
     })
-    .when('/admin/rt-contact', {
-      templateUrl: '/rt-contact',
+    .when('/admin/contact', {
+      templateUrl: '/admin/contact',
       controller: 'contactCtrl'
     });
 });
