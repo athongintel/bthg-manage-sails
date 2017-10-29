@@ -7,5 +7,10 @@ module.exports = {
     returnSuccess: function(result){
         "use strict";
         return {success: true, result: result};
+    },
+    
+    regexEscape: function(exp){
+        "use strict";
+        return String(exp).replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
     }
 };

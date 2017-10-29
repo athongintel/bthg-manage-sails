@@ -4,6 +4,7 @@ _app.model = {
     User: require('../api/models/user.model'),
     Auth: require('../api/models/auth.model'),
     Customer: require('../api/models/customer.model'),
+    CustomerContact: require('../api/models/customerContact.model'),
 };
 
 _app.errors = {

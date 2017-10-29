@@ -24,5 +24,10 @@
 	"edit_": "edit_",
 	"cancel_": "cancel_",
 	"save_": "save_",
-	"not_set": "not_set"
+	"not_set": "not_set",
+	"no_data": "no_data",
+	"save_problem": "save_problem",
+	"del_": "del_",
+	"remove_customer_contact_prompt": "remove_customer_contact_prompt",
+	"update_failed": "update_failed"
 }

@@ -7,8 +7,13 @@ const actions = {
     'login': {policies: [], action: UserService.login, validation: {required: ['username', 'authMethod', 'authData']}},
     
     'add_customer': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.addCustomer, validation: {required: ['name', 'code']}},
+    'update_customer_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.updateCustomerInfo, validation: {required: ['_id', 'name', 'code']}},
     'get_customer_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.getCustomerInfo, validation: {required: ['_id']}},
     'get_customer_meta_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.getCustomerMetaInfo, validation: {}},
+    'get_all_customer_contacts': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.getAllCustomerContacts, validation: {required: ['customerID']}},
+    'add_customer_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.addCustomerContact, validation: {required: ['customerID', 'name']}},
+    'update_customer_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.updateCustomerContact, validation: {required: ['_id', 'name']}},
+    'remove_customer_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.removeCustomerContact, validation: {required: ['_id']}},
     
 };
 
@@ -50,7 +55,7 @@ let runOneCommand = async function (principal, commandName, params) {
     "use strict";
     
     //-- check command & command params
-    if (!commandName || !params || !actions[commandName])
+    if (!commandName || !params || !actions[commandName] || !actions[commandName].action)
         return {success: false, error: _app.errors.MALFORMED_REQUEST_ERROR};
     
     //-- validation check

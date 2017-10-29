@@ -14,7 +14,7 @@ app.controller('NavbarController', ['$scope', '$uibModal', function ($scope, $mo
                 //-- show index based on roles...
                 if (!$scope.global.user) $scope.global.user = result;
                 if ($scope.global.user.userClass.indexOf(999) >= 0) {
-                    document.location.href = '/#admin';
+                    document.location.href = '/#admin/index';
                 }
             },
             function (err) {

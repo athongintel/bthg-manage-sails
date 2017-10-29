@@ -53,6 +53,40 @@ module.exports = {
         }
     },
     
+    updateCustomerInfo: async function(principal, params){
+        "use strict";
+        /*
+            params:{
+                [required] _id: id of the customer,
+                [required] name: customer's name
+                [required] code: customer's code
+                phoneNumber,
+                faxNumber,
+                address
+            }
+         */
+        
+        try {
+            let customer = await _app.model.Customer.findById(params._id);
+            if (!customer)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            customer.name = params.name;
+            customer.code = params.code;
+            customer.phoneNumber = params.phoneNumber;
+            customer.faxNumber = params.faxNumber;
+            customer.address = params.address;
+            
+            await customer.save();
+            
+            return sysUtils.returnSuccess(null);
+        }
+        catch (err) {
+            console.log('updateCustomerInfo:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     getCustomerMetaInfo: async function (principal, params) {
         "use strict";
         /*
@@ -61,11 +95,107 @@ module.exports = {
             }
          */
         try {
-            let customers = await _app.model.Customer.find({name: {$regex: '.*' + params.query + '.*'}}).select('_id name');
+            let customers = await _app.model.Customer.find({name: new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'ig')}).select('_id name');
             return sysUtils.returnSuccess(customers);
         }
         catch (err) {
             console.log('getCustomerMetaInfo:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    getAllCustomerContacts: async function (principal, params) {
+        "use strict";
+        /*
+            params:{
+                [required] customerID: customer id
+            }
+         */
+        try {
+            let contacts = await _app.model.CustomerContact.find({customerID: params.customerID});
+            return sysUtils.returnSuccess(contacts);
+        }
+        catch (err) {
+            console.log('getAllCustomerContacts:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    addCustomerContact: async function (principal, params) {
+        "use strict";
+        /*
+            params:{
+                [required] customerID: customer id
+                [required] name: contact name
+                position,
+                phoneNumber,
+                email,
+                discount,
+            }
+         */
+        try {
+            let contact = await _app.model.CustomerContact({
+                customerID: params.customerID,
+                name: params.name,
+                position: params.position,
+                phoneNumber: params.phoneNumber,
+                email: params.email,
+                discount: params.discount
+            });
+            contact = await contact.save();
+            return sysUtils.returnSuccess(contact);
+        }
+        catch (err) {
+            console.log('addCustomerContact:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    updateCustomerContact: async function (principal, params) {
+        "use strict";
+        /*
+            params:{
+                [required] _id: customer id
+                [required] name: contact name
+                position,
+                phoneNumber,
+                email,
+                discount,
+            }
+         */
+        try {
+            let contact = await _app.model.CustomerContact.findById(params._id);
+            contact.name = params.name;
+            contact.position = params.position;
+            contact.phoneNumber = params.phoneNumber;
+            contact.email = params.email;
+            contact.discount = params.discount;
+            contact = await contact.save();
+            
+            return sysUtils.returnSuccess(contact);
+        }
+        catch (err) {
+            console.log('updateCustomerContact:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    removeCustomerContact: async function (principal, params) {
+        "use strict";
+        /*
+            params:{
+                [required] _id: the contact id
+            }
+         */
+        try {
+            let contact = await _app.model.CustomerContact.findByIdAndRemove(params._id);
+            if (!contact)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            return sysUtils.returnSuccess();
+        }
+        catch (err) {
+            console.log('removeCustomerContact:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     },

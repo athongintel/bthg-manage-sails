@@ -11,7 +11,7 @@ app.config(['$locationProvider', function ($locationProvider) {
 app.config(function ($routeProvider) {
     
     $routeProvider
-        .when('/admin', {
+        .when('/admin/index', {
             templateUrl: '/admin/index',
             controller: 'AdminController'
         })

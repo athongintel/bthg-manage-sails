@@ -1,36 +1,42 @@
 nav.navbar.navbar-inverse(ng-controller='NavbarController as ctrl')
     .container-fluid
         .navbar-header
-            a.navbar-brand(href='#') #{__('bthg_manage')}
-        ul.nav.navbar-nav(ng-cloak ng-show='isPath("admin")')
-            li(ng-class='{active: isPath("admin/index")}')
-                a(href='#/admin/index') #{__('home')}
+            a.navbar-brand(href='') #{__('bthg_manage')}
+            button.navbar-toggle(type='button', data-toggle='collapse', data-target='#adminNavbar')
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
 
-            li(ng-class='{active: isPath("admin/customer")}')
-                a(href='#/admin/customer') #{_('customer_manage')}
+        div#adminNavbar.collapse.navbar-collapse
+            ul.nav.navbar-nav(ng-cloak ng-show='isPath("admin")')
+                li(ng-class='{active: isPath("admin/index")}')
+                    a(href='#/admin/index') #{__('home')}
 
-            li(ng-class='{active: isPath("admin/supplier")}')
-                a(href='#/admin/supplier') #{_('supplier_manage')}
+                li(ng-class='{active: isPath("admin/customer")}')
+                    a(href='#/admin/customer') #{_('customer_manage')}
 
-            li(ng-class='{active: isPath("admin/product")}')
-                a(href='#/admin/product') #{_('product_manage')}
+                li(ng-class='{active: isPath("admin/supplier")}')
+                    a(href='#/admin/supplier') #{_('supplier_manage')}
 
-            li(ng-class='{active: isPath("admin/quotation")}')
-                a(href='#/admin/quotation') #{_('quotation_manage')}
+                li(ng-class='{active: isPath("admin/product")}')
+                    a(href='#/admin/product') #{_('product_manage')}
 
-            li(ng-class='{active: isPath("admin/staff")}')
-                a(href='#/admin/staff') #{_('staff_manage')}
+                li(ng-class='{active: isPath("admin/quotation")}')
+                    a(href='#/admin/quotation') #{_('quotation_manage')}
 
-            li(ng-class='{active: isPath("admin/language")}')
-                a(href='#/admin/language') #{_('language_manage')}
+                li(ng-class='{active: isPath("admin/staff")}')
+                    a(href='#/admin/staff') #{_('staff_manage')}
 
-        ul.nav.navbar-nav.navbar-right(ng-cloak)
-            li(ng-show='global.user')
-                a(href='' ng-click='ctrl.logout()')
-                    span {{global.user.username}} &nbsp;
-                    i.fa.fa-sign-out
+                li(ng-class='{active: isPath("admin/language")}')
+                    a(href='#/admin/language') #{_('language_manage')}
 
-            li(ng-show='!global.user')
-                a(href='' ng-click='ctrl.login()')
-                    i.fa.fa-sign-in
-                    span &nbsp; #{__('login_')}
+            ul.nav.navbar-nav.navbar-right(ng-cloak)
+                li(ng-show='global.user')
+                    a(href='' ng-click='ctrl.logout()')
+                        span {{global.user.username}} &nbsp;
+                        i.fa.fa-sign-out
+
+                li(ng-show='!global.user')
+                    a(href='' ng-click='ctrl.login()')
+                        i.fa.fa-sign-in
+                        span &nbsp; #{__('login_')}

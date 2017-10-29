@@ -12,6 +12,14 @@
     width: 100% !important;
 }
 
+.select2-container .select2-selection--single, .select2-container--default .select2-selection--single .select2-selection__arrow, .select2-search__field{
+    height:40px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height:40px;
+}
+
 //-- margin
 .margin-bottom-15px {
     margin-bottom: 15px;
@@ -41,9 +49,10 @@
     .row-table-cell{
         padding:2px 0px;
         .row-table-content{
-            padding: 6px 12px;
+            padding: 6px 0px;
         }
         .row-table-header{
+            padding: 6px 12px;
             font-weight: bold;
             background: cadetblue;
             color: white;
@@ -60,11 +69,6 @@ button.action {
     font-size: 24px;
     margin-bottom: 15px;
     font-weight: bold;
-}
-
-//-- colors
-.danger-text-color {
-    color: #a94442;
 }
 
 //-- angular editable
