@@ -100,7 +100,6 @@ module.exports = {
                         return sysUtils.returnError(_app.errors.TOKEN_GENERATING_ERROR);
                     user.token = token;
                     
-                    console.log('login return success');
                     return sysUtils.returnSuccess(user);
                     break;
                 

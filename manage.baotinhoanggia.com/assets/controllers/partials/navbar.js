@@ -14,8 +14,6 @@ app.controller('NavbarController', ['$scope', '$uibModal', function ($scope, $mo
                 //-- show index based on roles...
                 if (!$scope.global.user) $scope.global.user = result;
                 if ($scope.global.user.userClass.indexOf(999) >= 0) {
-                    $scope.global.navigation[0] = "admin";
-                    $scope.global.navigation[1] = "home";
                     document.location.href = '/#admin';
                 }
             },
@@ -28,7 +26,6 @@ app.controller('NavbarController', ['$scope', '$uibModal', function ($scope, $mo
     ctrl.logout = function(){
         delete $scope.global.user;
         //-- redirect to main view
-        $scope.global.navigation[0] = null;
         document.location.href='/#';
     }
     

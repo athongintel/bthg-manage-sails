@@ -20,5 +20,9 @@
 	"position_": "position_",
 	"phoneNumber_": "phoneNumber_",
 	"email_": "email_",
-	"discount_": "discount_"
+	"discount_": "discount_",
+	"edit_": "edit_",
+	"cancel_": "cancel_",
+	"save_": "save_",
+	"not_set": "not_set"
 }

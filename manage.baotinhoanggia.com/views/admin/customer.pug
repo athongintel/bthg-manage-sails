@@ -25,49 +25,67 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                     i.fa.fa-spinner.fa-spin
 
                 div(ng-hide='!ctrl.selectedCustomer || ctrl.loadingCustomerInfo')
-                    label #{__('customer_info')}
-                    div.row-table.margin-bottom-15px
+                    div.row
+                        div.col-xs-6
+                            label #{__('customer_info')}
+                        div.col-xs-6
+                            div.text-right
+                                a(href='' ng-click='customerEditForm.$show()')
+                                    span #{__('edit_')} &nbsp;
+                                    i.fa.fa-pencil
+                    form.row-table.margin-bottom-15px(editable-form='' name='customerEditForm')
                         div.row
                             div.col-xs-12.col-sm-6
-                                div.row
-                                    div.col-xs-6
+                                div.row.flex
+                                    div.col-xs-6.vf-center
                                         div.row-table-cell
                                             div.row-table-content.row-table-header #{__('name_')}
-                                    div.col-xs-6
+                                    div.col-xs-6.vf-center
                                         div.row-table-cell
-                                            div.row-table-content {{ctrl.selectedCustomer.name}}
+                                            div.row-table-content
+                                                span(editable-text="ctrl.selectedCustomer.name" e-name="name" e-required) {{ctrl.selectedCustomer.name}}
                             div.col-xs-12.col-sm-6
-                                div.row
-                                    div.col-xs-6
+                                div.row.flex
+                                    div.col-xs-6.vf-center
                                         div.row-table-cell
                                             div.row-table-content.row-table-header #{__('code_')}
-                                    div.col-xs-6
+                                    div.col-xs-6.vf-center
                                         div.row-table-cell
-                                            div.row-table-content {{ctrl.selectedCustomer.code}}
+                                            div.row-table-content
+                                                span(editable-text="ctrl.selectedCustomer.code" e-name="code" e-required) {{ctrl.selectedCustomer.code}}
                         div.row
                             div.col-xs-12.col-sm-6
-                                div.row
-                                    div.col-xs-6
+                                div.row.flex
+                                    div.col-xs-6.vf-center
                                         div.row-table-cell
                                             div.row-table-content.row-table-header #{__('phone_number')}
-                                    div.col-xs-6
+                                    div.col-xs-6.vf-center
                                         div.row-table-cell
-                                            div.row-table-content {{ctrl.selectedCustomer.phoneNumber}}
+                                            div.row-table-content
+                                                span(editable-text="ctrl.selectedCustomer.phoneNumber" e-name="phoneNumber" e-required) {{ctrl.selectedCustomer.phoneNumber || #{__('not_set')}}}
                             div.col-xs-12.col-sm-6
-                                div.row
-                                    div.col-xs-6
+                                div.row.flex
+                                    div.col-xs-6.vf-center
                                         div.row-table-cell
                                             div.row-table-content.row-table-header #{__('fax_number')}
-                                    div.col-xs-6
+                                    div.col-xs-6.vf-center
                                         div.row-table-cell
-                                            div.row-table-content {{ctrl.selectedCustomer.faxNumber}}
-                        div.row
-                            div.col-xs-6.col-sm-3
+                                            div.row-table-content
+                                                span(editable-text="ctrl.selectedCustomer.faxNumber" e-name="faxNumber" e-required) {{ctrl.selectedCustomer.faxNumber || #{__('not_set')}}}
+                        div.row.flex
+                            div.col-xs-6.col-sm-3.vf-center
                                 div.row-table-cell
                                     div.row-table-content.row-table-header #{__('address_')}
-                            div.col-xs-12.col-sm-9
+                            div.col-xs-12.col-sm-9.vf-center
                                 div.row-table-cell
-                                    div.row-table-content {{ctrl.selectedCustomer.address}}
+                                    div.row-table-content
+                                        span(editable-text="ctrl.selectedCustomer.address" e-name="address" e-required) {{ctrl.selectedCustomer.address || #{__('not_set')}}}
+
+                        div.text-right(ng-show='customerEditForm.$visible')
+                            button.btn.btn-default(ng-disabled='customerEditForm.$waiting' ng-click='customerEditForm.$cancel()')
+                                span #{__('cancel_')}
+                            button.btn.btn-primary.margin-left-15px(type='submit' ng-disabled='customerEditForm.$waiting')
+                                span #{__('save_')}
 
                     label #{__('customer_contact')}
                     div.table-responsive
@@ -80,7 +98,7 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                                     th #{__('email_')}
                                     th #{__('discount_')}
                             tbody
-                                tr(ng-repeat='')
+                                //tr(ng-repeat='')
 
 
     include ../dialogs/admin-customer-add

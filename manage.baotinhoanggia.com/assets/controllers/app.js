@@ -1,5 +1,9 @@
 let app = document.app = angular.module('app', ['ngRoute', 'ngStorage', 'ui.bootstrap', 'ngSanitize', 'xeditable']);
 
+app.run(function(editableOptions) {
+    editableOptions.theme = 'bs3';
+});
+
 app.config(['$locationProvider', function ($locationProvider) {
     $locationProvider.hashPrefix('');
 }]);
