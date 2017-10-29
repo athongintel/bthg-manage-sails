@@ -1,12 +1,15 @@
 const randomstring = require('randomstring');
+const jwt = require('jsonwebtoken');
+
 const bcryptUtils = require('../../utils/bcrypt');
 const cryptoUtils = require('../../utils/crypto');
+const sysUtils = require('../../utils/system');
 
-let createSuperAdminAccount = async function(){
+let createSuperAdminAccount = async function () {
     "use strict";
     //-- check if super admin existed
     let superAdmin = await _app.model.User.findOne({userClass: _app.model.User.constants.SUPER_ADMIN});
-    if (!superAdmin){
+    if (!superAdmin) {
         console.log('- creating super admin account');
         
         let user = new _app.model.User({
@@ -15,7 +18,7 @@ let createSuperAdminAccount = async function(){
         });
         
         user = await user.save();
-    
+        
         let salt = randomstring.generate(sails.config.SALT_LENGTH);
         let hashPassword = await bcryptUtils.hash(`${sails.config.SUPER_ADMIN_DEFAULT_PASSWORD}${salt}`);
         
@@ -31,27 +34,83 @@ let createSuperAdminAccount = async function(){
     }
 };
 
+let generateUserToken = async function (userData) {
+    return await new Promise((resolve, reject) => {
+        jwt.sign(userData, sails.config.JWT_KEY, {expiresIn: "12h"}, function (err, token) {
+            return resolve(!err && token? token : null);
+        });
+    });
+};
+
+
 module.exports = {
-  
-  init: async function(params){
-    "use strict";
-    try {
-        await createSuperAdminAccount();
-        return {success: true};
-    }
-    catch(err){
-        console.log(err);
-        return {success: false};
-    }
-  },
-  
-  login: async function (principal, params) {
-    "use strict";
-    /*
-        params:{
-            authMethod: login method in Auth
-            authInfo: depending on authMethod
+    
+    init: async function (params) {
+        "use strict";
+        try {
+            await createSuperAdminAccount();
+            return {success: true};
         }
-     */
-  }
+        catch (err) {
+            console.log(err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    login: async function (principal, params) {
+        "use strict";
+        /*
+			params:{
+			    [required] username: user's identity
+				[required] authMethod: login method in Auth
+				[required] authData: depending on authMethod
+			}
+			
+			return:{
+				success: true,
+				result: {
+					<user model info>,
+					<inject token>
+				}
+			}
+		 */
+        try {
+            let user = await _app.model.User.findOne({username: params.username}).lean();
+            if (!user)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            let auth = await _app.model.Auth.findOne({userID: user._id, authMethod: params.authMethod});
+            if (!auth)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            switch (auth.authMethod) {
+                case _app.model.Auth.constants.AUTH_USERNAME:
+                    //-- check username and password
+                    let passWithSalt = `${params.authData.password}${auth.extra3}`;
+                    let result = await bcryptUtils.compare(passWithSalt, auth.extra2);
+                    
+                    //-- TODO: save login history
+                    
+                    if (!result)
+                        return sysUtils.returnError(_app.errors.WRONG_PASSWORD_ERROR);
+                    
+                    //-- create login token
+                    let token = await generateUserToken(user);
+                    if (!token)
+                        return sysUtils.returnError(_app.errors.TOKEN_GENERATING_ERROR);
+                    user.token = token;
+                    
+                    console.log('login return success');
+                    return sysUtils.returnSuccess(user);
+                    break;
+                
+                default:
+                    return sysUtils.returnError(_app.errors.INPUT_ERROR);
+            }
+        }
+        catch (err) {
+            console.log('login:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    }
 };

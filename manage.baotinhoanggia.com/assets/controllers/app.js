@@ -1,26 +1,37 @@
-document.app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'xeditable']);
+let app = document.app = angular.module('app', ['ngRoute', 'ngStorage', 'ui.bootstrap', 'ngSanitize', 'xeditable']);
 
-let navigation = document.app;
-
-navigation.config(['$locationProvider', function($locationProvider) {
-  $locationProvider.hashPrefix('');
+app.config(['$locationProvider', function ($locationProvider) {
+    $locationProvider.hashPrefix('');
 }]);
 
-navigation.config(function ($routeProvider) {
-  
-  $routeProvider
-    .when('/admin/home', {
-      templateUrl: '/admin/home',
-      controller: 'homeCtrl'
-    })
-    .when('/admin/contact', {
-      templateUrl: '/admin/contact',
-      controller: 'contactCtrl'
-    });
+app.config(function ($routeProvider) {
+    
+    $routeProvider
+        .when('/admin', {
+            templateUrl: '/admin/index',
+            controller: 'AdminController'
+        })
+        .when('/admin/customer', {
+            templateUrl: '/admin/customer',
+            controller: 'AdminCustomerController'
+        })
 });
 
-document.app.controller('GlobalController', ['$scope', function($scope){
+app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scope, $sessionStorage) {
     "use strict";
     
-    $scope.global = {};
+    if (!$sessionStorage.global) {
+        $sessionStorage.global = {};
+    }
+    $scope.global = $sessionStorage.global;
+    
+    $scope.isPath = function(path){
+        let subPath = document.location.pathname + document.location.search + document.location.hash;
+        return subPath.indexOf(path) === 3;
+    };
+    
+    $scope.global.locale = (Cookies.get('lang') || window.navigator.language || 'en');
+    $scope.global.data = {};
+    
+    moment.locale($scope.global.locale);
 }]);

@@ -1,5 +1,64 @@
+//-- fix select 2
+.select2 {
+    width: 100% !important;
+}
+
+//-- margin
+.margin-bottom-15px {
+    margin-bottom: 15px;
+}
+
+.margin-right-15px {
+    margin-right: 15px;
+}
+
+.margin-top-15px {
+    margin-top: 15px;
+}
+
+//-- text align
+.text-right {
+    text-align: right;
+}
+
+//-- row-table
+.row-table {
+    .row-table-cell{
+        padding:2px;
+        .row-table-content{
+            padding: 6px;
+        }
+        .row-table-header{
+            font-weight: bold;
+            background: cadetblue;
+            color: white;
+        }
+    }
+}
+
+//-- versatile
+button.action {
+    min-width: 100px;
+}
+
+.panel-header-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+//-- colors
+.danger-text-color {
+    color: #a94442;
+}
 
 //-- this helps the dialog vertically middle
+
+.modal-header .header {
+    font-weight: bold;
+    font-size: 18px;
+}
+
 .modal:before {
     display: inline-block;
     text-align: center;

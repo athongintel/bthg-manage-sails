@@ -8,11 +8,13 @@ module.exports.routes = {
     'GET /': {
         view: 'app', locals: {layout: false}
     },
-    'GET /admin/home': {
-        view: 'admin/home', locals: {layout: false}
+    
+    'GET /admin/index': {
+        view: 'admin/index', locals: {layout: false}
     },
-    'GET /admin/contact': {
-        view: 'admin/contact', locals: {layout: false}
-    }
+    
+    'GET /admin/customer': {
+        view: 'admin/customer', locals: {layout: false}
+    },
     
 };

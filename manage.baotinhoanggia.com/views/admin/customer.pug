@@ -1,0 +1,92 @@
+div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
+    div
+        div.row
+            div.col-xs-12.col-sm-6
+                div.panel-header-title #{__('customer_manage')}
+            div.col-xs-12.col-sm-6
+                div.text-right
+                    button.action.btn.btn-primary.margin-bottom-15px(ng-click='ctrl.addCustomer()')
+                        span
+                            i.fa.fa-plus
+                            span &nbsp;
+                        span #{__('add_customer')}
+
+    div.panel.panel-default
+        div.panel-body
+            div
+                label #{__('search_customer')}
+                select#select_customer.form-control
+
+            div.margin-top-15px
+                div.text-center(ng-show='!ctrl.selectedCustomer && !ctrl.loadingCustomerInfo')
+                    span #{__('select_a_customer')}
+
+                div.text-center(ng-show='ctrl.loadingCustomerInfo')
+                    i.fa.fa-spinner.fa-spin
+
+                div(ng-hide='!ctrl.selectedCustomer || ctrl.loadingCustomerInfo')
+                    label #{__('customer_info')}
+                    div.row-table.margin-bottom-15px
+                        div.row
+                            div.col-xs-12.col-sm-6
+                                div.row
+                                    div.col-xs-6
+                                        div.row-table-cell
+                                            div.row-table-content.row-table-header #{__('name_')}
+                                    div.col-xs-6
+                                        div.row-table-cell
+                                            div.row-table-content {{ctrl.selectedCustomer.name}}
+                            div.col-xs-12.col-sm-6
+                                div.row
+                                    div.col-xs-6
+                                        div.row-table-cell
+                                            div.row-table-content.row-table-header #{__('code_')}
+                                    div.col-xs-6
+                                        div.row-table-cell
+                                            div.row-table-content {{ctrl.selectedCustomer.code}}
+                        div.row
+                            div.col-xs-12.col-sm-6
+                                div.row
+                                    div.col-xs-6
+                                        div.row-table-cell
+                                            div.row-table-content.row-table-header #{__('phone_number')}
+                                    div.col-xs-6
+                                        div.row-table-cell
+                                            div.row-table-content {{ctrl.selectedCustomer.phoneNumber}}
+                            div.col-xs-12.col-sm-6
+                                div.row
+                                    div.col-xs-6
+                                        div.row-table-cell
+                                            div.row-table-content.row-table-header #{__('fax_number')}
+                                    div.col-xs-6
+                                        div.row-table-cell
+                                            div.row-table-content {{ctrl.selectedCustomer.faxNumber}}
+                        div.row
+                            div.col-xs-6.col-sm-3
+                                div.row-table-cell
+                                    div.row-table-content.row-table-header #{__('address_')}
+                            div.col-xs-12.col-sm-9
+                                div.row-table-cell
+                                    div.row-table-content {{ctrl.selectedCustomer.address}}
+
+
+
+
+
+
+
+                    label #{__('customer_contact')}
+                    div.table-responsive
+                        table.table.table-striped.table-hover
+                            thead
+                                tr
+                                    th #{__('name_')}
+                                    th #{__('position_')}
+                                    th #{__('phoneNumber_')}
+                                    th #{__('email_')}
+                                    th #{__('discount_')}
+                            tbody
+                                tr(ng-repeat='')
+
+
+    include ../dialogs/admin-customer-add

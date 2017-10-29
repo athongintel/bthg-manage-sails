@@ -33,15 +33,16 @@ var jsFilesToInject = [
     'js/dependencies/**/*.js',
     'lib/jquery/*.js',
     'lib/**/angular.*',
-	  'lib/**/momentjs/**/moment.*.js',
-	  'lib/**/momentjs/**/*.js',
+    'lib/**/momentjs/**/moment.*.js',
+    'lib/**/momentjs/**/*.js',
     'lib/**/ckeditor/*.js',
     'lib/**/ckeditor/adapters/**/*.js',
     'lib/**/*.js',
     'js/**/*.js',
     
     //-- angular controllers
-    'controllers/**/*.js'
+    'controllers/app.js',
+    'controllers/**/*.js',
 ];
 
 

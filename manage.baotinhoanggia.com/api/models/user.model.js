@@ -18,8 +18,8 @@ const userSchema = new mongoose.Schema({
     firstName: {type: String},
     lastName: {type: String},
     email: {type: String},
-    forgetPasswordCode: {type: String},
-    forgetPasswordCodeExpiration: {type: String},
+    forgetPasswordCode: {type: String, select: false},
+    forgetPasswordCodeExpiration: {type: String, select: false},
 });
 
 module.exports = mongoose.model('User', userSchema, 'user');

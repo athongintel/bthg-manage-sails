@@ -46,7 +46,7 @@ module.exports = function (grunt) {
                 src: ['**/*'],
                 dest: 'www'
             }]
-        }
+        },
     });
     
     grunt.loadNpmTasks('grunt-contrib-copy');

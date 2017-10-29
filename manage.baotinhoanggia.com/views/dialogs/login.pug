@@ -1,14 +1,23 @@
-script.
-    app.controller('LoginDialogController', ['$uibModalInstance', '$scope', function ($modalInstance, $scope) {
-        $scope.close = function(){
-            $modalInstance.dismiss();
-        }
-
-    }]);
-
 script(type="text/ng-template" id="loginDialog")
     .modal-header
-        button.close(type='button', ng-click='close()')
-        div #{__('login_')}
+        button.close(type='button', ng-click='close()') x
+        div.header #{__('login_')}
     .modal-body
-        div heello
+        fieldset(ng-disabled='processing')
+            div
+                label #{__('username_')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="username")
+            div
+                label #{__('password_')}
+                div.form-group.has-feedback
+                    input.form-control(type='password' ng-model="password")
+
+            div.text-right
+                button.btn.btn-primary(ng-disabled='!username || !password' ng-click='login()')
+                    span(ng-show='processing')
+                        i.fa.fa-spinner.fa-spin
+                        span &nbsp;
+                    span #{__('login_')}
+
+

@@ -1,0 +1,36 @@
+script(type="text/ng-template" id="adminCustomerAddDialog")
+    .modal-header
+        button.close(type='button', ng-click='close()') x
+        div.header #{__('add_customer')}
+    .modal-body
+        fieldset(ng-disabled='processing')
+            div
+                label #{__('name_')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="name")
+            div
+                label #{__('code_')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="code")
+
+            div
+                label #{__('phone_numer')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="phoneNumber")
+
+            div
+                label #{__('fax_number')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="faxNumber")
+
+            div
+                label #{__('address_')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="address")
+
+            div.text-right
+                button.action.btn.btn-primary(ng-disabled='!name || !code' ng-click='addCustomer()')
+                    span(ng-show='processing')
+                        i.fa.fa-spinner.fa-spin
+                        span &nbsp;
+                    span #{__('add_')}

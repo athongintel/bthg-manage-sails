@@ -1,4 +1,24 @@
 {
 	"bthg_manage": "bthg_manage",
-	"login_": "login_"
+	"login_": "login_",
+	"username_": "username_",
+	"password_": "password_",
+	"home": "home",
+	"customer_manage": "customer_manage",
+	"search_customer": "search_customer",
+	"add_customer": "add_customer",
+	"name_": "name_",
+	"code_": "code_",
+	"phone_numer": "phone_numer",
+	"fax_number": "fax_number",
+	"address_": "address_",
+	"add_": "add_",
+	"customer_info": "customer_info",
+	"select_a_customer": "select_a_customer",
+	"phone_number": "phone_number",
+	"customer_contact": "customer_contact",
+	"position_": "position_",
+	"phoneNumber_": "phoneNumber_",
+	"email_": "email_",
+	"discount_": "discount_"
 }
