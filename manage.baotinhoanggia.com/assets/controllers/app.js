@@ -1,4 +1,4 @@
-document.app = angular.module('app', ['ngRoute']);
+document.app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'xeditable']);
 
 let navigation = document.app;
 
@@ -19,11 +19,8 @@ navigation.config(function ($routeProvider) {
     });
 });
 
-navigation.controller('homeCtrl', function ($scope, $http) {
-
-});
-
-navigation.controller('contactCtrl', function ($scope, $http) {
-
-});
-
+document.app.controller('GlobalController', ['$scope', function($scope){
+    "use strict";
+    
+    $scope.global = {};
+}]);

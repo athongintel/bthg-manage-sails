@@ -1,0 +1,12 @@
+nav.navbar.navbar-inverse(ng-controller='NavbarController as ctrl')
+    .container-fluid
+        .navbar-header
+            a.navbar-brand(href='#') #{__('bthg_manage')}
+        ul.nav.navbar-nav
+            li.active
+                a(href='#') Home
+        ul.nav.navbar-nav.navbar-right
+            li
+                a(href='' ng-click='ctrl.login()')
+                    i.fa.fa-sign-in
+                    span &nbsp;#{__('login_')}

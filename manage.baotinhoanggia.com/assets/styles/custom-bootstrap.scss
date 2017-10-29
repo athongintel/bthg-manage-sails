@@ -1,0 +1,23 @@
+
+//-- this helps the dialog vertically middle
+.modal:before {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+}
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+    @media screen and (min-width: 768px) {
+        width: unquote($dialog_width + 'px');
+        left: unquote("calc(50% - " + $dialog_width/2 + "px)");
+    }
+    @media screen and (max-width: 767px) {
+        margin: 10px;
+        width: calc(100% - 20px);
+    }
+}

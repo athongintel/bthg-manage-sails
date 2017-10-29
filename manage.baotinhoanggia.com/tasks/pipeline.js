@@ -26,10 +26,10 @@ var cssFilesToInject = [
 // (uses Grunt-style wildcard/glob/splat expressions)
 var jsFilesToInject = [
     
-    // Load sails.io before everything else
+    //-- Load sails.io before everything else
     'js/dependencies/sails.io.js',
     
-    // Dependencies like jQuery, or Angular are brought in here
+    //-- Dependencies like jQuery, or Angular are brought in here
     'js/dependencies/**/*.js',
     'lib/jquery/*.js',
     'lib/**/angular.*',
@@ -38,8 +38,10 @@ var jsFilesToInject = [
     'lib/**/ckeditor/*.js',
     'lib/**/ckeditor/adapters/**/*.js',
     'lib/**/*.js',
-    'js/**/*.js'
+    'js/**/*.js',
     
+    //-- angular controllers
+    'controllers/**/*.js'
 ];
 
 

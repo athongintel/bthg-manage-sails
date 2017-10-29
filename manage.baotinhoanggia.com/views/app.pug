@@ -1,49 +1,44 @@
 doctype html
 html(ng-app='app')
-  head
-    title #{__('bthg_manage')}
+    head
+        title #{__('bthg_manage')}
+        meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
 
-    block meta
-      meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
+        // STYLES
+        link(rel="stylesheet", href="/lib/angular-xeditable-0.8.0/css/xeditable.min.css")
+        link(rel="stylesheet", href="/lib/bootstrap-toggle/bootstrap-toggle.min.css")
+        link(rel="stylesheet", href="/lib/bootstrap/css/bootstrap-theme.min.css")
+        link(rel="stylesheet", href="/lib/bootstrap/css/bootstrap.min.css")
+        link(rel="stylesheet", href="/lib/font-awesome/css/font-awesome.min.css")
+        link(rel="stylesheet", href="/lib/font-awesome/css/mixins.css")
+        link(rel="stylesheet", href="/lib/font-awesome/css/variables.css")
+        link(rel="stylesheet", href="/lib/selectize/selectize.bootstrap3.css")
+        link(rel="stylesheet", href="/styles/importer.css")
+        // STYLES END
 
-    // STYLES
-    link(rel="stylesheet", href="/lib/bootstrap-toggle/bootstrap-toggle.min.css")
-    link(rel="stylesheet", href="/lib/bootstrap/css/bootstrap-theme.min.css")
-    link(rel="stylesheet", href="/lib/bootstrap/css/bootstrap.min.css")
-    link(rel="stylesheet", href="/lib/font-awesome/css/font-awesome.min.css")
-    link(rel="stylesheet", href="/lib/font-awesome/css/mixins.css")
-    link(rel="stylesheet", href="/lib/font-awesome/css/variables.css")
-    link(rel="stylesheet", href="/lib/selectize/selectize.bootstrap3.css")
-    link(rel="stylesheet", href="/styles/importer.css")
-    // STYLES END
-    block style
+        // SCRIPTS
+        script(src="/js/dependencies/sails.io.js")
+        script(src="/lib/jquery/jquery.min.js")
+        script(src="/lib/angular/angular.min.js")
+        script(src="/lib/angular-xeditable-0.8.0/js/xeditable.min.js")
+        script(src="/lib/angular/angular-animate.min.js")
+        script(src="/lib/angular/angular-route.min.js")
+        script(src="/lib/angular/angular-sanitize.min.js")
+        script(src="/lib/angular/ng-file-upload-shim.min.js")
+        script(src="/lib/angular/ng-file-upload.min.js")
+        script(src="/lib/angular/ngStorage.min.js")
+        script(src="/lib/bignumber/bignumber.min.js")
+        script(src="/lib/bootstrap-toggle/bootstrap-toggle.min.js")
+        script(src="/lib/bootstrap/js/bootstrap.min.js")
+        script(src="/lib/selectize/selectize.min.js")
+        script(src="/lib/ui-bootstrap/ui-bootstrap.min.js")
+        script(src="/controllers/app.js")
+        script(src="/controllers/partials/navbar.js")
+        // SCRIPTS END
 
-    // SCRIPTS
-    script(src="/js/dependencies/sails.io.js")
-    script(src="/lib/jquery/jquery.min.js")
-    script(src="/lib/angular/angular.min.js")
-    script(src="/lib/angular/angular-animate.min.js")
-    script(src="/lib/angular/angular-route.min.js")
-    script(src="/lib/angular/angular-sanitize.min.js")
-    script(src="/lib/angular/ng-file-upload-shim.min.js")
-    script(src="/lib/angular/ng-file-upload.min.js")
-    script(src="/lib/angular/ngStorage.min.js")
-    script(src="/lib/bignumber/bignumber.min.js")
-    script(src="/lib/bootstrap-toggle/bootstrap-toggle.min.js")
-    script(src="/lib/bootstrap/js/bootstrap.min.js")
-    script(src="/lib/selectize/selectize.min.js")
-    script(src="/lib/ui-bootstrap/ui-bootstrap.min.js")
-    // SCRIPTS END
-    script(src="/controllers/app.js")
-    block script
+    body
+        div.container(ng-controller='GlobalController')
+            include ./partials/navbar
+            div(ng-view='')
 
-  body
-    block body
-      div
-        nav
-          ul
-            li
-              a(href='#admin/home') home
-            li
-              a(href='#admin/contact') contact
-      div(ng-view='')
+            include ./dialogs/login

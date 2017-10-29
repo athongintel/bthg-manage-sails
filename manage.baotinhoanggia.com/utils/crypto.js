@@ -2,6 +2,7 @@
 const crypto = require('crypto');
 
 module.exports = {
+    
     encrypt: function (data, key) {
         let cipher = crypto.createCipher('aes-256-ctr', key);
         let encrypted = cipher.update(data, 'utf8', 'hex');

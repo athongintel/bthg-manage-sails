@@ -1,0 +1,14 @@
+script.
+    app.controller('LoginDialogController', ['$uibModalInstance', '$scope', function ($modalInstance, $scope) {
+        $scope.close = function(){
+            $modalInstance.dismiss();
+        }
+
+    }]);
+
+script(type="text/ng-template" id="loginDialog")
+    .modal-header
+        button.close(type='button', ng-click='close()')
+        div #{__('login_')}
+    .modal-body
+        div heello

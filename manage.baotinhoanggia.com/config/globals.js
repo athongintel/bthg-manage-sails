@@ -2,7 +2,7 @@ global._app = {};
 
 _app.model = {
     User: require('../api/models/user.model'),
-    
+    Auth: require('../api/models/auth.model'),
 };
 
 _app.errors = {
