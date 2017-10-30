@@ -24,6 +24,15 @@ const actions = {
     'update_supplier_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.updateSupplierContact, validation: {required: ['_id', 'name']}},
     'remove_supplier_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.removeSupplierContact, validation: {required: ['_id']}},
     
+    'add_product_category': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.addProductCategory, validation: {required: ['name']}},
+    'remove_product_category': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductCategory, validation: {required: ['_id']}},
+    'update_product_category': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProductCategory, validation: {required: ['_id', 'name']}},
+    'get_all_product_categories': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllProductCategories, validation: {}},
+    
+    'add_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.addProductType, validation: {required: ['groupID', 'name']}},
+    'remove_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductType, validation: {required: ['_id']}},
+    'update_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProductType, validation: {required: ['_id', 'name']}},
+    'get_all_types_from_category': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllTypesFromCategory, validation: {required: ['groupID']}},
 };
 
 /*
@@ -134,6 +143,7 @@ module.exports = {
             }
         }).then(
             function (result) {
+                console.log(result);
                 res.json(result);
             },
             function (err) {
@@ -218,6 +228,7 @@ module.exports = {
             }
         }).then(
             function (result) {
+                console.log(result);
                 res.json(result);
             },
             function (err) {

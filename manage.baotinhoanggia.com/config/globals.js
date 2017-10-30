@@ -7,6 +7,9 @@ _app.model = {
     CustomerContact: require('../api/models/customerContact.model'),
     Supplier: require('../api/models/supplier.model'),
     SupplierContact: require('../api/models/supplierContact.model'),
+    ProductGroup: require('../api/models/productGroup.model'),
+    ProductType: require('../api/models/productType.model'),
+    Product: require('../api/models/product.model'),
 };
 
 _app.errors = {
@@ -17,5 +20,7 @@ _app.errors = {
     TOKEN_GENERATING_ERROR: {errorCode: 5, errorMessage: 'Cannot generate user token'},
     WRONG_PASSWORD_ERROR: {errorCode: 6, errorMessage: 'The provided password is not correct'},
     NOT_SUPER_ADMIN_ERROR: {errorCode: 7, errorMessage: 'Require super admin role'},
-    NOT_AUTHENTICATED_ERROR: {errorCode: 7, errorMessage: 'Require authentication'},
+    NOT_AUTHENTICATED_ERROR: {errorCode: 8, errorMessage: 'Require authentication'},
+    DUPLICATED_ERROR: {errorCode: 9, errorMessage: 'Duplicated'},
+    RESOURCE_DIRTY_ERROR: {errorCode: 10, errorMessage: 'The resource is dirty'},
 };
