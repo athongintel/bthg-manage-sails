@@ -1,0 +1,51 @@
+script(type="text/ng-template" id="adminSupplierAddDialog")
+    .modal-header
+        button.close(type='button', ng-click='close()') x
+        div.header #{__('add_supplier')}
+    .modal-body
+        fieldset(ng-disabled='processing')
+            div
+                label #{__('name_')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="name")
+            div
+                label #{__('address_')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="address")
+
+            div
+                label #{__('phone_numer')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="phoneNumber")
+
+            div
+                label #{__('website_')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="website")
+
+            div
+                label #{__('iban_')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="iban")
+
+            div
+                label #{__('bank_')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="bank")
+
+            div
+                label #{__('bank_address')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="bankAddress")
+
+            div
+                label #{__('switf_')}
+                div.form-group.has-feedback
+                    input.form-control(ng-model="swift")
+
+            div.text-right
+                button.action.btn.btn-primary(ng-disabled='!name' ng-click='addSupplier()')
+                    span(ng-show='processing')
+                        i.fa.fa-spinner.fa-spin
+                        span &nbsp;
+                    span #{__('add_')}

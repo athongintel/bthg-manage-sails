@@ -1,0 +1,43 @@
+div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl' ng-init='ctrl.init()')
+    div
+        div.row
+            div.col-xs-12.col-sm-6
+                div.panel-header-title #{__('product_category')}
+
+    div.panel.panel-default
+        div.panel-body
+            div
+                div.row
+                    div.col-xs-12.col-sm-6
+                        div
+                            div.row.flex
+                                div.col-xs-6.vf-center
+                                    label #{__('product_category')}
+                                div.col-xs-6.text-right.vf-center
+                                    button.btn.btn-default.btn-sm(ng-click='ctrl.addCategory()')
+                                        i.fa.fa-plus
+                                        span &nbsp; #{__('add_')}
+                            div.margin-top-15px
+                                div.category(ng-show='ctrl.newCategory')
+                                    a(href="#" editable-text="ctrl.newCategory.name" buttons="no") {{ ctrl.newCategory.name || "#{__('not_set')}"}}
+                                div.text-center.no-data(ng-show='!ctrl.categories || !ctrl.categories.length')
+                                    span #{__('no_data')}
+                                div.category-wrapper(ng-repeat='category in ctrl.categories')
+                                    div.category(ng-class='{active: ctrl.selectedCategory._id === category._id}' ng-click='ctrl.selectCategory(category)')
+                                        div.row.flex
+                                            div.col-xs-8.vf-center
+                                                span {{category.name}}
+                                            div.col-xs-4.vf-center.text-right
+                                                span.badge {{category.size}}
+                    div.col-xs-12.col-sm-6
+                        div
+                            div.row.flex
+                                div.col-xs-6.vf-center
+                                    label #{__('product_type')}
+                                div.col-xs-6.text-right.vf-center
+                                    button.btn.btn-default.btn-sm
+                                        i.fa.fa-plus
+                                        span &nbsp; #{__('add_')}
+                            div.margin-top-15px
+                                div.text-center.no-data(ng-show='!ctrl.selectedCategory || !ctrl.selectedCategory.length')
+                                    span #{__('no_data')}

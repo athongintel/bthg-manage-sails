@@ -1,0 +1,28 @@
+.admin-product-category{
+    .no-data{
+        padding: 5px;
+        background: whitesmoke;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .category{
+        cursor: pointer;
+        padding:6px;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        &:hover{
+            background: whitesmoke;
+        }
+        &.active{
+            background: seagreen;
+            color: white;
+            .badge{
+                color: black;
+                background-color: white;
+            }
+        }
+    }
+}

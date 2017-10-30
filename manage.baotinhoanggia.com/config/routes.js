@@ -17,4 +17,16 @@ module.exports.routes = {
         view: 'admin/customer', locals: {layout: false}
     },
     
+    'GET /admin/supplier': {
+        view: 'admin/supplier', locals: {layout: false}
+    },
+    
+    'GET /admin/product/new': {
+        view: 'admin/product/new', locals: {layout: false}
+    },
+    
+    'GET /admin/product/category': {
+        view: 'admin/product/category', locals: {layout: false}
+    },
+    
 };

@@ -37,6 +37,22 @@
     margin-left: 15px;
 }
 
+.margin-bottom-5px {
+    margin-bottom: 5px;
+}
+
+.margin-right-5px {
+    margin-right: 5px;
+}
+
+.margin-top-5px {
+    margin-top: 5px;
+}
+
+.margin-left-5px {
+    margin-left: 5px;
+}
+
 //-- text align
 .text-right {
     text-align: right;
@@ -62,7 +78,7 @@
 
 //-- versatile
 button.action {
-    min-width: 100px;
+    min-width: 80px;
 }
 
 .panel-header-title {
@@ -72,7 +88,8 @@ button.action {
 }
 
 //-- angular editable
-.editable-wrap, .input.editable-input{
+
+.editable-wrap, .editable-controls.form-group, .editable-wrap .editable-controls>input, .editable-wrap .editable-controls>select, .editable-wrap .editable-controls>textarea{
     width:100%;
 }
 

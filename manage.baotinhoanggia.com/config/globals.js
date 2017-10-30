@@ -5,6 +5,8 @@ _app.model = {
     Auth: require('../api/models/auth.model'),
     Customer: require('../api/models/customer.model'),
     CustomerContact: require('../api/models/customerContact.model'),
+    Supplier: require('../api/models/supplier.model'),
+    SupplierContact: require('../api/models/supplierContact.model'),
 };
 
 _app.errors = {

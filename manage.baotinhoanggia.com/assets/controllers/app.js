@@ -13,11 +13,23 @@ app.config(function ($routeProvider) {
     $routeProvider
         .when('/admin/index', {
             templateUrl: '/admin/index',
-            controller: 'AdminController'
+            controller: 'AdminIndexController'
         })
         .when('/admin/customer', {
             templateUrl: '/admin/customer',
             controller: 'AdminCustomerController'
+        })
+        .when('/admin/supplier', {
+            templateUrl: '/admin/supplier',
+            controller: 'AdminSupplierController'
+        })
+        .when('/admin/product/new', {
+            templateUrl: '/admin/product/new',
+            controller: 'AdminProductAddController'
+        })
+        .when('/admin/product/category', {
+            templateUrl: '/admin/product/category',
+            controller: 'AdminProductCategoryController'
         })
 });
 

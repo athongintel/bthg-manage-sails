@@ -1,23 +1,23 @@
-app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$timeout', function ($scope, $http, $modal, $timeout) {
+app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$timeout', function ($scope, $http, $modal, $timeout) {
     "use strict";
     
     let ctrl = this;
     
-    ctrl.selectedCustomer = null;
+    ctrl.selectedSupplier = null;
     
-    ctrl.addCustomer = function () {
+    ctrl.addSupplier = function () {
         $modal.open({
-            templateUrl: 'adminCustomerAddDialog',
-            controller: 'AdminCustomerAddDialogController',
+            templateUrl: 'adminSupplierAddDialog',
+            controller: 'AdminSupplierAddDialogController',
             scope: $scope,
             backdrop: 'static',
             keyboard: false
         }).result.then(
             function (result) {
-                if (!$scope.global.data.customers) $scope.global.data.customers = [];
-                $scope.global.data.customers.push(result);
-                ctrl.selectedCustomer = result;
-                ctrl.selectedCustomerContacts = [];
+                if (!$scope.global.data.suppliers) $scope.global.data.suppliers = [];
+                $scope.global.data.suppliers.push(result);
+                ctrl.selectedSupplier = result;
+                ctrl.selectedSupplierContacts = [];
             },
             function (err) {
                 //-- do nothing
@@ -25,32 +25,32 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
         );
     };
     
-    ctrl.saveCustomer = function () {
-        ctrl.selectedCustomer.customerSaveProblem = false;
+    ctrl.saveSupplier = function () {
+        ctrl.selectedSupplier.supplierSaveProblem = false;
         $http.post('/rpc', {
             token: $scope.global.user.token,
-            name: 'update_customer_info',
-            params: ctrl.selectedCustomer
+            name: 'update_supplier_info',
+            params: ctrl.selectedSupplier
         }).then(
             function (response) {
                 if (!response.data.success) {
-                    ctrl.selectedCustomer.customerSaveProblem = true;
+                    ctrl.selectedSupplier.supplierSaveProblem = true;
                 }
             },
             function (err) {
-                ctrl.selectedCustomer.customerSaveProblem = true;
+                ctrl.selectedSupplier.supplierSaveProblem = true;
             }
         );
     };
     
-    ctrl.addCustomerContact = function(){
-        if (!ctrl.selectedCustomerContacts) ctrl.selectedCustomerContacts = [];
+    ctrl.addSupplierContact = function(){
+        if (!ctrl.selectedSupplierContacts) ctrl.selectedSupplierContacts = [];
         //-- check if container empty row
-        let emptyContact = ctrl.selectedCustomerContacts.find(function(contact){
+        let emptyContact = ctrl.selectedSupplierContacts.find(function(contact){
            return !contact._id;
         });
         if (!emptyContact) {
-            ctrl.selectedCustomerContacts.push({_id: 0});
+            ctrl.selectedSupplierContacts.push({_id: 0});
         }
     };
     
@@ -59,28 +59,28 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
     };
     
     ctrl.removeContact = function(id){
-        let removeIndex = ctrl.selectedCustomerContacts.findIndex(function(contact){
+        let removeIndex = ctrl.selectedSupplierContacts.findIndex(function(contact){
             return contact._id === id;
         });
         if (removeIndex >= 0)
-            ctrl.selectedCustomerContacts.splice(removeIndex, 1);
+            ctrl.selectedSupplierContacts.splice(removeIndex, 1);
     };
     
     ctrl.updateContact = function(id, newContact){
-        let updateIndex = ctrl.selectedCustomerContacts.findIndex(function(contact){
+        let updateIndex = ctrl.selectedSupplierContacts.findIndex(function(contact){
             return contact._id === id;
         });
         if (updateIndex >= 0)
-            ctrl.selectedCustomerContacts[updateIndex] = newContact;
+            ctrl.selectedSupplierContacts[updateIndex] = newContact;
     };
     
-    ctrl.updateCustomerContact = function(contact){
+    ctrl.updateSupplierContact = function(contact){
         let data = {
             token: $scope.global.user.token,
             params: contact
         };
-        data.name = contact._id? 'update_customer_contact' : 'add_customer_contact';
-        data.params.customerID = data.customerID || ctrl.selectedCustomer._id;
+        data.name = contact._id? 'update_supplier_contact' : 'add_supplier_contact';
+        data.params.supplierID = data.supplierID || ctrl.selectedSupplier._id;
         
         $http.post('/rpc', data).then(
             function(response){
@@ -97,21 +97,21 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
         );
     };
     
-    ctrl.cancelEditCustomerContact = function(contact){
+    ctrl.cancelEditSupplierContact = function(contact){
         if (!contact._id)
             ctrl.removeContact(contact._id)
     };
     
     
     
-    ctrl.removeCustomerContact = function(contact, i18n_confirm_remove_customer_contact){
+    ctrl.removeSupplierContact = function(contact, i18n_confirm_remove_supplier_contact){
         if (!contact._id) {
             ctrl.removeContact(contact._id)
         }
         else{
-            let ok = confirm(i18n_confirm_remove_customer_contact);
+            let ok = confirm(i18n_confirm_remove_supplier_contact);
             if (ok){
-                $http.post('/rpc', {token: $scope.global.user.token, name: 'remove_customer_contact', params: {_id: contact._id}}).then(
+                $http.post('/rpc', {token: $scope.global.user.token, name: 'remove_supplier_contact', params: {_id: contact._id}}).then(
                     function(response){
                         if (response.data.success){
                             ctrl.removeContact(contact._id);
@@ -130,13 +130,13 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
     
     ctrl.init = function () {
         
-        let customerSelector = $('#select_customer');
-        customerSelector.select2({
+        let supplierSelector = $('#select_supplier');
+        supplierSelector.select2({
             ajax: {
                 transport: function (params, success, failure) {
                     $http.post('/rpc', {
                         token: $scope.global.user.token,
-                        name: 'get_customer_meta_info',
+                        name: 'get_supplier_meta_info',
                         params: {query: params.data.term}
                     }).then(
                         function (response) {
@@ -154,9 +154,9 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                     );
                 },
                 processResults: function (data) {
-                    data.forEach(function (customer) {
-                        customer.id = customer._id;
-                        customer.text = customer.name;
+                    data.forEach(function (supplier) {
+                        supplier.id = supplier._id;
+                        supplier.text = supplier.name;
                     });
                     
                     return {
@@ -165,42 +165,42 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                 }
             }
         });
-        customerSelector.on('select2:select', function (e) {
+        supplierSelector.on('select2:select', function (e) {
             $timeout(function () {
-                ctrl.loadingCustomerInfo = true;
+                ctrl.loadingSupplierInfo = true;
             });
             $http.post('/batch', {
                 token: $scope.global.user.token,
                 options: {},
                 commands: [
                     {
-                        name: 'get_customer_info',
+                        name: 'get_supplier_info',
                         params: {_id: e.params.data._id}
                     },
                     {
-                        name: 'get_all_customer_contacts',
-                        params: {customerID: e.params.data._id}
+                        name: 'get_all_supplier_contacts',
+                        params: {supplierID: e.params.data._id}
                     }
                 ]
             }).then(
                 function (response) {
                     $timeout(function () {
-                        ctrl.loadingCustomerInfo = false;
+                        ctrl.loadingSupplierInfo = false;
                         if (response.data.success) {
-                            //-- load full customer info
-                            ctrl.selectedCustomer = response.data.results[0].success? response.data.results[0].result : null;
-                            ctrl.selectedCustomerContacts = response.data.results[1].success? response.data.results[1].result : null;
+                            //-- load full supplier info
+                            ctrl.selectedSupplier = response.data.results[0].success? response.data.results[0].result : null;
+                            ctrl.selectedSupplierContacts = response.data.results[1].success? response.data.results[1].result : null;
                         }
                         else {
-                            ctrl.loadCustomerError = true;
+                            ctrl.loadSupplierError = true;
                         }
                     });
                     
                 },
                 function (err) {
                     $timeout(function () {
-                        ctrl.loadingCustomerInfo = false;
-                        ctrl.loadCustomerError = true;
+                        ctrl.loadingSupplierInfo = false;
+                        ctrl.loadSupplierError = true;
                     });
                 }
             );

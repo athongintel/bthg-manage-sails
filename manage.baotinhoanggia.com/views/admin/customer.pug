@@ -123,12 +123,12 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                                         span(editable-text="contact.discount" e-name="discount" e-form="rowform") {{contact.discount || #{__('not_set')}}}
                                     td.text-right
                                         form.form-buttons.form-inline(editable-form='', name='rowform', onaftersave='ctrl.updateCustomerContact(contact)', ng-show='rowform.$visible', shown='!contact._id')
-                                            button.btn.btn-primary.margin-right-15px(type='submit', ng-disabled='rowform.$waiting')
+                                            button.btn.btn-primary.margin-right-5px(type='submit', ng-disabled='rowform.$waiting')
                                                 i.fa.fa-floppy-o
                                             button.btn.btn-default(type='button', ng-disabled='rowform.$waiting', ng-click='rowform.$cancel(); ctrl.cancelEditCustomerContact(contact)')
                                                 i.fa.fa-ban
                                         .buttons(ng-show='!rowform.$visible')
-                                            button.btn.btn-primary.margin-right-15px(type='button', ng-click='rowform.$show()')
+                                            button.btn.btn-primary.margin-right-5px(type='button', ng-click='rowform.$show()')
                                                 i.fa.fa-pencil
                                             button.btn.btn-danger(type='button', ng-click='ctrl.removeCustomerContact(contact, "' + __('remove_customer_contact_prompt') + '")')
                                                 i.fa.fa-trash

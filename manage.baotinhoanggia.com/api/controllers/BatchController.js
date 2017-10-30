@@ -15,6 +15,15 @@ const actions = {
     'update_customer_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.updateCustomerContact, validation: {required: ['_id', 'name']}},
     'remove_customer_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.removeCustomerContact, validation: {required: ['_id']}},
     
+    'add_supplier': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.addSupplier, validation: {required: ['name']}},
+    'update_supplier_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.updateSupplierInfo, validation: {required: ['_id', 'name']}},
+    'get_supplier_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.getSupplierInfo, validation: {required: ['_id']}},
+    'get_supplier_meta_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.getSupplierMetaInfo, validation: {}},
+    'get_all_supplier_contacts': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.getAllSupplierContacts, validation: {required: ['supplierID']}},
+    'add_supplier_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.addSupplierContact, validation: {required: ['supplierID', 'name']}},
+    'update_supplier_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.updateSupplierContact, validation: {required: ['_id', 'name']}},
+    'remove_supplier_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.removeSupplierContact, validation: {required: ['_id']}},
+    
 };
 
 /*

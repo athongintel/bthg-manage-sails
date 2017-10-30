@@ -1,4 +1,4 @@
-app.controller('AdminController', [function(){
+app.controller('AdminIndexController', [function(){
     "use strict";
     
 }]);

@@ -1,4 +1,46 @@
-nav.navbar.navbar-inverse(ng-controller='NavbarController as ctrl')
+.navbar.navbar-default(role='navigation' ng-controller='NavbarController as ctrl')
+    .navbar-header
+        button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+        a.navbar-brand(href='') #{__('bthg_manage')}
+    .collapse.navbar-collapse
+        ul.nav.navbar-nav.navbar-right(ng-cloak)
+            li(ng-show='global.user')
+                a(href='' ng-click='ctrl.logout()')
+                    span {{global.user.username}} &nbsp;
+                    i.fa.fa-sign-out
+
+            li(ng-show='!global.user')
+                a(href='' ng-click='ctrl.login()')
+                    i.fa.fa-sign-in
+                    span &nbsp; #{__('login_')}
+
+        ul.nav.navbar-nav(ng-cloak ng-show='isPath("admin")')
+            li(ng-class='{active: isPath("admin/index")}')
+                a(href='#/admin/index') #{__('home')}
+            li(ng-class='{active: isPath("admin/customer")}')
+                a(href='#/admin/customer') #{_('customer_manage')}
+
+            li(ng-class='{active: isPath("admin/supplier")}')
+                a(href='#/admin/supplier') #{_('supplier_manage')}
+
+            li(ng-class='{active: isPath("admin/product")}')
+                a.dropdown-toggle(href='', data-toggle='dropdown')
+                    span #{_('product_')}
+                    b.caret
+                ul.dropdown-menu
+                    li(ng-class='{active: isPath("admin/product/list")}')
+                        a(href='#/admin/product/list') #{__('find_product')}
+                    li(ng-class='{active: isPath("admin/product/category")}')
+                        a(href='#/admin/product/category') #{__('product_category')}
+                    li.divider
+                    li(ng-class='{active: isPath("admin/product/new")}')
+                        a(href='#/admin/product/new') #{__('new_product')}
+
+//nav.navbar.navbar-inverse(ng-controller='NavbarController as ctrl')
     .container-fluid
         .navbar-header
             a.navbar-brand(href='') #{__('bthg_manage')}
