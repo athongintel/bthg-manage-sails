@@ -20,13 +20,17 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
                                         i.fa.fa-plus
                                         span &nbsp; #{__('add_')}
                             div.margin-top-15px
-                                div.category(ng-show='ctrl.isNewCategory')
-                                    a(href="" editable-text="ctrl.newCategory.name" buttons="no" e-form='newCategoryForm' oncancel='ctrl.cancelCategory()' onbeforesave='ctrl.updateCategory(ctrl.newCategory, $data)') {{ ctrl.newCategory.name || "#{__('not_set')}"}}
+                                div.input-group.input-group-sm.margin-bottom-15px
+                                    span.input-group-addon
+                                        span.glyphicon.glyphicon-search
+                                    input.form-control(ng-model='ctrl.categoryFilter' ng-change='ctrl.filterCategory()')
 
-                                div.text-center.no-data(ng-show='!ctrl.categories || !ctrl.categories.length')
+                                div.text-center.no-data(ng-show='!ctrl.isNewCategory && (!ctrl.categories || !ctrl.categories.length)')
                                     span #{__('no_data')}
 
-                                div.category-wrapper(ng-repeat='category in ctrl.categories')
+                                div.category(ng-show='ctrl.isNewCategory')
+                                    a(href="" editable-text="ctrl.newCategory.name" buttons="no" e-form='newCategoryForm' oncancel='ctrl.cancelCategory()' onbeforesave='ctrl.updateCategory(ctrl.newCategory, $data)') {{ ctrl.newCategory.name || "#{__('not_set')}"}}
+                                div.category-wrapper(ng-repeat='category in ctrl.filteredCategories')
                                     div.category(ng-class='{active: ctrl.selectedCategory._id === category._id}' ng-click='ctrl.selectCategory(category)')
                                         div.row.flex
                                             div.col-xs-8.vf-center
@@ -48,16 +52,21 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
                                         i.fa.fa-plus
                                         span &nbsp; #{__('add_')}
                             div.margin-top-15px
-                                div.category(ng-show='ctrl.isNewType')
-                                    a(href="" editable-text="ctrl.newType.name" buttons="no" e-form='newTypeForm' oncancel='ctrl.cancelType()' onbeforesave='ctrl.updateType(ctrl.newType, $data)') {{ ctrl.newType.name || "#{__('not_set')}"}}
-
-                                div.text-center.no-data(ng-show='!ctrl.loadingTypes && (!ctrl.selectedCategory.types || !ctrl.selectedCategory.types.length)')
-                                    span #{__('no_data')}
+                                div.input-group.input-group-sm.margin-bottom-15px
+                                    span.input-group-addon
+                                        span.glyphicon.glyphicon-search
+                                    input.form-control(ng-model='ctrl.typeFilter' ng-change='ctrl.filterType()')
 
                                 div.text-center(ng-show='ctrl.loadingTypes')
                                     i.fa.fa-spinner.fa-spin
 
-                                div.category-wrapper(ng-repeat='type in ctrl.selectedCategory.types')
+                                div.text-center.no-data(ng-show='!ctrl.loadingTypes && !ctrl.isNewType && (!ctrl.selectedCategory.types || !ctrl.selectedCategory.types.length)')
+                                    span #{__('no_data')}
+
+                                div.category(ng-show='ctrl.isNewType')
+                                    a(href="" editable-text="ctrl.newType.name" buttons="no" e-form='newTypeForm' oncancel='ctrl.cancelType()' onbeforesave='ctrl.updateType(ctrl.newType, $data)') {{ ctrl.newType.name || "#{__('not_set')}"}}
+
+                                div.category-wrapper(ng-repeat='type in ctrl.filteredTypes')
                                     div.category(ng-class='{active: ctrl.selectedType._id === type._id}' ng-click='ctrl.selectType(type)')
                                         div.row.flex
                                             div.col-xs-8.vf-center

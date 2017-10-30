@@ -1,35 +1,51 @@
-app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal', '$timeout', function ($scope, $http, $modal, $timeout) {
+app.controller('AdminProductCategoryController', ['$scope', '$http', function ($scope, $http) {
     "use strict";
     
     let ctrl = this;
     
+    ctrl.categoryFilter = "";
+    ctrl.typeFilter = "";
+    
+    ctrl.filterCategory = function(){
+        ctrl.filteredCategories = ctrl.categories.filter(function(cat){
+            return cat.name.indexOf(ctrl.categoryFilter) >= 0;
+        });
+    };
+    
     ctrl.selectCategory = function (category) {
         ctrl.selectedCategory = category;
         //-- load types
-        ctrl.loadingTypes = true;
-        $http.post('/rpc', {
-            token: $scope.global.user.token,
-            name: 'get_all_types_from_category',
-            params:{
-                groupID: category._id,
-                with_count: true,
-            }
-        }).then(
-            function(response){
-                // console.log(response.data);
-                ctrl.loadingTypes = false;
-                if (response.data.success){
-                    ctrl.selectedCategory.types = response.data.result;
+        if (!ctrl.selectedCategory.types) {
+            ctrl.loadingTypes = true;
+            $http.post('/rpc', {
+                token: $scope.global.user.token,
+                name: 'get_all_types_from_category',
+                params: {
+                    groupID: category._id,
+                    with_count: true,
                 }
-                else{
+            }).then(
+                function (response) {
+                    ctrl.loadingTypes = false;
+                    if (response.data.success) {
+                        ctrl.selectedCategory.types = response.data.result;
+                        ctrl.filterCategory();
+                        ctrl.filterType();
+                    }
+                    else {
+                        //-- TODO: error
+                    }
+                },
+                function () {
+                    ctrl.loadingTypes = false;
                     //-- TODO: error
                 }
-            },
-            function(err){
-                ctrl.loadingTypes = false;
-                //-- TODO: error
-            }
-        );
+            );
+        }
+        else{
+            ctrl.filterCategory();
+            ctrl.filterType();
+        }
     };
     
     ctrl.addCategory = function () {
@@ -60,6 +76,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal'
                         return String(cat._id) === String(category._id);
                     });
                     if (removeIndex >= 0) ctrl.categories.splice(removeIndex, 1);
+                    ctrl.filterCategory();
                 }
                 else {
                     //-- TODO: error
@@ -80,7 +97,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal'
             });
         }
         else {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve) {
                 let data = {
                     token: $scope.global.user.token,
                     params: {
@@ -105,6 +122,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal'
                                 ctrl.isNewCategory = false;
                                 ctrl.categories.unshift(response.data.result);
                             }
+                            ctrl.filterCategory();
                             resolve(true);
                         }
                         else {
@@ -119,7 +137,6 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal'
         }
         
     };
-    
     
     ctrl.selectType = function (type) {
         ctrl.selectedType = type;
@@ -154,6 +171,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal'
                     });
                     if (removeIndex >= 0) ctrl.selectedCategory.types.splice(removeIndex, 1);
                     ctrl.selectedCategory.size--;
+                    ctrl.filterType();
                 }
                 else {
                     //-- TODO: error
@@ -174,7 +192,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal'
             });
         }
         else {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve) {
                 let data = {
                     token: $scope.global.user.token,
                     params: {
@@ -201,6 +219,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal'
                                 ctrl.isNewType = false;
                                 ctrl.selectedCategory.types.unshift(response.data.result);
                             }
+                            ctrl.filterType();
                             resolve(true);
                         }
                         else {
@@ -216,6 +235,11 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal'
 
     };
     
+    ctrl.filterType = function(){
+        ctrl.filteredTypes = ctrl.selectedCategory.types.filter(function(type){
+            return type.name.indexOf(ctrl.typeFilter) >= 0;
+        });
+    };
     
     ctrl.init = function () {
         ctrl.initializing = true;
@@ -235,6 +259,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal'
                         return String(b._id).localeCompare(String(a._id));
                     });
                     ctrl.categories = response.data.result;
+                    ctrl.filterCategory();
                 }
                 else {
                     //-- TODO: error

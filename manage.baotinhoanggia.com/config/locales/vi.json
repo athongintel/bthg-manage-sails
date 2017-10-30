@@ -49,5 +49,7 @@
 	"new_product": "new_product",
 	"add_new_product": "add_new_product",
 	"admin_dashboard": "admin_dashboard",
-	"product_type": "product_type"
+	"product_type": "product_type",
+	"find_quotation": "find_quotation",
+	"new_quotation": "new_quotation"
 }

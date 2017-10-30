@@ -40,6 +40,16 @@
                     li(ng-class='{active: isPath("admin/product/new")}')
                         a(href='#/admin/product/new') #{__('new_product')}
 
+            li(ng-class='{active: isPath("admin/quotation")}')
+                a.dropdown-toggle(href='', data-toggle='dropdown')
+                    span #{_('quotation_')}
+                    b.caret
+                ul.dropdown-menu
+                    li(ng-class='{active: isPath("admin/quotation/list")}')
+                        a(href='#/admin/quotation/list') #{__('find_quotation')}
+                    li(ng-class='{active: isPath("admin/quotation/new")}')
+                        a(href='#/admin/quotation/new') #{__('new_quotation')}
+
 //nav.navbar.navbar-inverse(ng-controller='NavbarController as ctrl')
     .container-fluid
         .navbar-header
