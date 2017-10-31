@@ -3,6 +3,33 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
     
     let ctrl = this;
     
+    $scope.checkSupplierAttribute = function (attr, value, oldValue) {
+        "use strict";
+        if (oldValue && oldValue === value) {
+            return true;
+        }
+        else {
+            return new Promise(function (resolve) {
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'check_attribute',
+                    params: {
+                        collection: 'Supplier',
+                        attr: attr,
+                        value: value
+                    }
+                }).then(
+                    function (response) {
+                        resolve(response.data.success || response.data.error.errorMessage);
+                    },
+                    function (err) {
+                        resolve(err)
+                    }
+                );
+            });
+        }
+    };
+    
     ctrl.selectedSupplier = null;
     
     ctrl.addSupplier = function () {
@@ -19,113 +46,149 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                 ctrl.selectedSupplier = result;
                 ctrl.selectedSupplierContacts = [];
             },
-            function (err) {
+            function () {
                 //-- do nothing
             }
         );
     };
     
-    ctrl.saveSupplier = function () {
-        ctrl.selectedSupplier.supplierSaveProblem = false;
-        $http.post('/rpc', {
-            token: $scope.global.user.token,
-            name: 'update_supplier_info',
-            params: ctrl.selectedSupplier
-        }).then(
-            function (response) {
-                if (!response.data.success) {
+    ctrl.saveSupplier = function (data) {
+        return new Promise(function (resolve) {
+            ctrl.selectedSupplier.supplierSaveProblem = false;
+            data._id = ctrl.selectedSupplier._id;
+            $http.post('/rpc', {
+                token: $scope.global.user.token,
+                name: 'update_supplier_info',
+                params: data
+            }).then(
+                function (response) {
+                    if (!response.data.success) {
+                        ctrl.selectedSupplier.supplierSaveProblem = true;
+                    }
+                    resolve(response.data.success || response.data.error.errorMessage);
+                },
+                function () {
                     ctrl.selectedSupplier.supplierSaveProblem = true;
+                    resolve('Network error');
                 }
-            },
-            function (err) {
-                ctrl.selectedSupplier.supplierSaveProblem = true;
-            }
-        );
+            );
+        });
     };
     
-    ctrl.addSupplierContact = function(){
+    ctrl.addSupplierContact = function () {
         if (!ctrl.selectedSupplierContacts) ctrl.selectedSupplierContacts = [];
         //-- check if container empty row
-        let emptyContact = ctrl.selectedSupplierContacts.find(function(contact){
-           return !contact._id;
+        let emptyContact = ctrl.selectedSupplierContacts.find(function (contact) {
+            return !contact._id;
         });
         if (!emptyContact) {
             ctrl.selectedSupplierContacts.push({_id: 0});
         }
     };
     
-    ctrl.checkContact = function(data){
-        //console.log(data);
-    };
-    
-    ctrl.removeContact = function(id){
-        let removeIndex = ctrl.selectedSupplierContacts.findIndex(function(contact){
+    ctrl.removeContact = function (id) {
+        let removeIndex = ctrl.selectedSupplierContacts.findIndex(function (contact) {
             return contact._id === id;
         });
         if (removeIndex >= 0)
             ctrl.selectedSupplierContacts.splice(removeIndex, 1);
     };
     
-    ctrl.updateContact = function(id, newContact){
-        let updateIndex = ctrl.selectedSupplierContacts.findIndex(function(contact){
+    ctrl.updateContact = function (id, newContact) {
+        let updateIndex = ctrl.selectedSupplierContacts.findIndex(function (contact) {
             return contact._id === id;
         });
         if (updateIndex >= 0)
             ctrl.selectedSupplierContacts[updateIndex] = newContact;
     };
     
-    ctrl.updateSupplierContact = function(contact){
-        let data = {
-            token: $scope.global.user.token,
-            params: contact
-        };
-        data.name = contact._id? 'update_supplier_contact' : 'add_supplier_contact';
-        data.params.supplierID = data.supplierID || ctrl.selectedSupplier._id;
-        
-        $http.post('/rpc', data).then(
-            function(response){
-                if (response.data.success){
-                    ctrl.updateContact(contact._id, response.data.result);
-                }
-                else{
-                    contact.updateError = true;
-                }
-            },
-            function(err){
-                contact.updateError = true;
+    ctrl.updateSupplierContact = function (data, contact) {
+        return new Promise(function (resolve) {
+            console.log(data, contact);
+            let postData = {
+                token: $scope.global.user.token,
+                params: data
+            };
+            if (contact._id) {
+                postData.name = 'update_supplier_contact';
+                postData.params._id = contact._id;
             }
-        );
+            else {
+                postData.name = 'add_supplier_contact';
+                postData.params.supplierID = ctrl.selectedSupplier._id;
+            }
+            $http.post('/rpc', postData).then(
+                function (response) {
+                    if (response.data.success) {
+                        ctrl.updateContact(contact._id, response.data.result);
+                    }
+                    resolve(response.data.success || response.data.error.errorMessage);
+                },
+                function (err) {
+                    console.log(err);
+                    resolve('Network error.');
+                }
+            );
+        });
     };
     
-    ctrl.cancelEditSupplierContact = function(contact){
+    ctrl.cancelEditSupplierContact = function (contact) {
         if (!contact._id)
             ctrl.removeContact(contact._id)
     };
     
-    
-    
-    ctrl.removeSupplierContact = function(contact, i18n_confirm_remove_supplier_contact){
+    ctrl.removeSupplierContact = function (contact, i18n_confirm_remove_supplier_contact) {
         if (!contact._id) {
             ctrl.removeContact(contact._id)
         }
-        else{
+        else {
             let ok = confirm(i18n_confirm_remove_supplier_contact);
-            if (ok){
-                $http.post('/rpc', {token: $scope.global.user.token, name: 'remove_supplier_contact', params: {_id: contact._id}}).then(
-                    function(response){
-                        if (response.data.success){
+            if (ok) {
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'remove_supplier_contact',
+                    params: {_id: contact._id}
+                }).then(
+                    function (response) {
+                        if (response.data.success) {
                             ctrl.removeContact(contact._id);
                         }
-                        else{
-                            //-- TODO: remove failed
+                        else {
+                            alert(respone.data.error.errorMessage);
                         }
                     },
-                    function(err){
+                    function (err) {
                         //-- TODO: remove failed
                     }
                 );
             }
         }
+    };
+    
+    ctrl.checkContactAttribute = function (attr, value, contact) {
+        // if (value === contact[attr]) {
+        //     return true;
+        // }
+        // else {
+        return new Promise(function (resolve) {
+            $http.post('/rpc', {
+                token: $scope.global.user.token,
+                name: 'check_attribute',
+                params: {
+                    collection: 'SupplierContact',
+                    attr: attr,
+                    value: value
+                }
+            }).then(
+                function (response) {
+                    resolve(response.data.success || response.data.error.errorMessage);
+                },
+                function (err) {
+                    resolve('Network error');
+                }
+            )
+        });
+        // }
     };
     
     ctrl.init = function () {
@@ -188,8 +251,8 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                         ctrl.loadingSupplierInfo = false;
                         if (response.data.success) {
                             //-- load full supplier info
-                            ctrl.selectedSupplier = response.data.results[0].success? response.data.results[0].result : null;
-                            ctrl.selectedSupplierContacts = response.data.results[1].success? response.data.results[1].result : null;
+                            ctrl.selectedSupplier = response.data.results[0].success ? response.data.results[0].result : null;
+                            ctrl.selectedSupplierContacts = response.data.results[1].success ? response.data.results[1].result : null;
                         }
                         else {
                             ctrl.loadSupplierError = true;

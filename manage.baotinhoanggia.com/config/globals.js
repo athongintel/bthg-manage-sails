@@ -9,6 +9,7 @@ _app.model = {
     SupplierContact: require('../api/models/supplierContact.model'),
     ProductGroup: require('../api/models/productGroup.model'),
     ProductType: require('../api/models/productType.model'),
+    ProductBrand: require('../api/models/productBrand.model'),
     Product: require('../api/models/product.model'),
 };
 
@@ -23,4 +24,5 @@ _app.errors = {
     NOT_AUTHENTICATED_ERROR: {errorCode: 8, errorMessage: 'Require authentication'},
     DUPLICATED_ERROR: {errorCode: 9, errorMessage: 'Duplicated'},
     RESOURCE_DIRTY_ERROR: {errorCode: 10, errorMessage: 'The resource is dirty'},
+    TOKEN_INVALID_ERROR: {errorCode: 11, errorMessage: 'The session is expired'},
 };

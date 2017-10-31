@@ -1,0 +1,28 @@
+.admin-product-brand{
+    .no-data{
+        padding: 5px;
+        background: whitesmoke;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .brand{
+        cursor: pointer;
+        padding:6px;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        &:hover{
+            background: whitesmoke;
+        }
+        &.active{
+            background: lightgray;
+            color: white;
+            .badge{
+                color: black;
+                background-color: white;
+            }
+        }
+    }
+}

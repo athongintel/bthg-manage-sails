@@ -3,6 +3,33 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
     
     let ctrl = this;
     
+    $scope.checkCustomerAttribute = function (attr, value, oldValue) {
+        "use strict";
+        if (oldValue && oldValue === value) {
+            return true;
+        }
+        else {
+            return new Promise(function (resolve) {
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'check_attribute',
+                    params: {
+                        collection: 'Customer',
+                        attr: attr,
+                        value: value
+                    }
+                }).then(
+                    function (response) {
+                        resolve(response.data.success || response.data.error.errorMessage);
+                    },
+                    function (err) {
+                        resolve(err)
+                    }
+                );
+            });
+        }
+    };
+    
     ctrl.selectedCustomer = null;
     
     ctrl.addCustomer = function () {
@@ -19,113 +46,148 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                 ctrl.selectedCustomer = result;
                 ctrl.selectedCustomerContacts = [];
             },
-            function (err) {
+            function () {
                 //-- do nothing
             }
         );
     };
     
-    ctrl.saveCustomer = function () {
-        ctrl.selectedCustomer.customerSaveProblem = false;
-        $http.post('/rpc', {
-            token: $scope.global.user.token,
-            name: 'update_customer_info',
-            params: ctrl.selectedCustomer
-        }).then(
-            function (response) {
-                if (!response.data.success) {
+    ctrl.saveCustomer = function (data) {
+        return new Promise(function (resolve) {
+            ctrl.selectedCustomer.customerSaveProblem = false;
+            data._id = ctrl.selectedCustomer._id;
+            $http.post('/rpc', {
+                token: $scope.global.user.token,
+                name: 'update_customer_info',
+                params: data
+            }).then(
+                function (response) {
+                    if (!response.data.success) {
+                        ctrl.selectedCustomer.customerSaveProblem = true;
+                    }
+                    resolve(response.data.success || response.data.error.errorMessage);
+                },
+                function () {
                     ctrl.selectedCustomer.customerSaveProblem = true;
+                    resolve('Network error');
                 }
-            },
-            function (err) {
-                ctrl.selectedCustomer.customerSaveProblem = true;
-            }
-        );
+            );
+        });
     };
     
-    ctrl.addCustomerContact = function(){
+    ctrl.addCustomerContact = function () {
         if (!ctrl.selectedCustomerContacts) ctrl.selectedCustomerContacts = [];
         //-- check if container empty row
-        let emptyContact = ctrl.selectedCustomerContacts.find(function(contact){
-           return !contact._id;
+        let emptyContact = ctrl.selectedCustomerContacts.find(function (contact) {
+            return !contact._id;
         });
         if (!emptyContact) {
             ctrl.selectedCustomerContacts.push({_id: 0});
         }
     };
     
-    ctrl.checkContact = function(data){
-        //console.log(data);
-    };
-    
-    ctrl.removeContact = function(id){
-        let removeIndex = ctrl.selectedCustomerContacts.findIndex(function(contact){
+    ctrl.removeContact = function (id) {
+        let removeIndex = ctrl.selectedCustomerContacts.findIndex(function (contact) {
             return contact._id === id;
         });
         if (removeIndex >= 0)
             ctrl.selectedCustomerContacts.splice(removeIndex, 1);
     };
     
-    ctrl.updateContact = function(id, newContact){
-        let updateIndex = ctrl.selectedCustomerContacts.findIndex(function(contact){
+    ctrl.updateContact = function (id, newContact) {
+        let updateIndex = ctrl.selectedCustomerContacts.findIndex(function (contact) {
             return contact._id === id;
         });
         if (updateIndex >= 0)
             ctrl.selectedCustomerContacts[updateIndex] = newContact;
     };
     
-    ctrl.updateCustomerContact = function(contact){
-        let data = {
-            token: $scope.global.user.token,
-            params: contact
-        };
-        data.name = contact._id? 'update_customer_contact' : 'add_customer_contact';
-        data.params.customerID = data.customerID || ctrl.selectedCustomer._id;
-        
-        $http.post('/rpc', data).then(
-            function(response){
-                if (response.data.success){
-                    ctrl.updateContact(contact._id, response.data.result);
-                }
-                else{
-                    contact.updateError = true;
-                }
-            },
-            function(err){
-                contact.updateError = true;
+    ctrl.updateCustomerContact = function (data, contact) {
+        return new Promise(function (resolve) {
+            let postData = {
+                token: $scope.global.user.token,
+                params: data
+            };
+            if (contact._id) {
+                postData.name = 'update_customer_contact';
+                postData.params._id = contact._id;
             }
-        );
+            else {
+                postData.name = 'add_customer_contact';
+                postData.params.customerID = ctrl.selectedCustomer._id;
+            }
+            $http.post('/rpc', postData).then(
+                function (response) {
+                    if (response.data.success) {
+                        ctrl.updateContact(contact._id, response.data.result);
+                    }
+                    resolve(response.data.success || response.data.error.errorMessage);
+                },
+                function (err) {
+                    console.log(err);
+                    resolve('Network error.');
+                }
+            );
+        });
     };
     
-    ctrl.cancelEditCustomerContact = function(contact){
+    ctrl.cancelEditCustomerContact = function (contact) {
         if (!contact._id)
             ctrl.removeContact(contact._id)
     };
     
-    
-    
-    ctrl.removeCustomerContact = function(contact, i18n_confirm_remove_customer_contact){
+    ctrl.removeCustomerContact = function (contact, i18n_confirm_remove_customer_contact) {
         if (!contact._id) {
             ctrl.removeContact(contact._id)
         }
-        else{
+        else {
             let ok = confirm(i18n_confirm_remove_customer_contact);
-            if (ok){
-                $http.post('/rpc', {token: $scope.global.user.token, name: 'remove_customer_contact', params: {_id: contact._id}}).then(
-                    function(response){
-                        if (response.data.success){
+            if (ok) {
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'remove_customer_contact',
+                    params: {_id: contact._id}
+                }).then(
+                    function (response) {
+                        if (response.data.success) {
                             ctrl.removeContact(contact._id);
                         }
-                        else{
-                            //-- TODO: remove failed
+                        else {
+                            alert(respone.data.error.errorMessage);
                         }
                     },
-                    function(err){
+                    function (err) {
                         //-- TODO: remove failed
                     }
                 );
             }
         }
+    };
+    
+    ctrl.checkContactAttribute = function (attr, value, contact) {
+        // if (value === contact[attr]) {
+        //     return true;
+        // }
+        // else {
+            return new Promise(function (resolve) {
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'check_attribute',
+                    params: {
+                        collection: 'CustomerContact',
+                        attr: attr,
+                        value: value
+                    }
+                }).then(
+                    function (response) {
+                        resolve(response.data.success || response.data.error.errorMessage);
+                    },
+                    function (err) {
+                        resolve('Network error');
+                    }
+                )
+            });
+        // }
     };
     
     ctrl.init = function () {
@@ -140,7 +202,6 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                         params: {query: params.data.term}
                     }).then(
                         function (response) {
-                            // console.log('response in transport: ', response);
                             if (response.data.success) {
                                 success(response.data.result);
                             }
@@ -188,8 +249,8 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                         ctrl.loadingCustomerInfo = false;
                         if (response.data.success) {
                             //-- load full customer info
-                            ctrl.selectedCustomer = response.data.results[0].success? response.data.results[0].result : null;
-                            ctrl.selectedCustomerContacts = response.data.results[1].success? response.data.results[1].result : null;
+                            ctrl.selectedCustomer = response.data.results[0].success ? response.data.results[0].result : null;
+                            ctrl.selectedCustomerContacts = response.data.results[1].success ? response.data.results[1].result : null;
                         }
                         else {
                             ctrl.loadCustomerError = true;

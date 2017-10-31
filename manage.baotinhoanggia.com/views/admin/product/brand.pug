@@ -1,0 +1,65 @@
+div.admin-product-brand(ng-controller='AdminProductBrandController as ctrl' ng-init='ctrl.init()')
+    div
+        div.row
+            div.col-xs-12.col-sm-6
+                div.panel-header-title #{__('product_brand')}
+
+    div.panel.panel-default
+        div.panel-body
+            div.text-center(ng-show='ctrl.initializing')
+                i.fa.fa-spinner.fa-spin
+            div(ng-hide='ctrl.initializing')
+                div.row
+                    div.col-xs-12.col-sm-6
+                        div.margin-bottom-15px
+                            div.row.flex
+                                div.col-xs-6.vf-center
+                                    label #{__('product_brand')}
+                                div.col-xs-6.text-right.vf-center
+                                    button.btn.btn-default.btn-sm(ng-click='ctrl.addBrand()')
+                                        i.fa.fa-plus
+                                        span &nbsp; #{__('add_')}
+                            div.margin-top-15px
+                                div.input-group.input-group-sm.margin-bottom-15px
+                                    span.input-group-addon
+                                        span.glyphicon.glyphicon-search
+                                    input.form-control(ng-model='ctrl.brandFilter' ng-change='ctrl.filterBrand()')
+
+                                div.text-center.no-data(ng-show='!ctrl.isNewBrand && (!ctrl.brands || !ctrl.brands.length)')
+                                    span #{__('no_data')}
+
+                                //div.brand(ng-show='ctrl.isNewBrand')
+                                    a(href="" editable-text="ctrl.newBrand.name" buttons="no" e-form='newBrandForm' oncancel='ctrl.cancelBrand()' onbeforesave='ctrl.updateBrand($data, ctrl.newBrand)') {{ ctrl.newBrand.name || "#{__('not_set')}"}}
+
+                                div.brand-wrapper(ng-repeat='brand in ctrl.filteredBrands')
+                                    div.brand(ng-class='{active: ctrl.selectedBrand._id === brand._id}' ng-click='ctrl.selectBrand(brand)')
+                                        form(editable-form='' name='rowform' onbeforesave='ctrl.updateBrand($data, brand)' shown='!brand._id')
+                                            div.row.flex
+                                                div.col-xs-9.vf-center
+                                                    div.row
+                                                        div.col-xs-6
+                                                            span(ng-hide='!brand.isBeingRemoved && ctrl.selectedBrand._id === brand._id') {{brand.name}}
+                                                            a(ng-show='!brand.isBeingRemoved && ctrl.selectedBrand._id === brand._id' href=""
+                                                                e-form='rowform' e-name='name' onbeforesave='ctrl.checkBrandAttribute("name", $data, brand.name)'
+                                                                editable-text="brand.name" buttons="no" e-required) {{ brand.name || "#{__('not_set')}"}}
+                                                        div.col-xs-6
+                                                            span(ng-hide='!brand.isBeingRemoved && (ctrl.selectedBrand._id === brand._id || !brand._id)') {{ctrl.originNameFromCode(brand.origin) || "#{__('not_set')}"}}
+                                                            a(ng-show='!brand.isBeingRemoved && ctrl.selectedBrand._id === brand._id' href=""
+                                                                e-form='rowform' e-name='origin' e-uib-typeahead='origin as origin.name for origin in ctrl.origins | filter:$viewValue' typeahead-editable='false'
+                                                                editable-text="ctrl.originNameFromCode(brand.origin)" buttons="no" e-required) {{ ctrl.originNameFromCode(brand.origin) || "#{__('not_set')}"}}
+
+                                                div.col-xs-3.vf-center.text-right
+                                                        span(ng-show='ctrl.selectedBrand._id === brand._id || brand.isBeingRemoved')
+                                                            span.buttons(ng-show='rowform.$visible')
+                                                                button.btn.btn-primary.btn-xs.margin-right-5px(type='submit', ng-disabled='rowform.$waiting')
+                                                                    i.fa.fa-floppy-o
+                                                                button.btn.btn-default.btn-xs.margin-right-5px(type='button', ng-disabled='rowform.$waiting', ng-click='rowform.$cancel(); ctrl.cancelBrand(brand)')
+                                                                    i.fa.fa-ban
+                                                            span.buttons(ng-show='!rowform.$visible')
+                                                                button.btn.btn-primary.btn-xs.margin-right-5px(type='button', ng-click='rowform.$show()')
+                                                                    i.fa.fa-pencil
+                                                                button.btn.btn-danger.btn-xs.margin-right-5px(ng-click='ctrl.removeBrand(brand)' ng-disabled='brand.isBeingRemoved')
+                                                                    i.fa.fa-trash(ng-hide='brand.isBeingRemoved')
+                                                                    i.fa.fa-spinner.fa-spin(ng-show='brand.isBeingRemoved')
+
+                                                        span.badge {{brand.size || "0"}}

@@ -30,7 +30,6 @@ app.controller('AdminSupplierAddDialogController', ['$uibModalInstance', '$scope
             function (err) {
                 "use strict";
                 $scope.processing = false;
-                console.log(err);
                 alert('Network error.');
             }
         );

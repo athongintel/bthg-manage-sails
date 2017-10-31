@@ -13,3 +13,60 @@ div(ng-controller='AdminProductAddController as ctrl' ng-init='ctrl.init()')
 
     div.panel.panel-default
         div.panel-body
+            div
+                div.row
+                    div.col-xs-12.col-sm-6
+                        div
+                            div.margin-bottom-15px
+                                div.row
+                                    div.col-xs-6
+                                        label #{__('product_group')}
+                                    div.col-xs-6.text-right
+                                        label
+                                            input(type='checkbox' ng-model='ctrl.keepGroup')
+                                            span &nbsp; #{__('keep_')}
+                                select#select_product_group.form-control
+
+                            div.margin-bottom-15px
+                                div.row
+                                    div.col-xs-6
+                                        label #{__('product_type')}
+                                    div.col-xs-6.text-right
+                                        label
+                                            input(type='checkbox' ng-model='ctrl.keepType')
+                                            span &nbsp; #{__('keep_')}
+                                select#select_product_type.form-control(ng-disabled='!ctrl.selectedProductGroup')
+
+                            div.margin-bottom-15px
+                                div.row
+                                    div.col-xs-6
+                                        label #{__('product_brand')}
+                                    div.col-xs-6.text-right
+                                        label
+                                            input(type='checkbox' ng-model='ctrl.keepBrand')
+                                            span &nbsp; #{__('keep_')}
+                                select#select_product_brand.form-control(ng-disabled='!ctrl.selectedProductType')
+
+                            div.margin-bottom-15px
+                                label #{__('model_')}
+                                input.form-control(ng-model='ctrl.productModel' ng-disabled='!ctrl.selectedProductBrand')
+
+                            div.margin-bottom-15px
+                                label #{__('description_')}
+                                input.form-control(ng-model='ctrl.productDescription' ng-disabled='!ctrl.productModel')
+
+                    div.col-xs-12.col-sm-6
+                        div
+                            div.margin-bottom-15px
+                                label #{__('product_images')}
+                            div.margin-bottom-15px
+                                label #{__('suppliers_')}
+            div.row.flex
+                div.col-xs-6.vf-center
+                    label
+                        input(type='checkbox' ng-model='ctrl.keepPage')
+                        span &nbsp; #{__('keep_page')}
+                div.col-xs-6.text-right.vf-center
+                    button.btn.btn-primary.action
+                        span #{__('add_')}
+

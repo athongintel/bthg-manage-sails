@@ -2,50 +2,45 @@ script(type="text/ng-template" id="adminSupplierAddDialog")
     .modal-header
         button.close(type='button', ng-click='close()') x
         div.header #{__('add_supplier')}
-    .modal-body
-        fieldset(ng-disabled='processing')
-            div
-                label #{__('name_')}
-                div.form-group.has-feedback
-                    input.form-control(ng-model="name")
-            div
-                label #{__('address_')}
-                div.form-group.has-feedback
-                    input.form-control(ng-model="address")
+    .modal-body(ng-init='init()')
+        form(editable-form='', name="addSupplierForm" onaftersave="addSupplier()" shown="true")
+            fieldset(ng-disabled='processing')
+                div.margin-bottom-15px
+                    label #{__('name_')} *
+                    div(editable-text="name" e-name="name" onbeforesave='checkSupplierAttribute("name", $data)' e-required) {{ name || "#{__('not_set')}"}}
 
-            div
-                label #{__('phone_numer')}
-                div.form-group.has-feedback
-                    input.form-control(ng-model="phoneNumber")
+                div.margin-bottom-15px
+                    label #{__('address_')}
+                    div(editable-text="address" e-name="address") {{ address || "#{__('not_set')}"}}
 
-            div
-                label #{__('website_')}
-                div.form-group.has-feedback
-                    input.form-control(ng-model="website")
+                div.margin-bottom-15px
+                    label #{__('phone_number')}
+                    div(editable-text="phoneNumber" e-name="phoneNumber") {{ phoneNumber || "#{__('not_set')}"}}
 
-            div
-                label #{__('iban_')}
-                div.form-group.has-feedback
-                    input.form-control(ng-model="iban")
+                div.margin-bottom-15px
+                    label #{__('website_')}
+                    div(editable-text="website" e-name="website") {{ website || "#{__('not_set')}"}}
 
-            div
-                label #{__('bank_')}
-                div.form-group.has-feedback
-                    input.form-control(ng-model="bank")
+                div.margin-bottom-15px
+                    label #{__('iban_')}
+                    div(editable-text="iban" e-name="iban") {{ iban || "#{__('not_set')}"}}
 
-            div
-                label #{__('bank_address')}
-                div.form-group.has-feedback
-                    input.form-control(ng-model="bankAddress")
+                div.margin-bottom-15px
+                    label #{__('bank_')}
+                    div(editable-text="bank" e-name="bank") {{ bank || "#{__('not_set')}"}}
 
-            div
-                label #{__('switf_')}
-                div.form-group.has-feedback
-                    input.form-control(ng-model="swift")
+                div.margin-bottom-15px
+                    label #{__('bank_address')}
+                    div(editable-text="bankAddress" e-name="bankAddress") {{ bankAddress || "#{__('not_set')}"}}
 
-            div.text-right
-                button.action.btn.btn-primary(ng-disabled='!name' ng-click='addSupplier()')
-                    span(ng-show='processing')
-                        i.fa.fa-spinner.fa-spin
-                        span &nbsp;
-                    span #{__('add_')}
+                div.margin-bottom-15px
+                    label #{__('swift_')}
+                    div(editable-text="swift" e-name="swift") {{ swift || "#{__('not_set')}"}}
+
+
+                div.text-right
+                    button.action.btn.btn-primary(type='submit')
+                        span(ng-show='processing')
+                            i.fa.fa-spinner.fa-spin
+                            span &nbsp;
+                        span #{__('add_')}

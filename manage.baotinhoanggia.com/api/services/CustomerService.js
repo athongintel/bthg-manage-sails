@@ -6,8 +6,8 @@ module.exports = {
         "use strict";
         /*
             params:{
-                [required] name: customer name,
-                [required] code: the shortened code of customer,
+                [required, unique] name: customer name,
+                [required, unique] code: the shortened code of customer,
                 phoneNumber,
                 faxNumber,
                 address
@@ -15,7 +15,16 @@ module.exports = {
          */
         
         try {
-            let customer = new _app.model.Customer({
+            //-- check for unique name and code
+            let customer = await _app.model.Customer.findOne({name: params.name});
+            if (customer)
+                return sysUtils.returnError(_app.errors.DUPLICATED_ERROR);
+    
+            customer = await _app.model.Customer.findOne({code: params.code});
+            if (customer)
+                return sysUtils.returnError(_app.errors.DUPLICATED_ERROR);
+            
+            customer = new _app.model.Customer({
                 name: params.name,
                 code: params.code,
                 phoneNumber: params.phoneNumber,
@@ -95,7 +104,13 @@ module.exports = {
             }
          */
         try {
-            let customers = await _app.model.Customer.find({name: new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'ig')}).select('_id name');
+            let customers = await _app.model.Customer.find({}).select('_id name');
+            if (params.query){
+                let regex = new RegExp(`.*${params.query}.*`,'ig');
+                customers = customers.filter(c=>{
+                    return !!regex.exec(c.name);
+                });
+            }
             return sysUtils.returnSuccess(customers);
         }
         catch (err) {

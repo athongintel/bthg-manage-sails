@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const sysUtils = require('../../utils/system');
 
 module.exports = {
+    
+    //----------- product category -------------
+    
     addProductCategory: async function (principal, params) {
         "use strict";
         /*
@@ -93,6 +96,7 @@ module.exports = {
         "use strict";
         /*
             params: {
+                query: query by name
                 with_count: count the product type of each product
             }
          */
@@ -117,6 +121,12 @@ module.exports = {
             else {
                 categories = await _app.model.ProductGroup.find({});
             }
+            if (params.query) {
+                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`,'gi');
+                categories = categories.filter(cat => {
+                    return !!regex.exec(cat.name);
+                });
+            }
             return sysUtils.returnSuccess(categories);
         }
         catch (err) {
@@ -125,6 +135,139 @@ module.exports = {
         }
     },
     
+    //----------- product brand -------------
+    
+    addProductBrand: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                [required] name: brand name
+                origin: brand origin
+            }
+         */
+        try {
+            //-- check if the name existed
+            
+            let brand = await _app.model.ProductBrand.findOne({name: params.name});
+            if (brand)
+                return sysUtils.returnError(_app.errors.DUPLICATED_ERROR);
+            
+            brand = new _app.model.ProductBrand({
+                name: params.name,
+                origin: params.origin
+            });
+            
+            brand = await brand.save();
+            
+            return sysUtils.returnSuccess(brand);
+        }
+        catch (err) {
+            console.log('addProductBrand:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    updateProductBrand: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                [required] _id: the id of product category
+                [required] name: new product category name
+                origin,
+            }
+         */
+        try {
+            //-- check if the name existed
+            
+            let brand = await _app.model.ProductBrand.findById(params._id);
+            if (!brand)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            let namedBrand = await _app.model.ProductBrand.findOne({name: params.name});
+            if (namedBrand && namedBrand.name === params.name && String(namedBrand._id) !== String(brand._id))
+                if (brand)
+                    return sysUtils.returnError(_app.errors.DUPLICATED_ERROR);
+            
+            brand.name = params.name;
+            brand.origin = params.origin;
+            
+            brand = await brand.save();
+            
+            return sysUtils.returnSuccess(brand);
+        }
+        catch (err) {
+            console.log('updateProductBrand:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    removeProductBrand: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                [required] _id: the id of product brand
+            }
+         */
+        try {
+            
+            let brand = await _app.model.ProductBrand.findById(params._id);
+            if (!brand)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            brand = await _app.model.ProductBrand.findByIdAndRemove(brand._id);
+            
+            return sysUtils.returnSuccess(brand);
+        }
+        catch (err) {
+            console.log('removeProductBrand:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    getAllProductBrands: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                query: query by name
+                with_count: count the product type of each product
+            }
+         */
+        try {
+            let brands;
+            if (params.with_count) {
+                brands = await _app.model.ProductBrand.aggregate([
+                    {
+                        $lookup: {
+                            from: "product",
+                            localField: "_id",
+                            foreignField: "brandID",
+                            as: "products"
+                        }
+                    }
+                ]);
+                brands.forEach(brand => {
+                    brand.size = brand.products.length;
+                    delete brand.products;
+                });
+            }
+            else {
+                brands = await _app.model.ProductBrand.find({});
+            }
+            if (params.query){
+                let regex = new RegExp(`.*${params.query}.*`, 'ig');
+                brands = brands.filter(b=>{
+                    return !!regex.exec(b.name);
+                });
+            }
+            return sysUtils.returnSuccess(brands);
+        }
+        catch (err) {
+            console.log('getAllProductBrands:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    //----------- product type -------------
     
     addProductType: async function (principal, params) {
         "use strict";
@@ -223,6 +366,7 @@ module.exports = {
         /*
             params: {
                 [required] groupID,
+                query: filter by name
                 with_count: count the product of each type
             }
          */
@@ -249,6 +393,13 @@ module.exports = {
             }
             else {
                 types = await _app.model.ProductType.find({groupID: params.groupID});
+            }
+            
+            if (params.query){
+                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'ig');
+                types = types.filter(t=>{
+                    return !!regex.exec(t.name);
+                })
             }
             return sysUtils.returnSuccess(types);
         }

@@ -2,9 +2,12 @@ const PO = require('../policies/Policies');
 
 const UserService = require('../services/UserService');
 const CustomerService = require('../services/CustomerService');
+const SupplierService = require('../services/SupplierService');
+const SystemService = require('../services/SystemService');
 
 const actions = {
     'login': {policies: [], action: UserService.login, validation: {required: ['username', 'authMethod', 'authData']}},
+    'check_attribute': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.checkAttribute, validation: {required: ['collection', 'attr', 'value']}},
     
     'add_customer': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.addCustomer, validation: {required: ['name', 'code']}},
     'update_customer_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.updateCustomerInfo, validation: {required: ['_id', 'name', 'code']}},
@@ -28,6 +31,11 @@ const actions = {
     'remove_product_category': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductCategory, validation: {required: ['_id']}},
     'update_product_category': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProductCategory, validation: {required: ['_id', 'name']}},
     'get_all_product_categories': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllProductCategories, validation: {}},
+    
+    'add_product_brand': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.addProductBrand, validation: {required: ['name']}},
+    'remove_product_brand': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductBrand, validation: {required: ['_id']}},
+    'update_product_brand': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProductBrand, validation: {required: ['_id', 'name']}},
+    'get_all_product_brands': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllProductBrands, validation: {}},
     
     'add_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.addProductType, validation: {required: ['groupID', 'name']}},
     'remove_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductType, validation: {required: ['_id']}},
@@ -80,7 +88,7 @@ let runOneCommand = async function (principal, commandName, params) {
     if (actions[commandName].validation){
         if (actions[commandName].validation.required && actions[commandName].validation.required.length){
             let missing = actions[commandName].validation.required.some(attr=>{
-               if (params[attr] === undefined || params[attr] === null){
+               if (params[attr] === '' || params[attr] === undefined || params[attr] === null){
                    return true;
                }
             });

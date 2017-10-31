@@ -31,6 +31,10 @@ app.config(function ($routeProvider) {
             templateUrl: '/admin/product/category',
             controller: 'AdminProductCategoryController'
         })
+        .when('/admin/product/brand', {
+            templateUrl: '/admin/product/brand',
+            controller: 'AdminProductBrandController'
+        })
 });
 
 app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scope, $sessionStorage) {
