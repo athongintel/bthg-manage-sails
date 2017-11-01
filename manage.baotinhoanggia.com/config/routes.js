@@ -33,4 +33,8 @@ module.exports.routes = {
         view: 'admin/product/brand', locals: {layout: false}
     },
     
+    'GET /admin/product/list': {
+        view: 'admin/product/list', locals: {layout: false}
+    },
+    
 };

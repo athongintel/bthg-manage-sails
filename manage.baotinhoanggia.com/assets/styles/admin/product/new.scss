@@ -43,11 +43,11 @@
         }
         .info-float{
             position: absolute;
-            top: 2px;
+            top: 0px;
             right: 4px;
             font-size: 26px;
         }
-        .close{
+        .close-float{
             opacity: 0.5;
             &:hover{
                 opacity:0.9;

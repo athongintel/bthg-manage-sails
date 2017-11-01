@@ -141,4 +141,31 @@ module.exports = {
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     },
+    
+    filterCollection: async function (principal, params) {
+        "use strict";
+        /*
+            params:{
+                [required] collection: collection to be checked
+                [required] filter: array of {attr, value}
+            }
+         */
+        try {
+            if (!_app.model[params.collection])
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            let promise = _app.model[params.collection].find();
+            params.filter.forEach(pair => {
+                promise = promise.where(pair.attr, pair.value);
+            });
+            
+            let result = await promise.exec();
+            
+            return sysUtils.returnSuccess(result);
+        }
+        catch (err) {
+            console.log('filterCollection:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
 };

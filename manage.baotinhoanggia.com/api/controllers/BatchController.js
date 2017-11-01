@@ -10,6 +10,7 @@ const sysUtils = require('../../utils/system');
 const actions = {
     'login': {policies: [], action: UserService.login, validation: {required: ['username', 'authMethod', 'authData']}},
     'check_attribute': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.checkAttribute, validation: {required: ['collection', 'pairs']}},
+    'filter_collection': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.filterCollection, validation: {required: ['collection', 'filter']}},
     
     'add_customer': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.addCustomer, validation: {required: ['name', 'code']}},
     'update_customer_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.updateCustomerInfo, validation: {required: ['_id', 'name', 'code']}},
@@ -45,6 +46,7 @@ const actions = {
     'get_all_types_from_category': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllTypesFromCategory, validation: {required: ['groupID']}},
     
     'add_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.addProduct, validation: {required: ['typeID', 'brandID', 'model']}},
+    
 };
 
 /*

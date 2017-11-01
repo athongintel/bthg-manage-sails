@@ -1,4 +1,4 @@
-let app = document.app = angular.module('app', ['ngRoute', 'ngStorage', 'ui.bootstrap', 'ngSanitize', 'xeditable', 'ngFileUpload']);
+let app = document.app = angular.module('app', ['ngRoute', 'ngStorage', 'ui.bootstrap', 'ngSanitize', 'xeditable', 'ngFileUpload', 'cleave.js']);
 
 app.run(function(editableOptions) {
     editableOptions.theme = 'bs3';
@@ -13,27 +13,24 @@ app.config(function ($routeProvider) {
     $routeProvider
         .when('/admin/index', {
             templateUrl: '/admin/index',
-            controller: 'AdminIndexController'
         })
         .when('/admin/customer', {
             templateUrl: '/admin/customer',
-            controller: 'AdminCustomerController'
         })
         .when('/admin/supplier', {
             templateUrl: '/admin/supplier',
-            controller: 'AdminSupplierController'
         })
         .when('/admin/product/new', {
             templateUrl: '/admin/product/new',
-            controller: 'AdminProductAddController'
         })
         .when('/admin/product/category', {
             templateUrl: '/admin/product/category',
-            controller: 'AdminProductCategoryController'
         })
         .when('/admin/product/brand', {
             templateUrl: '/admin/product/brand',
-            controller: 'AdminProductBrandController'
+        })
+        .when('/admin/product/list', {
+            templateUrl: '/admin/product/list',
         })
 });
 
@@ -48,6 +45,12 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
     $scope.isPath = function(path){
         let subPath = document.location.pathname + document.location.search + document.location.hash;
         return subPath.indexOf(path) === 3;
+    };
+    
+    $scope.cleaveOptions = {
+        currency: {
+            numeral: true
+        }
     };
     
     $scope.origins = [
@@ -302,6 +305,12 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
         return origin ? origin.name : null;
     };
     
+    $scope.global.utils = {
+        regexEscape: function(exp){
+            "use strict";
+            return String(exp).replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+        }
+    };
     $scope.global.locale = (Cookies.get('lang') || window.navigator.language || 'en');
     $scope.global.data = {};
     

@@ -62,5 +62,9 @@
 	"suppliers_": "suppliers_",
 	"keep_": "keep_",
 	"keep_page": "keep_page",
-	"stock_init": "stock_init"
+	"stock_init": "stock_init",
+	"product_list": "product_list",
+	"price_init": "price_init",
+	"model_filter": "model_filter",
+	"no_result": "no_result"
 }

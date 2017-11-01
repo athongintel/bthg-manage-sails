@@ -62,12 +62,15 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                     label #{__('stock_init')}
                                     input.form-control(type='number' ng-model='ctrl.product.initStock')
                                 div.margin-bottom-15px
+                                    label #{__('price_init')}
+                                    input.form-control(cleave="cleaveOptions.currency" type='text' ng-model='ctrl.product.initPrice' )
+                                div.margin-bottom-15px
                                     label #{__('product_images')}
                                     div.panel.panel-default
                                         div.panel-body(ngf-drop-disabled='ctrl.addingProduct' ngf-drop="ctrl.loadProductFiles($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'", ngf-max-size='1MB')
                                             div.img-wrapper(ng-repeat='image in ctrl.productImages')
                                                 img(ngf-thumbnail="image")
-                                                span.info-float.close.text-danger(ng-click='ctrl.removeProductImage(image)' ng-hide='image.isBeingUploaded || (image.uploadSucceeded !== null || image.uploadSucceeded !== undefined)')
+                                                span.info-float.close-float.text-danger(ng-click='ctrl.removeProductImage(image)' ng-hide='image.isBeingUploaded || image.uploadProceeded')
                                                     i.fa.fa-minus-circle
                                                 span.info-float(ng-show='image.isBeingUploaded')
                                                     i.fa.fa-refresh.fa-spin

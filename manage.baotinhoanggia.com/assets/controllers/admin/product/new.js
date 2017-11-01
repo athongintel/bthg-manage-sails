@@ -49,14 +49,14 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                                     //-- reopen form
                                     $timeout(function () {
                                         $scope.addProductForm.$show();
-                                    }, 200);
+                                    }, 100);
                                     resolve(true);
                                 }
                                 else {
                                     //-- redirect to product find
                                     document.location.href = `#/admin/product/list?productID=${response.data.result.product._id}`;
                                 }
-                            });
+                            }, 50);
                         };
                         //-- upload photos, match url and photos
                         if (ctrl.productImages) {
@@ -73,6 +73,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                                         "use strict";
                                         ctrl.productImages[i].isBeingUploaded = false;
                                         ctrl.productImages[i].uploadSucceeded = true;
+                                        ctrl.productImages[i].uploadProceeded = true;
                                         ctrl.uploadedCount++;
                                         if (ctrl.uploadedCount === ctrl.productImages.length) {
                                             ctrl.uploadingPhotos = false;
@@ -82,6 +83,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                                     function () {
                                         ctrl.productImages[i].isBeingUploaded = false;
                                         ctrl.productImages[i].uploadSucceeded = false;
+                                        ctrl.productImages[i].uploadProceeded = true;
                                         ctrl.uploadedCount++;
                                         if (ctrl.uploadedCount === ctrl.productImages.length) {
                                             ctrl.uploadingPhotos = false;
