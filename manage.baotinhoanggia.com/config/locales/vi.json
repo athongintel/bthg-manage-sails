@@ -67,5 +67,9 @@
 	"price_init": "price_init",
 	"model_filter": "model_filter",
 	"no_result": "no_result",
-	"in_stock": "in_stock"
+	"in_stock": "in_stock",
+	"current_import_price": "current_import_price",
+	"current_export_price": "current_export_price",
+	"confirm_remove_product_photo": "confirm_remove_product_photo",
+	"company_info": "company_info"
 }

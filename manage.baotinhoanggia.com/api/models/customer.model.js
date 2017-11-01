@@ -10,6 +10,7 @@ const customerSchema = new mongoose.Schema({
     phoneNumber: {type: String},
     faxNumber: {type: String},
     address: {type: String},
+    companyInfo: {type: String},
 });
 
 module.exports = mongoose.model('Customer', customerSchema, 'customer');

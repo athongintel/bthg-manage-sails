@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const Cron = require('cron').CronJob;
+const BigNumber = require('bignumber.js');
 
 const backupDir = path.join(__dirname, '../backup-db');
 
@@ -98,6 +99,7 @@ module.exports = {
         "use strict";
         
         moment.tz.setDefault(sails.config.TIME_ZONE);
+        BigNumber.config({DECIMAL_PLACES: sails.config.CURRENCY_DECIMAL_PLACES});
         
         aws.config.update({
             accessKeyId: sails.config.AWS_API_ID,

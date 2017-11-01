@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
     username: {type: String, required: true, unique: true},
     userClass: {type: Array, default: [constants.NORMAL_USER]},
     accountStatus: {type: Number, required: true, default: constants.ACCOUNT_AVAIL},
+    branchID: {type: mongoose.Schema.ObjectId, required: true, ref: 'Branch'},
     firstName: {type: String},
     lastName: {type: String},
     email: {type: String},

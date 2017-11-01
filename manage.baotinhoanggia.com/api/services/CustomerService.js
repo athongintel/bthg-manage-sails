@@ -10,7 +10,8 @@ module.exports = {
                 [required, unique] code: the shortened code of customer,
                 phoneNumber,
                 faxNumber,
-                address
+                address,
+                companyInfo,
             }
          */
         
@@ -29,7 +30,8 @@ module.exports = {
                 code: params.code,
                 phoneNumber: params.phoneNumber,
                 faxNumber: params.faxNumber,
-                address: params.address
+                address: params.address,
+                companyInfo: params.companyInfo
             });
             
             customer = await customer.save();

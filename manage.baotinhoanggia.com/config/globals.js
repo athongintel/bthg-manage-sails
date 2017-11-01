@@ -11,7 +11,8 @@ _app.model = {
     ProductType: require('../api/models/productType.model'),
     ProductBrand: require('../api/models/productBrand.model'),
     Product: require('../api/models/product.model'),
-    Stock: require('../api/models/stock.model'),
+    InStock: require('../api/models/inStock.model'),
+    Branch: require('../api/models/branch.model'),
 };
 
 _app.errors = {

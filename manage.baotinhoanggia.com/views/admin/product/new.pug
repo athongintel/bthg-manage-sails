@@ -11,7 +11,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                             span &nbsp;
                         span #{__('add_customer')}
 
-    div.panel.panel-default
+    div.panel.panel-default.main-panel
         div.panel-body
             form(editable-form='', name='addProductForm' shown='true' onbeforesave='ctrl.addProduct($data)')
                 fieldset(ng-disabled='ctrl.addingProduct || (ctrl.uploadingPhotos && ctrl.uploadedCount < ctrl.productImages.length)')
@@ -60,10 +60,13 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                             div
                                 div.margin-bottom-15px
                                     label #{__('stock_init')}
-                                    input.form-control(type='number' ng-model='ctrl.product.initStock')
+                                    input.form-control(type='number' ng-model='ctrl.product.initInStock')
                                 div.margin-bottom-15px
-                                    label #{__('price_init')}
-                                    input.form-control(cleave="cleaveOptions.currency" type='text' ng-model='ctrl.product.initPrice' )
+                                    label #{__('in_price_init')}
+                                    input.form-control(cleave="cleaveOptions.currency" type='text' ng-model='ctrl.product.initInPrice' )
+                                div.margin-bottom-15px
+                                    label #{__('out_price_init')}
+                                    input.form-control(cleave="cleaveOptions.currency" type='text' ng-model='ctrl.product.initOutPrice' )
                                 div.margin-bottom-15px
                                     label #{__('product_images')}
                                     div.panel.panel-default

@@ -9,35 +9,44 @@ let createSuperAdminAccount = async function () {
     "use strict";
     //-- check if super admin existed
     let superAdmin = await _app.model.User.findOne({userClass: _app.model.User.constants.SUPER_ADMIN});
-    if (!superAdmin) {
-        console.log('- creating super admin account');
-        
-        let user = new _app.model.User({
-            username: sails.config.SUPER_ADMIN_USERNAME,
-            userClass: [_app.model.User.constants.NORMAL_USER, _app.model.User.constants.SUPER_ADMIN],
-        });
-        
-        user = await user.save();
-        
-        let salt = randomstring.generate(sails.config.SALT_LENGTH);
-        let hashPassword = await bcryptUtils.hash(`${sails.config.SUPER_ADMIN_DEFAULT_PASSWORD}${salt}`);
-        
-        let auth = new _app.model.Auth({
-            userID: user._id,
-            authMethod: _app.model.Auth.constants.AUTH_USERNAME,
-            extra1: sails.config.SUPER_ADMIN_USERNAME,
-            extra2: hashPassword,
-            extra3: salt
-        });
-        
-        await auth.save();
-    }
+    if (superAdmin)
+        return sysUtils.returnSuccess();
+    
+    console.log('- creating super admin account');
+    
+    let headerQuarter = await _app.model.Branch.findOne({type: _app.model.Branch.constants.BRANCH_HEADQUARTER});
+    if (!headerQuarter)
+        return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+    
+    let user = new _app.model.User({
+        username: sails.config.SUPER_ADMIN_USERNAME,
+        branchID: headerQuarter._id,
+        userClass: [_app.model.User.constants.NORMAL_USER, _app.model.User.constants.SUPER_ADMIN],
+    });
+    
+    user = await user.save();
+    
+    let salt = randomstring.generate(sails.config.SALT_LENGTH);
+    let hashPassword = await bcryptUtils.hash(`${sails.config.SUPER_ADMIN_DEFAULT_PASSWORD}${salt}`);
+    
+    let auth = new _app.model.Auth({
+        userID: user._id,
+        authMethod: _app.model.Auth.constants.AUTH_USERNAME,
+        extra1: sails.config.SUPER_ADMIN_USERNAME,
+        extra2: hashPassword,
+        extra3: salt
+    });
+    
+    await auth.save();
+    
+    return sysUtils.returnSuccess();
+    
 };
 
 let generateUserToken = async function (userData) {
     return await new Promise((resolve, reject) => {
         jwt.sign(userData, sails.config.JWT_KEY, {expiresIn: "12h"}, function (err, token) {
-            return resolve(!err && token? token : null);
+            return resolve(!err && token ? token : null);
         });
     });
 };
@@ -48,7 +57,8 @@ module.exports = {
     init: async function (params) {
         "use strict";
         try {
-            await createSuperAdminAccount();
+            let result = await createSuperAdminAccount();
+            if (!result.success) return result;
             return sysUtils.returnSuccess();
         }
         catch (err) {

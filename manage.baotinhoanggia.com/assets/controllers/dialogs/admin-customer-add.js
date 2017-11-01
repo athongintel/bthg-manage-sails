@@ -13,7 +13,8 @@ app.controller('AdminCustomerAddDialogController', ['$uibModalInstance', '$scope
                 code: $scope.code,
                 phoneNumber: $scope.phoneNumber,
                 faxNumber: $scope.faxNumber,
-                address: $scope.address
+                address: $scope.address,
+                companyInfo: $scope.companyInfo
             }
         }).then(
             function (response) {

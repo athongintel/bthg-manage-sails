@@ -47,6 +47,8 @@ const actions = {
     
     'add_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.addProduct, validation: {required: ['typeID', 'brandID', 'model']}},
     'get_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getProduct, validation: {required: ['_id']}},
+    'update_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProduct, validation: {required: ['_id', 'model']}},
+    'remove_product_photo': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductPhoto, validation: {required: ['_id', 'fileName']}},
 };
 
 /*

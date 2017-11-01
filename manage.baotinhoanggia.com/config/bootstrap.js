@@ -17,7 +17,7 @@ module.exports.bootstrap = function (cb) {
         try {
             
             let initResult;
-            let services = ['SystemService', 'UserService'];
+            let services = ['SystemService', 'BranchService', 'UserService'];
             for (let i = 0; i < services.length; i++) {
                 console.log(`Init ${services[i]}...`);
                 initResult = await require(`../api/services/${services[i]}`).init();

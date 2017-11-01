@@ -11,7 +11,7 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                             span &nbsp;
                         span #{__('add_customer')}
 
-    div.panel.panel-default
+    div.panel.panel-default.main-panel
         div.panel-body
             div
                 label #{__('search_customer')}
@@ -57,6 +57,10 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                         div.margin-bottom-15px
                             label #{__('address_')}
                             div(editable-text="ctrl.selectedCustomer.address" e-name="address") {{ctrl.selectedCustomer.address || "#{__('not_set')}"}}
+
+                        div.margin-bottom-15px
+                            label #{__('company_info')}
+                            div(editable-text="ctrl.selectedCustomer.companyInfo" e-name="companyInfo") {{ctrl.selectedCustomer.companyInfo || "#{__('not_set')}"}}
 
                         div.text-right(ng-show='customerEditForm.$visible')
                             button.btn.btn-default(type="button" ng-disabled='customerEditForm.$waiting' ng-click='customerEditForm.$cancel()')

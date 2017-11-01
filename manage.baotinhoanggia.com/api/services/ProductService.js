@@ -1,3 +1,4 @@
+const BigNumber = require('bignumber.js');
 const mongoose = require('mongoose');
 const sysUtils = require('../../utils/system');
 
@@ -448,9 +449,10 @@ module.exports = {
             let product = new _app.model.Product(productData);
             product = await product.save();
             
-            if (params.initStock) {
-                product.stockPeek = params.initStock;
-                let stock = new _app.model.Stock({
+            if (params.initInStock && params.initInPrice && params.initOutPrice) {
+                product.stockPeek = params.initInStock;
+                
+                let stock = new _app.model.InStock({
                     productID: product._id,
                     quantity: params.initStock,
                     metaInfo: _app.model.Stock.constants.STOCK_INIT_STOCK,
@@ -470,26 +472,106 @@ module.exports = {
                     let imageUrls = [];
                     let uploadUrls = [];
                     for (let i = 0; i < photoCount; i++) {
-                        let fileName = `product-${product._id}-photo${i + 1}`;
-                        let objectPath = 'product-photos/' + fileName;
-                        imageUrls.push(`https://${sails.config.S3_ASSET_BUCKET}.s3.amazonaws.com/${objectPath}`);
+                        let fileName = `product-${product._id}-photo${Date.now()}`;
+                        let objectPath = sails.config.PRODUCT_PHOTO_BUCKET_PREFIX + '/' + fileName;
                         
-                        let url = await _app.S3.getSignedUrl('putObject', {
+                        let url = `https://${sails.config.S3_ASSET_BUCKET}.s3.amazonaws.com/${objectPath}`;
+                        imageUrls.push(url);
+                        
+                        let uploadUrl = await _app.S3.getSignedUrl('putObject', {
                             Bucket: sails.config.S3_ASSET_BUCKET,
                             Key: objectPath,
                             Expires: sails.config.PRESIGNED_URL_TIMEOUT_SEC,
                             ContentType: 'image/*'
                         });
-                        uploadUrls.push(url);
+                        uploadUrls.push(uploadUrl);
+    
+                        product.photos.push({
+                            fileName: fileName,
+                            url: url
+                        });
                     }
                     
                     //-- update to product
-                    product.photos = imageUrls;
                     product = await product.save();
                     returnObject.product = product;
                     returnObject.uploadUrls = uploadUrls;
                 }
             }
+            
+            return sysUtils.returnSuccess(returnObject);
+            
+        }
+        catch (err) {
+            console.log('addProduct:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    updateProduct: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                [required] _id: id of the product,
+                [required, unique] model: the product model,
+                description,
+                supplierIDs,
+                addedPhotos,
+            }
+         */
+        try {
+            let product = await _app.model.Product.findById(params._id);
+            if (!product)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            product.model = params.model;
+            product.description = params.description;
+            product.supplierIDs = params.supplierIDs;
+            
+            let returnObject = {};
+            
+            //-- generate photo upload url
+            if (!isNaN(params.addedPhotos)) {
+                let photoCount = Number(params.addedPhotos);
+                if (photoCount > 0) {
+                    photoCount = Math.min(photoCount, sails.config.PRODUCT_MAX_PHOTO - product.photos.length);
+                    
+                    //-- return a pre-signed url to upload logo
+                    let imageUrls = [];
+                    let uploadUrls = [];
+                    for (let i = 0; i < photoCount; i++) {
+                        let fileName = `product-${product._id}-photo${Date.now()}`;
+                        let objectPath = sails.config.PRODUCT_PHOTO_BUCKET_PREFIX + '/' + fileName;
+                        
+                        let url = `https://${sails.config.S3_ASSET_BUCKET}.s3.amazonaws.com/${objectPath}`;
+                        imageUrls.push(url);
+                        
+                        let uploadUrl = await _app.S3.getSignedUrl('putObject', {
+                            Bucket: sails.config.S3_ASSET_BUCKET,
+                            Key: objectPath,
+                            Expires: sails.config.PRESIGNED_URL_TIMEOUT_SEC,
+                            ContentType: 'image/*'
+                        });
+                        uploadUrls.push(uploadUrl);
+                        
+                        product.photos.push({
+                            fileName: fileName,
+                            url: url
+                        });
+                    }
+                    
+                    //-- update to product
+                    product = await product.save();
+                    returnObject.uploadUrls = uploadUrls;
+                }
+            }
+            
+            //-- return a full object
+            let productFull = await ProductService.getProduct(principal, {_id: product._id, full_info: true});
+            if (!productFull.success)
+                return productFull;
+            
+            returnObject.product = productFull.result;
             
             return sysUtils.returnSuccess(returnObject);
             
@@ -511,40 +593,23 @@ module.exports = {
         try {
             let product;
             if (params.full_info) {
-                // product = await _app.model.Product.aggregate([
-                //     {
-                //         $match: {_id: mongoose.Types.ObjectId(params._id)}
-                //     },
-                //     {
-                //         $lookup: {
-                //             from: 'productType',
-                //             localField: 'typeID',
-                //             foreignField: '_id',
-                //             as: 'typeID'
-                //         },
-                //     },
-                //     {
-                //         $lookup: {
-                //             from: 'productBrand',
-                //             localField: 'brandID',
-                //             foreignField: '_id',
-                //             as: 'brandID'
-                //         },
-                //     },
-                //     {
-                //         $lookup: {
-                //             from: 'supplier',
-                //             localField: 'supplierIDs',
-                //             foreignField: '_id',
-                //             as: 'supplierIDs'
-                //         },
-                //     }
-                // ]);
-                product = await _app.model.Product.findById(params._id).populate('typeID').populate('brandID').populate('supplierIDs').exec();
                 
-                //-- query for in stock
+                product = await _app.model.Product.findById(params._id).populate('typeID').populate('brandID').populate('supplierIDs').lean().exec();
                 
-                console.log(product);
+                //-- query for available
+                let inStocks = await _app.model.InStock.find({productID: product._id});
+                let outStocks = await _app.model.OutStock.find({productID: product._id});
+                //-- sum
+                let sum = 0;
+                inStocks.forEach(stock=>{
+                   sum += stock.quantity;
+                });
+    
+                outStocks.forEach(stock=>{
+                    sum -= stock.quantity;
+                });
+                
+                product.available = sum;
             }
             else {
                 product = await _app.model.Product.findById(params._id);
@@ -557,4 +622,43 @@ module.exports = {
         }
     },
     
+    removeProductPhoto: async function(principal, params){
+        "use strict";
+        "use strict";
+        /*
+            params: {
+                [required] _id: product id
+                fileName: the file name of product photo
+            }
+         */
+        try {
+            let product = await _app.model.Product.findById(params._id);
+            if (!product)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            let index = product.photos.findIndex(p=>{
+                return p.fileName === params.fileName;
+            });
+            
+            if (index < 0)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            //-- call s3 to remove file
+            let s3Params = {
+                Bucket: sails.config.S3_ASSET_BUCKET,
+                Key: sails.config.PRODUCT_PHOTO_BUCKET_PREFIX + '/' + product.photos[index].fileName
+            };
+            await _app.S3.deleteObject(s3Params).promise();
+            
+            //-- update database
+            product.photos.splice(index, 1);
+            await product.save();
+            
+            return sysUtils.returnSuccess();
+        }
+        catch (err) {
+            console.log('removeProductPhoto:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    }
 };

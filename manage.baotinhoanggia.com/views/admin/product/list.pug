@@ -4,7 +4,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
             div.col-xs-12.col-sm-6
                 div.panel-header-title #{__('product_list')}
 
-    div.panel.panel-default
+    div.panel.panel-default.main-panel
         div.panel-body
             div.text-center(ng-show='ctrl.initializing')
                 i.fa.fa-spinner.fa-spin
@@ -56,7 +56,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                         div.col-xs-6.text-right
                                                             button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedSupplier()')
                                                                 i.fa.fa-window-close.text-danger
-                                                    select#select_product_suppliers.form-control()
+                                                    select#select_product_supplier.form-control()
 
 
                                         div
@@ -89,7 +89,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                     div.col-xs-6
                                         label #{'product_details'}
                                     div.col-xs-6.text-right
-                                        button.btn.btn-xs.btn-default(ng-click='editProductForm.$show()' ng-disabled='!ctrl.product')
+                                        button.btn.btn-xs.btn-default(ng-click='ctrl.startEditing()' ng-disabled='!ctrl.product || editProductForm.$waiting')
                                             i.fa.fa-pencil
                                             span &nbsp; #{__('edit_')}
                                 div.panel.panel-default
@@ -97,7 +97,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                         div.text-center(ng-show='ctrl.loadingProduct')
                                             i.fa.fa-spinner.fa-spin
                                         div(ng-show='ctrl.product')
-                                            form(editable-form='' name='editProductForm' onbeforesave='ctrl.saveProduct($data)')
+                                            form(editable-form='' name='editProductForm' onbeforesave='ctrl.updateProduct($data)')
                                                 div.row.margin-bottom-15px
                                                     div.col-xs-12.col-sm-6
                                                         div.row
@@ -105,21 +105,45 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                                 label #{__('model_')}
                                                             div.col-xs-6
                                                                 div.text-right
-                                                                    div(editable-text="ctrl.product.model" e-name="model" onbeforesave='ctrl.checkProductAttribute("model", $data)' e-required) {{ctrl.product.model}}
+                                                                    div(editable-text="ctrl.product.model" e-name="model" onbeforesave='ctrl.checkProductAttribute("model", $data, ctrl.product.model)' e-required) {{ctrl.product.model}}
 
                                                     div.col-xs-12.col-sm-6
                                                         div.row
                                                             div.col-xs-6
                                                                 label #{__('in_stock')}
                                                             div.col-xs-6
-                                                                div.text-right {{100}}
+                                                                div.text-right {{ctrl.product.available}}/{{ctrl.product.stockPeek}}
+                                                        div.row
+                                                            div.col-xs-6
+                                                                label #{__('current_import_price')}
+                                                            div.col-xs-6
+                                                                div.text-right {{ctrl.product.currentImportPrice}}
+                                                        div.row
+                                                            div.col-xs-6
+                                                                label #{__('current_export_price')}
+                                                            div.col-xs-6
+                                                                div.text-right {{ctrl.product.currentExportPrice}}
 
                                                 div.margin-bottom-15px
-                                                    label #{__('product_images')}
+                                                    label #{__('product_images')}§
                                                     div.panel.panel-default
-                                                        div.panel-body
+                                                        div.panel-body(ngf-drop-disabled='!ctrl.product.isBeingEdited' ngf-drop="ctrl.addProductPhoto($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'", ngf-max-size='1MB')
                                                             div.img-wrapper(ng-repeat='image in ctrl.product.photos')
-                                                                img(ng-src='{{image}}')
+                                                                img(ng-if='!image.localPhoto' ng-src='{{image.url}}')
+                                                                img(ng-if='image.localPhoto' ngf-thumbnail='image.file')
+                                                                span.info-float.close-float.text-danger(ng-click='ctrl.removeProductImage(image, "'+__('confirm_remove_product_photo')+'")' ng-hide='!ctrl.product.isBeingEdited || image.isBeingRemoved || image.isBeingUploaded || image.uploadProceeded')
+                                                                    i.fa.fa-minus-circle(ng-if='image.localPhoto')
+                                                                    i.fa.fa-times-circle(ng-if='!image.localPhoto')
+                                                                span.info-float(ng-show='image.isBeingUploaded || image.isBeingRemoved')
+                                                                    i.fa.fa-refresh.fa-spin
+                                                                span.info-float.text-success(ng-show='image.uploadSucceeded === true')
+                                                                    i.fa.fa-check-circle
+                                                                span.info-float.text-warning(ng-show='image.uploadSucceeded === false')
+                                                                    i.fa.fa-exclamation-circle
+                                                            div.img-upload-wrapper(ng-show='ctrl.product.isBeingEdited && (ctrl.product.photos && ctrl.product.photos.length < 5)')
+                                                                label
+                                                                    i.fa.fa-plus-circle
+                                                                    input(style='display: none' type='file', ngf-select="ctrl.addProductPhoto($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'", ngf-max-size='1MB')
 
                                                 div.margin-bottom-15px
                                                     label #{__('description_')}
@@ -128,7 +152,8 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
 
                                                 div.margin-bottom-15px
                                                     label #{__('suppliers_')}
-                                                    div.panel.panel-default
+                                                    select#select_product_suppliers.form-control(ng-if='ctrl.product.isBeingEdited')
+                                                    div.panel.panel-default(ng-hide='ctrl.product.isBeingEdited')
                                                         div.panel-body
                                                             div.text-center.no-data(ng-hide='ctrl.product.supplierIDs && ctrl.product.supplierIDs.length')
                                                                 span #{__('no_data')}
@@ -137,8 +162,11 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                                 i.fa.fa-external-link-square
 
                                                 div.text-right(ng-show='editProductForm.$visible')
-                                                    button.btn.btn-default.margin-right-5px(type='button' ng-click='editProductForm.$cancel()')
+                                                    button.btn.btn-default.margin-right-5px(type='button' ng-click='ctrl.cancelEditing()' ng-disabled='editProductForm.$waiting')
                                                         span #{__('cancel_')}
-                                                    button.btn.btn-primary(type='submit')
+                                                    button.btn.btn-primary(type='submit' ng-disabled='editProductForm.$waiting')
+                                                        span(ng-show='editProductForm.$waiting')
+                                                            i.fa.fa-spinner.fa-spin
+                                                            span &nbsp;
                                                         span #{__('save_')}
 

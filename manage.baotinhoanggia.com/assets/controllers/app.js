@@ -309,6 +309,27 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
         regexEscape: function(exp){
             "use strict";
             return String(exp).replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+        },
+        
+        breakQueries: function(path){
+            //-- find the ?
+            let result = {};
+            if (path) {
+                let index = path.indexOf('?');
+                if (index >= 0){
+                    let subPath = path.substr(index+1);
+                    //-- then split by &
+                    let splits = subPath.split('&');
+                    if (splits && splits.length){
+                        splits.forEach(function(pair){
+                           //-- finally split by =
+                           let values = pair.split('=');
+                           result[values[0]] = values[1];
+                        });
+                    }
+                }
+            }
+            return result;
         }
     };
     $scope.global.locale = (Cookies.get('lang') || window.navigator.language || 'en');
