@@ -79,7 +79,7 @@ module.exports = {
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             
             let types = await _app.model.ProductType.find({groupID: category._id});
-            if (!types && !types.length)
+            if (types && types.length)
                 return sysUtils.returnError(_app.errors.RESOURCE_DIRTY_ERROR);
             
             category = await _app.model.ProductGroup.findByIdAndRemove(category._id);
@@ -122,7 +122,7 @@ module.exports = {
                 categories = await _app.model.ProductGroup.find({});
             }
             if (params.query) {
-                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`,'gi');
+                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'gi');
                 categories = categories.filter(cat => {
                     return !!regex.exec(cat.name);
                 });
@@ -210,9 +210,15 @@ module.exports = {
          */
         try {
             
+            //-- check dirty
+            
             let brand = await _app.model.ProductBrand.findById(params._id);
             if (!brand)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+    
+            let products = await _app.model.Product.find({brandID: brand._id});
+            if (products && products.length)
+                return sysUtils.returnError(_app.errors.RESOURCE_DIRTY_ERROR);
             
             brand = await _app.model.ProductBrand.findByIdAndRemove(brand._id);
             
@@ -253,9 +259,9 @@ module.exports = {
             else {
                 brands = await _app.model.ProductBrand.find({});
             }
-            if (params.query){
+            if (params.query) {
                 let regex = new RegExp(`.*${params.query}.*`, 'ig');
-                brands = brands.filter(b=>{
+                brands = brands.filter(b => {
                     return !!regex.exec(b.name);
                 });
             }
@@ -348,7 +354,7 @@ module.exports = {
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             
             let products = await _app.model.Product.find({typeID: type._id});
-            if (!products && !products.length)
+            if (products && products.length)
                 return sysUtils.returnError(_app.errors.RESOURCE_DIRTY_ERROR);
             
             type = await _app.model.ProductType.findByIdAndRemove(type._id);
@@ -395,9 +401,9 @@ module.exports = {
                 types = await _app.model.ProductType.find({groupID: params.groupID});
             }
             
-            if (params.query){
+            if (params.query) {
                 let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'ig');
-                types = types.filter(t=>{
+                types = types.filter(t => {
                     return !!regex.exec(t.name);
                 })
             }
@@ -405,6 +411,91 @@ module.exports = {
         }
         catch (err) {
             console.log('getAllTypesFromCategory:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    //----------- product -------------
+    addProduct: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                [required] typeID: ID of the product type,
+                [required] brandID: ID of the brand,
+                [required, unique] model,
+                suppliersID: IF of suppliers
+                description,
+                
+                photosNumber: number of returned upload urls
+                initStock: init amount in stock
+            }
+         */
+        try {
+            let type = await _app.model.ProductType.findById(params.typeID);
+            let brand = await _app.model.ProductBrand.findById(params.brandID);
+            
+            if (!type || !brand)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            let productData = {
+                typeID: type._id,
+                brandID: brand._id,
+                model: params.model,
+                suppliersID: params.suppliersID,
+                description: params.description,
+            };
+            
+            let product = new _app.model.Product(productData);
+            product = await product.save();
+            
+            if (params.initStock){
+                product.stockPeek = params.initStock;
+                let stock = new _app.model.Stock({
+                    productID: product._id,
+                    quantity: params.initStock,
+                    metaInfo: _app.model.Stock.constants.STOCK_INIT_STOCK,
+                });
+                await stock.save();
+            }
+            
+            let returnObject = {product: product};
+            
+            //-- generate photo upload url
+            if (!isNaN(params.photosNumber)){
+                let photoCount = Number(params.photosNumber);
+                if (photoCount > 0){
+                    photoCount = Math.min(photoCount, sails.config.PRODUCT_MAX_PHOTO);
+    
+                    //-- return a pre-signed url to upload logo
+                    let imageUrls = [];
+                    let uploadUrls = [];
+                    for (let i=0; i<photoCount; i++) {
+                        let fileName = `product-${product._id}-photo${i+1}`;
+                        let objectPath = 'product-photos/' + fileName;
+                        imageUrls.push(`https://${sails.config.S3_ASSET_BUCKET}.s3.amazonaws.com/${objectPath}`);
+    
+                        let url = await _app.S3.getSignedUrl('putObject', {
+                            Bucket: sails.config.S3_ASSET_BUCKET,
+                            Key: objectPath,
+                            Expires: sails.config.PRESIGNED_URL_TIMEOUT_SEC,
+                            ContentType: 'image/*'
+                        });
+                        uploadUrls.push(url);
+                    }
+                    
+                    //-- update to product
+                    product.photos = imageUrls;
+                    product = await product.save();
+                    returnObject.product = product;
+                    returnObject.uploadUrls = uploadUrls;
+                }
+            }
+            
+            return sysUtils.returnSuccess(returnObject);
+            
+        }
+        catch (err) {
+            console.log('addProduct:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     },

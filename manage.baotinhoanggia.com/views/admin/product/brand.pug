@@ -28,9 +28,6 @@ div.admin-product-brand(ng-controller='AdminProductBrandController as ctrl' ng-i
                                 div.text-center.no-data(ng-show='!ctrl.isNewBrand && (!ctrl.brands || !ctrl.brands.length)')
                                     span #{__('no_data')}
 
-                                //div.brand(ng-show='ctrl.isNewBrand')
-                                    a(href="" editable-text="ctrl.newBrand.name" buttons="no" e-form='newBrandForm' oncancel='ctrl.cancelBrand()' onbeforesave='ctrl.updateBrand($data, ctrl.newBrand)') {{ ctrl.newBrand.name || "#{__('not_set')}"}}
-
                                 div.brand-wrapper(ng-repeat='brand in ctrl.filteredBrands')
                                     div.brand(ng-class='{active: ctrl.selectedBrand._id === brand._id}' ng-click='ctrl.selectBrand(brand)')
                                         form(editable-form='' name='rowform' onbeforesave='ctrl.updateBrand($data, brand)' shown='!brand._id')
@@ -43,10 +40,10 @@ div.admin-product-brand(ng-controller='AdminProductBrandController as ctrl' ng-i
                                                                 e-form='rowform' e-name='name' onbeforesave='ctrl.checkBrandAttribute("name", $data, brand.name)'
                                                                 editable-text="brand.name" buttons="no" e-required) {{ brand.name || "#{__('not_set')}"}}
                                                         div.col-xs-6
-                                                            span(ng-hide='!brand.isBeingRemoved && (ctrl.selectedBrand._id === brand._id || !brand._id)') {{ctrl.originNameFromCode(brand.origin) || "#{__('not_set')}"}}
+                                                            span(ng-hide='!brand.isBeingRemoved && (ctrl.selectedBrand._id === brand._id || !brand._id)') {{originNameFromCode(brand.origin) || "#{__('not_set')}"}}
                                                             a(ng-show='!brand.isBeingRemoved && ctrl.selectedBrand._id === brand._id' href=""
-                                                                e-form='rowform' e-name='origin' e-uib-typeahead='origin as origin.name for origin in ctrl.origins | filter:$viewValue' typeahead-editable='false'
-                                                                editable-text="ctrl.originNameFromCode(brand.origin)" buttons="no" e-required) {{ ctrl.originNameFromCode(brand.origin) || "#{__('not_set')}"}}
+                                                                e-form='rowform' e-name='origin' e-uib-typeahead='origin as origin.name for origin in origins | filter:$viewValue' typeahead-editable='false'
+                                                                editable-text="originNameFromCode(brand.origin)" buttons="no" e-required) {{originNameFromCode(brand.origin) || "#{__('not_set')}"}}
 
                                                 div.col-xs-3.vf-center.text-right
                                                         span(ng-show='ctrl.selectedBrand._id === brand._id || brand.isBeingRemoved')
@@ -58,7 +55,7 @@ div.admin-product-brand(ng-controller='AdminProductBrandController as ctrl' ng-i
                                                             span.buttons(ng-show='!rowform.$visible')
                                                                 button.btn.btn-primary.btn-xs.margin-right-5px(type='button', ng-click='rowform.$show()')
                                                                     i.fa.fa-pencil
-                                                                button.btn.btn-danger.btn-xs.margin-right-5px(ng-click='ctrl.removeBrand(brand)' ng-disabled='brand.isBeingRemoved')
+                                                                button.btn.btn-danger.btn-xs.margin-right-5px(ng-click='ctrl.removeBrand(brand)' ng-disabled='brand.isBeingRemoved || brand.size > 0')
                                                                     i.fa.fa-trash(ng-hide='brand.isBeingRemoved')
                                                                     i.fa.fa-spinner.fa-spin(ng-show='brand.isBeingRemoved')
 

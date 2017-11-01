@@ -15,8 +15,10 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     name: 'check_attribute',
                     params: {
                         collection: 'Supplier',
-                        attr: attr,
-                        value: value
+                        pairs: [{
+                            attr: attr,
+                            value: value
+                        }]
                     }
                 }).then(
                     function (response) {
@@ -176,8 +178,10 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                 name: 'check_attribute',
                 params: {
                     collection: 'SupplierContact',
-                    attr: attr,
-                    value: value
+                    pairs: [{
+                        attr: attr,
+                        value: value
+                    }]
                 }
             }).then(
                 function (response) {
@@ -199,11 +203,10 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                 transport: function (params, success, failure) {
                     $http.post('/rpc', {
                         token: $scope.global.user.token,
-                        name: 'get_supplier_meta_info',
+                        name: 'get_all_suppliers',
                         params: {query: params.data.term}
                     }).then(
                         function (response) {
-                            // console.log('response in transport: ', response);
                             if (response.data.success) {
                                 success(response.data.result);
                             }
@@ -251,8 +254,8 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                         ctrl.loadingSupplierInfo = false;
                         if (response.data.success) {
                             //-- load full supplier info
-                            ctrl.selectedSupplier = response.data.results[0].success ? response.data.results[0].result : null;
-                            ctrl.selectedSupplierContacts = response.data.results[1].success ? response.data.results[1].result : null;
+                            ctrl.selectedSupplier = response.data.result[0].success ? response.data.result[0].result : null;
+                            ctrl.selectedSupplierContacts = response.data.result[1].success ? response.data.result[1].result : null;
                         }
                         else {
                             ctrl.loadSupplierError = true;

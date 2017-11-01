@@ -61,5 +61,6 @@
 	"description_": "description_",
 	"suppliers_": "suppliers_",
 	"keep_": "keep_",
-	"keep_page": "keep_page"
+	"keep_page": "keep_page",
+	"stock_init": "stock_init"
 }

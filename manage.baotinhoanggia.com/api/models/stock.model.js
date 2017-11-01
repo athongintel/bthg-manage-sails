@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 
 const constants = {
+    STOCK_INIT_STOCK: 'STOCK_INIT_STOCK'
 };
 
 const stockSchema = new mongoose.Schema({

@@ -98,7 +98,7 @@ module.exports = {
         }
     },
     
-    getSupplierMetaInfo: async function (principal, params) {
+    getAllSuppliers: async function (principal, params) {
         "use strict";
         /*
             params:{
@@ -106,7 +106,13 @@ module.exports = {
             }
          */
         try {
-            let suppliers = await _app.model.Supplier.find({name: new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'ig')}).select('_id name');
+            let suppliers = await _app.model.Supplier.find({});
+            if (params.query){
+                let regex = new RegExp(`.*${params.query}.*`, 'ig');
+                suppliers = suppliers.filter(s=>{
+                    return !!regex.exec(s.name);
+                });
+            }
             return sysUtils.returnSuccess(suppliers);
         }
         catch (err) {

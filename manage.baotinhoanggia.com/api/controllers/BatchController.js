@@ -5,9 +5,11 @@ const CustomerService = require('../services/CustomerService');
 const SupplierService = require('../services/SupplierService');
 const SystemService = require('../services/SystemService');
 
+const sysUtils = require('../../utils/system');
+
 const actions = {
     'login': {policies: [], action: UserService.login, validation: {required: ['username', 'authMethod', 'authData']}},
-    'check_attribute': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.checkAttribute, validation: {required: ['collection', 'attr', 'value']}},
+    'check_attribute': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.checkAttribute, validation: {required: ['collection', 'pairs']}},
     
     'add_customer': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.addCustomer, validation: {required: ['name', 'code']}},
     'update_customer_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.updateCustomerInfo, validation: {required: ['_id', 'name', 'code']}},
@@ -21,7 +23,7 @@ const actions = {
     'add_supplier': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.addSupplier, validation: {required: ['name']}},
     'update_supplier_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.updateSupplierInfo, validation: {required: ['_id', 'name']}},
     'get_supplier_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.getSupplierInfo, validation: {required: ['_id']}},
-    'get_supplier_meta_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.getSupplierMetaInfo, validation: {}},
+    'get_all_suppliers': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.getAllSuppliers, validation: {}},
     'get_all_supplier_contacts': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.getAllSupplierContacts, validation: {required: ['supplierID']}},
     'add_supplier_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.addSupplierContact, validation: {required: ['supplierID', 'name']}},
     'update_supplier_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: SupplierService.updateSupplierContact, validation: {required: ['_id', 'name']}},
@@ -41,6 +43,8 @@ const actions = {
     'remove_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductType, validation: {required: ['_id']}},
     'update_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProductType, validation: {required: ['_id', 'name']}},
     'get_all_types_from_category': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllTypesFromCategory, validation: {required: ['groupID']}},
+    
+    'add_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.addProduct, validation: {required: ['typeID', 'brandID', 'model']}},
 };
 
 /*
@@ -74,7 +78,7 @@ let policiesCheck = async function (policies, principal, params) {
         if (!result.success)
             return result;
     }
-    return {success: true};
+    return sysUtils.returnSuccess();
 };
 
 let runOneCommand = async function (principal, commandName, params) {
@@ -82,7 +86,7 @@ let runOneCommand = async function (principal, commandName, params) {
     
     //-- check command & command params
     if (!commandName || !params || !actions[commandName] || !actions[commandName].action)
-        return {success: false, error: _app.errors.MALFORMED_REQUEST_ERROR};
+        return sysUtils.returnError(_app.errors.MALFORMED_REQUEST_ERROR);
     
     //-- validation check
     if (actions[commandName].validation){
@@ -92,7 +96,7 @@ let runOneCommand = async function (principal, commandName, params) {
                    return true;
                }
             });
-            if (missing) return {success: false, error: _app.errors.INPUT_ERROR};
+            if (missing) return sysUtils.returnError(_app.errors.INPUT_ERROR);
         }
     }
     
@@ -139,7 +143,7 @@ module.exports = {
          *   }
          */
         "use strict";
-        console.log(req.body);
+        console.log(JSON.stringify(req.body));
         new Promise(async (resolve, reject) => {
             try {
                 req.principal.req = req;
@@ -156,7 +160,7 @@ module.exports = {
             },
             function (err) {
                 console.log(err);
-                res.json({success: false, error: _app.errors.SYSTEM_ERROR, extra: err});
+                res.json(sysUtils.returnError(_app.errors.SYSTEM_ERROR));
             }
         );
     },
@@ -201,7 +205,7 @@ module.exports = {
          *   }
          */
         "use strict";
-        console.log(req.body);
+        console.log(JSON.stringify(req.body));
         new Promise(async (resolve, reject) => {
             try {
                 req.principal.req = req;
@@ -209,14 +213,14 @@ module.exports = {
                 //return resolve(await(runOneCommand(req.principal, req.body.name, req.body.params)));
                 
                 if (!req.body.options || !req.body.commands || req.body.commands.length > sails.config.BATCH_MAX_COMMAND_NUMBER)
-                    return resolve({success: false, error: _app.errors.MALFORMED_REQUEST_ERROR});
+                    return resolve(sysUtils.returnError(_app.errors.MALFORMED_REQUEST_ERROR));
                 
                 let results = [];
                 if (req.body.options.serial) {
                     for (let cIndex = 0; cIndex < req.body.commands.length; cIndex++) {
                         let result = await runOneCommand(req.principal, req.body.commands[cIndex].name, req.body.commands[cIndex].params);
                         if (!result.success && req.body.options.serialStop)
-                            return resolve({success: false, error: _app.errors.EXECUTION_HALTED_ERROR, extra: results});
+                            return resolve(sysUtils.returnError(_app.errors.EXECUTION_HALTED_ERROR));
                         else
                             results.push(result);
                     }
@@ -227,7 +231,7 @@ module.exports = {
                     req.body.commands.forEach(command => {
                         promises.push(runOneCommand(req.principal, command.name, command.params));
                     });
-                    return resolve({success: true, results: await Promise.all(promises)});
+                    return resolve(sysUtils.returnSuccess(await Promise.all(promises)));
                 }
                 
             }
@@ -241,7 +245,7 @@ module.exports = {
             },
             function (err) {
                 console.log(err);
-                res.json({success: false, error: _app.errors.SYSTEM_ERROR, extra: err});
+                res.json(sysUtils.returnError(_app.errors.SYSTEM_ERROR));
             }
         );
     }

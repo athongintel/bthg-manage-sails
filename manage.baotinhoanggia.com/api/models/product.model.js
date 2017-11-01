@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema({
 
     //-- stock info
     stockPeek: {type: Number, default: 0},
-    lastPrice: {type: mongoose.Schema.ObjectId, ref: 'OutPriceHistory'}
+    // lastPrice: {type: mongoose.Schema.ObjectId, ref: 'OutPriceHistory'}
     
 });
 

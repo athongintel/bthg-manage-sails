@@ -1,4 +1,4 @@
-div(ng-controller='AdminProductAddController as ctrl' ng-init='ctrl.init()')
+div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init='ctrl.init()')
     div
         div.row
             div.col-xs-12.col-sm-6
@@ -13,60 +13,84 @@ div(ng-controller='AdminProductAddController as ctrl' ng-init='ctrl.init()')
 
     div.panel.panel-default
         div.panel-body
-            div
-                div.row
-                    div.col-xs-12.col-sm-6
-                        div
-                            div.margin-bottom-15px
-                                div.row
-                                    div.col-xs-6
-                                        label #{__('product_group')}
-                                    div.col-xs-6.text-right
-                                        label
-                                            input(type='checkbox' ng-model='ctrl.keepGroup')
-                                            span &nbsp; #{__('keep_')}
-                                select#select_product_group.form-control
+            form(editable-form='', name='addProductForm' shown='true' onbeforesave='ctrl.addProduct($data)')
+                fieldset(ng-disabled='ctrl.addingProduct || (ctrl.uploadingPhotos && ctrl.uploadedCount < ctrl.productImages.length)')
+                    div.row
+                        div.col-xs-12.col-sm-6
+                            div
+                                div.margin-bottom-15px
+                                    div.row
+                                        div.col-xs-6
+                                            label #{__('product_group')}
+                                        div.col-xs-6.text-right
+                                            label
+                                                input(type='checkbox' ng-model='ctrl.keepGroup')
+                                                span &nbsp; #{__('keep_')}
+                                    select#select_product_group.form-control(ng-disabled='ctrl.addingProduct')
 
-                            div.margin-bottom-15px
-                                div.row
-                                    div.col-xs-6
-                                        label #{__('product_type')}
-                                    div.col-xs-6.text-right
-                                        label
-                                            input(type='checkbox' ng-model='ctrl.keepType')
-                                            span &nbsp; #{__('keep_')}
-                                select#select_product_type.form-control(ng-disabled='!ctrl.selectedProductGroup')
+                                div.margin-bottom-15px
+                                    div.row
+                                        div.col-xs-6
+                                            label #{__('product_type')}
+                                        div.col-xs-6.text-right
+                                            label
+                                                input(type='checkbox' ng-model='ctrl.keepType')
+                                                span &nbsp; #{__('keep_')}
+                                    select#select_product_type.form-control(ng-disabled='!ctrl.selectedProductGroup || ctrl.addingProduct')
 
-                            div.margin-bottom-15px
-                                div.row
-                                    div.col-xs-6
-                                        label #{__('product_brand')}
-                                    div.col-xs-6.text-right
-                                        label
-                                            input(type='checkbox' ng-model='ctrl.keepBrand')
-                                            span &nbsp; #{__('keep_')}
-                                select#select_product_brand.form-control(ng-disabled='!ctrl.selectedProductType')
+                                div.margin-bottom-15px
+                                    div.row
+                                        div.col-xs-6
+                                            label #{__('product_brand')}
+                                        div.col-xs-6.text-right
+                                            label
+                                                input(type='checkbox' ng-model='ctrl.keepBrand')
+                                                span &nbsp; #{__('keep_')}
+                                    select#select_product_brand.form-control(ng-disabled='ctrl.addingProduct')
 
-                            div.margin-bottom-15px
-                                label #{__('model_')}
-                                input.form-control(ng-model='ctrl.productModel' ng-disabled='!ctrl.selectedProductBrand')
+                                div.margin-bottom-15px
+                                    label #{__('model_')}
+                                    div(editable-text="ctrl.product.model" e-name="model" e-form='addProductForm' onbeforesave='ctrl.checkProductAttribute("model", $data)' e-required)
 
-                            div.margin-bottom-15px
-                                label #{__('description_')}
-                                input.form-control(ng-model='ctrl.productDescription' ng-disabled='!ctrl.productModel')
+                                div.margin-bottom-15px
+                                    label #{__('description_')}
+                                    textarea.form-control.fixed-textarea(ng-model='ctrl.product.description' row='5')
 
-                    div.col-xs-12.col-sm-6
-                        div
-                            div.margin-bottom-15px
-                                label #{__('product_images')}
-                            div.margin-bottom-15px
-                                label #{__('suppliers_')}
-            div.row.flex
-                div.col-xs-6.vf-center
-                    label
-                        input(type='checkbox' ng-model='ctrl.keepPage')
-                        span &nbsp; #{__('keep_page')}
-                div.col-xs-6.text-right.vf-center
-                    button.btn.btn-primary.action
-                        span #{__('add_')}
+                        div.col-xs-12.col-sm-6
+                            div
+                                div.margin-bottom-15px
+                                    label #{__('stock_init')}
+                                    input.form-control(type='number' ng-model='ctrl.product.initStock')
+                                div.margin-bottom-15px
+                                    label #{__('product_images')}
+                                    div.panel.panel-default
+                                        div.panel-body(ngf-drop-disabled='ctrl.addingProduct' ngf-drop="ctrl.loadProductFiles($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'", ngf-max-size='1MB')
+                                            div.img-wrapper(ng-repeat='image in ctrl.productImages')
+                                                img(ngf-thumbnail="image")
+                                                span.info-float.close.text-danger(ng-click='ctrl.removeProductImage(image)' ng-hide='image.isBeingUploaded || (image.uploadSucceeded !== null || image.uploadSucceeded !== undefined)')
+                                                    i.fa.fa-minus-circle
+                                                span.info-float(ng-show='image.isBeingUploaded')
+                                                    i.fa.fa-refresh.fa-spin
+                                                span.info-float.text-success(ng-show='image.uploadSucceeded === true')
+                                                    i.fa.fa-check-circle
+                                                span.info-float.text-warning(ng-show='image.uploadSucceeded === false')
+                                                    i.fa.fa-exclamation-circle
+                                            div.img-upload-wrapper(ng-hide='ctrl.productImages && ctrl.productImages.length === 5 || ctrl.addingProduct')
+                                                label
+                                                    i.fa.fa-plus-circle
+                                                    input(style='display: none' type='file', ngf-select="ctrl.loadProductFiles($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'", ngf-max-size='1MB')
+                                div.margin-bottom-15px
+                                    label #{__('suppliers_')}
+                                    select#select_product_suppliers.form-control(ng-disabled='ctrl.addingProduct')
+                    div.row.flex
+                        div.col-xs-6.vf-center
+                            label
+                                input(type='checkbox' ng-model='ctrl.keepPage')
+                                span &nbsp; #{__('keep_page')}
+                        div.col-xs-6.text-right.vf-center
+                            button.btn.btn-primary.action(type='submit' ng-disabled='!ctrl.selectedProductGroup || !ctrl.product.typeID || !ctrl.product.brandID')
+                                span(ng-show='ctrl.addingProduct')
+                                    i.fa.fa-spin.fa-spinner
+                                    span &nbsp;
+                                span #{__('add_')}
 

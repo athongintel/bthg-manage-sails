@@ -49,7 +49,7 @@ module.exports = {
         "use strict";
         try {
             await createSuperAdminAccount();
-            return {success: true};
+            return sysUtils.returnSuccess();
         }
         catch (err) {
             console.log(err);

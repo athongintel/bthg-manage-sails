@@ -15,8 +15,10 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                     name: 'check_attribute',
                     params: {
                         collection: 'Customer',
-                        attr: attr,
-                        value: value
+                        pairs: [{
+                            attr: attr,
+                            value: value
+                        }]
                     }
                 }).then(
                     function (response) {
@@ -169,24 +171,26 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
         //     return true;
         // }
         // else {
-            return new Promise(function (resolve) {
-                $http.post('/rpc', {
-                    token: $scope.global.user.token,
-                    name: 'check_attribute',
-                    params: {
-                        collection: 'CustomerContact',
+        return new Promise(function (resolve) {
+            $http.post('/rpc', {
+                token: $scope.global.user.token,
+                name: 'check_attribute',
+                params: {
+                    collection: 'CustomerContact',
+                    pairs: [{
                         attr: attr,
                         value: value
-                    }
-                }).then(
-                    function (response) {
-                        resolve(response.data.success || response.data.error.errorMessage);
-                    },
-                    function (err) {
-                        resolve('Network error');
-                    }
-                )
-            });
+                    }]
+                }
+            }).then(
+                function (response) {
+                    resolve(response.data.success || response.data.error.errorMessage);
+                },
+                function (err) {
+                    resolve('Network error');
+                }
+            )
+        });
         // }
     };
     
@@ -249,8 +253,8 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                         ctrl.loadingCustomerInfo = false;
                         if (response.data.success) {
                             //-- load full customer info
-                            ctrl.selectedCustomer = response.data.results[0].success ? response.data.results[0].result : null;
-                            ctrl.selectedCustomerContacts = response.data.results[1].success ? response.data.results[1].result : null;
+                            ctrl.selectedCustomer = response.data.result[0].success ? response.data.result[0].result : null;
+                            ctrl.selectedCustomerContacts = response.data.result[1].success ? response.data.result[1].result : null;
                         }
                         else {
                             ctrl.loadCustomerError = true;

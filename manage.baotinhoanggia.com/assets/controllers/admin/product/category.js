@@ -6,8 +6,8 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
     ctrl.categoryFilter = "";
     ctrl.typeFilter = "";
     
-    ctrl.filterCategory = function(){
-        ctrl.filteredCategories = ctrl.categories.filter(function(cat){
+    ctrl.filterCategory = function () {
+        ctrl.filteredCategories = ctrl.categories.filter(function (cat) {
             return cat.name.indexOf(ctrl.categoryFilter) >= 0;
         });
     };
@@ -42,7 +42,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                 }
             );
         }
-        else{
+        else {
             ctrl.filterCategory();
             ctrl.filterType();
         }
@@ -70,6 +70,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
             }
         }).then(
             function (response) {
+                category.isBeingRemoved = false;
                 if (response.data.success) {
                     //-- remove
                     let removeIndex = ctrl.categories.findIndex(function (cat) {
@@ -79,11 +80,12 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                     ctrl.filterCategory();
                 }
                 else {
-                    //-- TODO: error
+                    alert(response.data.error.errorMessage);
                 }
             },
-            function (err) {
-                //-- TODO: error
+            function () {
+                category.isBeingRemoved = false;
+                alert('Network error');
             });
     };
     
@@ -164,6 +166,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
             }
         }).then(
             function (response) {
+                type.isBeingRemoved = false;
                 if (response.data.success) {
                     //-- remove
                     let removeIndex = ctrl.selectedCategory.types.findIndex(function (t) {
@@ -174,11 +177,12 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                     ctrl.filterType();
                 }
                 else {
-                    //-- TODO: error
+                    alert(response.data.error.errorMessage);
                 }
             },
-            function (err) {
-                //-- TODO: error
+            function () {
+                type.isBeingRemoved = false;
+                alert('Network error');
             });
     };
     
@@ -202,14 +206,14 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                     }
                 };
                 data.name = type._id ? "update_product_type" : "add_product_type";
-
+                
                 $http.post('/rpc', data).then(
                     function (response) {
                         if (response.data.success) {
                             let updateIndex = ctrl.selectedCategory.types.findIndex(function (type) {
                                 return String(type._id) === String(response.data.result._id);
                             });
-
+                            
                             if (updateIndex >= 0) {
                                 response.data.result.size = ctrl.selectedCategory.types[updateIndex].size;
                                 ctrl.selectedCategory.types[updateIndex] = response.data.result;
@@ -232,11 +236,11 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                 );
             });
         }
-
+        
     };
     
-    ctrl.filterType = function(){
-        ctrl.filteredTypes = ctrl.selectedCategory.types.filter(function(type){
+    ctrl.filterType = function () {
+        ctrl.filteredTypes = ctrl.selectedCategory.types.filter(function (type) {
             return type.name.indexOf(ctrl.typeFilter) >= 0;
         });
     };
