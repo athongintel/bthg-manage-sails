@@ -159,6 +159,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
         ctrl.typeSelector = $('#select_product_type');
         ctrl.brandSelector = $('#select_product_brand');
         ctrl.suppliersSelector = $('#select_product_suppliers');
+        ctrl.branchSelector = $('#select_store_branch');
         
         ctrl.groupSelector.select2({
             ajax: {
@@ -320,6 +321,46 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                     };
                 }
             }
+        });
+    
+        ctrl.branchSelector.select2({
+            ajax: {
+                transport: function (params, success, failure) {
+                    $http.post('/rpc', {
+                        token: $scope.global.user.token,
+                        name: 'get_all_branches',
+                        params: {
+                            query: params.data.term,
+                        }
+                    }).then(
+                        function (response) {
+                            if (response.data.success) {
+                                success(response.data.result);
+                            }
+                            else {
+                                failure();
+                            }
+                        },
+                        function (err) {
+                            failure();
+                        }
+                    );
+                },
+                processResults: function (data) {
+                    data.forEach(function (branch) {
+                        branch.id = branch._id;
+                        branch.text = `${branch.name}`;
+                    });
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+        ctrl.branchSelector.on('select2:select', function (e) {
+            $timeout(function () {
+                ctrl.product.storeBranch = e.params.data._id;
+            });
         });
     };
     

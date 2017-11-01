@@ -59,14 +59,20 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                         div.col-xs-12.col-sm-6
                             div
                                 div.margin-bottom-15px
-                                    label #{__('stock_init')}
-                                    input.form-control(type='number' ng-model='ctrl.product.initInStock')
-                                div.margin-bottom-15px
-                                    label #{__('in_price_init')}
-                                    input.form-control(cleave="cleaveOptions.currency" type='text' ng-model='ctrl.product.initInPrice' )
-                                div.margin-bottom-15px
-                                    label #{__('out_price_init')}
-                                    input.form-control(cleave="cleaveOptions.currency" type='text' ng-model='ctrl.product.initOutPrice' )
+                                    div.row
+                                        div.col-xs-12.col-sm-6
+                                            label #{__('stock_init')}
+                                            input.form-control(type='number' ng-model='ctrl.product.initInStock')
+                                        div.col-xs-12.col-sm-6
+                                            label #{__('store_branch')}
+                                            select#select_store_branch.form-control()
+                                div.row.margin-bottom-15px
+                                    div.col-xs-12.col-sm-6
+                                        label #{__('in_price_init')}
+                                        input.form-control(cleave="cleaveOptions.currency" type='text' ng-model='ctrl.product.initInPrice' )
+                                    div.col-xs-12.col-sm-6
+                                        label #{__('out_price_init')}
+                                        input.form-control(cleave="cleaveOptions.currency" type='text' ng-model='ctrl.product.initOutPrice' )
                                 div.margin-bottom-15px
                                     label #{__('product_images')}
                                     div.panel.panel-default

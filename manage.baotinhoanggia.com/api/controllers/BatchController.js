@@ -4,6 +4,7 @@ const UserService = require('../services/UserService');
 const CustomerService = require('../services/CustomerService');
 const SupplierService = require('../services/SupplierService');
 const SystemService = require('../services/SystemService');
+const BranchService = require('../services/BranchService');
 
 const sysUtils = require('../../utils/system');
 
@@ -49,6 +50,8 @@ const actions = {
     'get_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getProduct, validation: {required: ['_id']}},
     'update_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProduct, validation: {required: ['_id', 'model']}},
     'remove_product_photo': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductPhoto, validation: {required: ['_id', 'fileName']}},
+    
+    'get_all_branches': {policies: [PO.isAuthenticated, PO.isAdmin], action: BranchService.getAllBranches, validation: {required: []}},
 };
 
 /*

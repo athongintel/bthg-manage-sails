@@ -113,19 +113,19 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                                 label #{__('in_stock')}
                                                             div.col-xs-6
                                                                 div.text-right {{ctrl.product.available}}/{{ctrl.product.stockPeek}}
-                                                        div.row
+                                                        //div.row
                                                             div.col-xs-6
                                                                 label #{__('current_import_price')}
                                                             div.col-xs-6
                                                                 div.text-right {{ctrl.product.currentImportPrice}}
-                                                        div.row
+                                                        //div.row
                                                             div.col-xs-6
                                                                 label #{__('current_export_price')}
                                                             div.col-xs-6
                                                                 div.text-right {{ctrl.product.currentExportPrice}}
 
                                                 div.margin-bottom-15px
-                                                    label #{__('product_images')}§
+                                                    label #{__('product_images')}
                                                     div.panel.panel-default
                                                         div.panel-body(ngf-drop-disabled='!ctrl.product.isBeingEdited' ngf-drop="ctrl.addProductPhoto($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'", ngf-max-size='1MB')
                                                             div.img-wrapper(ng-repeat='image in ctrl.product.photos')

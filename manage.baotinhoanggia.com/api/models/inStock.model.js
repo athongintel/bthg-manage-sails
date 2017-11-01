@@ -11,8 +11,8 @@ const inStockSchema = new mongoose.Schema({
     userID: {type: mongoose.Schema.ObjectId, ref: 'User', required: true},
     supplierID: {type: mongoose.Schema.ObjectId, ref: 'Supplier'},
     quantity: {type: Number, required: true},
-    inStockOrderID: {type: mongoose.Schema.ObjectId, ref: 'InStockOrder'},
     price: {type: String},
+    inStockOrderID: {type: mongoose.Schema.ObjectId, ref: 'InStockOrder'},
     metaInfo: {type: mongoose.Schema.Types.Mixed},
     createdAt: {type: Date, default: Date.now}
 });

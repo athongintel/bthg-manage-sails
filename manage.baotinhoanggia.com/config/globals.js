@@ -12,6 +12,7 @@ _app.model = {
     ProductBrand: require('../api/models/productBrand.model'),
     Product: require('../api/models/product.model'),
     InStock: require('../api/models/inStock.model'),
+    OutStock: require('../api/models/outStock.model'),
     Branch: require('../api/models/branch.model'),
 };
 

@@ -428,7 +428,7 @@ module.exports = {
                 description,
                 
                 photosNumber: number of returned upload urls
-                initStock: init amount in stock
+                initInStock: init amount in stock
             }
          */
         try {
@@ -449,16 +449,32 @@ module.exports = {
             let product = new _app.model.Product(productData);
             product = await product.save();
             
-            if (params.initInStock && params.initInPrice && params.initOutPrice) {
-                product.stockPeek = params.initInStock;
-                
-                let stock = new _app.model.InStock({
-                    productID: product._id,
-                    quantity: params.initStock,
-                    metaInfo: _app.model.Stock.constants.STOCK_INIT_STOCK,
-                });
-                await stock.save();
-            }
+            let initInStock = Number(params.initInStock || "0");
+            let initInPrice = new BigNumber(params.initInPrice || "0");
+            let initOutPrice = new BigNumber(params.initOutPrice || "0");
+            
+            product.stockPeek = initInStock;
+            
+            let inStock = new _app.model.InStock({
+                productID: product._id,
+                branchID: params.storeBranch,
+                userID: principal.user._id,
+                quantity: initInStock,
+                price: initInPrice.toString(),
+                metaInfo: _app.model.InStock.constants.STOCK_INIT_STOCK,
+            });
+            await inStock.save();
+    
+            let outStock = new _app.model.OutStock({
+                productID: product._id,
+                branchID: params.storeBranch,
+                userID: principal.user._id,
+                quantity: new BigNumber(0).toString(),
+                price: initOutPrice.toString(),
+                metaInfo: _app.model.OutStock.constants.STOCK_INIT_STOCK,
+            });
+            await inStock.save();
+            await outStock.save();
             
             let returnObject = {product: product};
             
@@ -595,6 +611,8 @@ module.exports = {
             if (params.full_info) {
                 
                 product = await _app.model.Product.findById(params._id).populate('typeID').populate('brandID').populate('supplierIDs').lean().exec();
+                if (!product)
+                    return sysUtils .returnError(_app.errors.NOT_FOUND_ERROR);
                 
                 //-- query for available
                 let inStocks = await _app.model.InStock.find({productID: product._id});

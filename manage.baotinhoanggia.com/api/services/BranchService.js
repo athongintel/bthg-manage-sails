@@ -32,4 +32,21 @@ module.exports = {
         }
     },
     
+    getAllBranches: async function(principal, params){
+        "use strict";
+        /*
+            params: {
+                query: the query for name
+            }
+         */
+        try{
+            let branches = await _app.model.Branch.find({name: new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'i')})
+            return sysUtils.returnSuccess(branches);
+        }
+        catch(err){
+            console.log('getAllBranches:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    }
+    
 };

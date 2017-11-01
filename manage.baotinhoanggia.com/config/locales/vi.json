@@ -71,5 +71,8 @@
 	"current_import_price": "current_import_price",
 	"current_export_price": "current_export_price",
 	"confirm_remove_product_photo": "confirm_remove_product_photo",
-	"company_info": "company_info"
+	"company_info": "company_info",
+	"in_price_init": "in_price_init",
+	"out_price_init": "out_price_init",
+	"store_branch": "store_branch"
 }

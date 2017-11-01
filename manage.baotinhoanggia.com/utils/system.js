@@ -11,6 +11,7 @@ module.exports = {
     
     regexEscape: function(exp){
         "use strict";
+        if (!exp) return '';
         return String(exp).replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
     }
 };
