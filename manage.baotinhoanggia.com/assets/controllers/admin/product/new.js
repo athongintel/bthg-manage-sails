@@ -19,7 +19,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
             
             postData.params.model = data.model;
             postData.params.photosNumber = ctrl.productImages ? ctrl.productImages.length : 0;
-            postData.params.suppliersID = ctrl.suppliersSelector.val();
+            postData.params.supplierIDs = ctrl.suppliersSelector.val();
             
             $http.post('/rpc', postData).then(
                 function (response) {

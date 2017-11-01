@@ -11,39 +11,102 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', fun
         ctrl.queryingProduct = true;
         ctrl.allProducts = [];
         ctrl.filteredProducts = [];
+        ctrl.selectedProduct = null;
         
         let filter = [];
         if (ctrl.selectedProductType) filter.push({attr: 'typeID', value: ctrl.selectedProductType});
         if (ctrl.selectedProductBrand) filter.push({attr: 'brandID', value: ctrl.selectedProductBrand});
         if (ctrl.selectedProductSupplier) filter.push({attr: 'suppliersID', value: ctrl.selectedProductSupplier});
         
+        //-- at least one query if not to select all products
+        if (filter.length) {
+            $http.post('/rpc', {
+                token: $scope.global.user.token,
+                name: 'filter_collection',
+                params: {
+                    collection: 'Product',
+                    filter: filter
+                }
+            }).then(
+                function (response) {
+                    ctrl.queryingProduct = false;
+                    if (response.data.success) {
+                        ctrl.allProducts = response.data.result;
+                        ctrl.filterProduct();
+                    }
+                    else {
+                        ctrl.queryFailed = response.data.error.errorMessage;
+                    }
+                },
+                function () {
+                    ctrl.queryingProduct = false;
+                    ctrl.queryFailed = 'Network error';
+                }
+            )
+        }
+        else{
+            ctrl.queryingProduct = false;
+        }
+    };
+    
+    ctrl.clearSelectedGroup = function(){
+        console.log('group trigger');
+        ctrl.typeSelector.val('').trigger('change');
+        ctrl.groupSelector.val('').trigger('change');
+        ctrl.selectedProductGroup = null;
+        ctrl.selectedProductType = null;
+        ctrl.queryProducts();
+    };
+    
+    ctrl.clearSelectedType = function(){
+        ctrl.typeSelector.val('').trigger('change');
+        ctrl.selectedProductType = null;
+        ctrl.queryProducts();
+    };
+    
+    ctrl.clearSelectedBrand = function(){
+        ctrl.brandSelector.val('').trigger('change');
+        ctrl.selectedProductBrand = null;
+        ctrl.queryProducts();
+    };
+    
+    ctrl.clearSelectedSupplier = function(){
+        ctrl.suppliersSelector.val('').trigger('change');
+        ctrl.selectedProductSupplier = null;
+        ctrl.queryProducts();
+    };
+    
+    ctrl.selectProduct = function (product) {
+        ctrl.selectedProduct = product;
+        //-- load product details
+        ctrl.loadingProduct = true;
         $http.post('/rpc', {
             token: $scope.global.user.token,
-            name: 'filter_collection',
-            params:{
-                collection: 'Product',
-                filter: filter
+            name: 'get_product',
+            params: {
+                _id: ctrl.selectedProduct._id,
+                full_info: true
             }
         }).then(
             function(response){
-                ctrl.queryingProduct = false;
+                ctrl.loadingProduct = false;
                 if (response.data.success){
-                    ctrl.allProducts = response.data.result;
-                    ctrl.filterProduct();
+                    ctrl.product = response.data.result;
+                    console.log(ctrl.product);
                 }
                 else{
-                    ctrl.queryFailed = response.data.error.errorMessage;
+                    alert(response.data.error.errorMessage);
                 }
             },
             function(){
-                ctrl.queryingProduct = false;
-                ctrl.queryFailed = 'Network error';
+                ctrl.loadingProduct = false;
+                alert('Network error');
             }
-        )
+        );
     };
     
     ctrl.filterProduct = function () {
-        let regex = new RegExp(`.*${ctrl.productFilter ? $scope.global.utils.regexEscape(ctrl.productFilter) : ''}.*`, 'ig');
+        let regex = new RegExp(`.*${ctrl.productFilter ? $scope.global.utils.regexEscape(ctrl.productFilter) : ''}.*`, 'i');
         ctrl.filteredProducts = ctrl.allProducts.filter(function (p) {
             return !!regex.exec(p.model);
         });

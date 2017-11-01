@@ -106,7 +106,7 @@ module.exports = {
         try {
             let customers = await _app.model.Customer.find({}).select('_id name');
             if (params.query){
-                let regex = new RegExp(`.*${params.query}.*`,'ig');
+                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`,'i');
                 customers = customers.filter(c=>{
                     return !!regex.exec(c.name);
                 });

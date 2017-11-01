@@ -122,7 +122,7 @@ module.exports = {
                 categories = await _app.model.ProductGroup.find({});
             }
             if (params.query) {
-                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'gi');
+                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'i');
                 categories = categories.filter(cat => {
                     return !!regex.exec(cat.name);
                 });
@@ -215,7 +215,7 @@ module.exports = {
             let brand = await _app.model.ProductBrand.findById(params._id);
             if (!brand)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
-    
+            
             let products = await _app.model.Product.find({brandID: brand._id});
             if (products && products.length)
                 return sysUtils.returnError(_app.errors.RESOURCE_DIRTY_ERROR);
@@ -260,7 +260,7 @@ module.exports = {
                 brands = await _app.model.ProductBrand.find({});
             }
             if (params.query) {
-                let regex = new RegExp(`.*${params.query}.*`, 'ig');
+                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'i');
                 brands = brands.filter(b => {
                     return !!regex.exec(b.name);
                 });
@@ -402,7 +402,7 @@ module.exports = {
             }
             
             if (params.query) {
-                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'ig');
+                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'i');
                 types = types.filter(t => {
                     return !!regex.exec(t.name);
                 })
@@ -423,7 +423,7 @@ module.exports = {
                 [required] typeID: ID of the product type,
                 [required] brandID: ID of the brand,
                 [required, unique] model,
-                suppliersID: IF of suppliers
+                supplierIDs: ID of suppliers
                 description,
                 
                 photosNumber: number of returned upload urls
@@ -441,14 +441,14 @@ module.exports = {
                 typeID: type._id,
                 brandID: brand._id,
                 model: params.model,
-                suppliersID: params.suppliersID,
+                supplierIDs: params.supplierIDs,
                 description: params.description,
             };
             
             let product = new _app.model.Product(productData);
             product = await product.save();
             
-            if (params.initStock){
+            if (params.initStock) {
                 product.stockPeek = params.initStock;
                 let stock = new _app.model.Stock({
                     productID: product._id,
@@ -461,19 +461,19 @@ module.exports = {
             let returnObject = {product: product};
             
             //-- generate photo upload url
-            if (!isNaN(params.photosNumber)){
+            if (!isNaN(params.photosNumber)) {
                 let photoCount = Number(params.photosNumber);
-                if (photoCount > 0){
+                if (photoCount > 0) {
                     photoCount = Math.min(photoCount, sails.config.PRODUCT_MAX_PHOTO);
-    
+                    
                     //-- return a pre-signed url to upload logo
                     let imageUrls = [];
                     let uploadUrls = [];
-                    for (let i=0; i<photoCount; i++) {
-                        let fileName = `product-${product._id}-photo${i+1}`;
+                    for (let i = 0; i < photoCount; i++) {
+                        let fileName = `product-${product._id}-photo${i + 1}`;
                         let objectPath = 'product-photos/' + fileName;
                         imageUrls.push(`https://${sails.config.S3_ASSET_BUCKET}.s3.amazonaws.com/${objectPath}`);
-    
+                        
                         let url = await _app.S3.getSignedUrl('putObject', {
                             Bucket: sails.config.S3_ASSET_BUCKET,
                             Key: objectPath,
@@ -496,6 +496,63 @@ module.exports = {
         }
         catch (err) {
             console.log('addProduct:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    getProduct: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                [required] _id: product id
+                full_info: boolean: whether to get full product info
+            }
+         */
+        try {
+            let product;
+            if (params.full_info) {
+                // product = await _app.model.Product.aggregate([
+                //     {
+                //         $match: {_id: mongoose.Types.ObjectId(params._id)}
+                //     },
+                //     {
+                //         $lookup: {
+                //             from: 'productType',
+                //             localField: 'typeID',
+                //             foreignField: '_id',
+                //             as: 'typeID'
+                //         },
+                //     },
+                //     {
+                //         $lookup: {
+                //             from: 'productBrand',
+                //             localField: 'brandID',
+                //             foreignField: '_id',
+                //             as: 'brandID'
+                //         },
+                //     },
+                //     {
+                //         $lookup: {
+                //             from: 'supplier',
+                //             localField: 'supplierIDs',
+                //             foreignField: '_id',
+                //             as: 'supplierIDs'
+                //         },
+                //     }
+                // ]);
+                product = await _app.model.Product.findById(params._id).populate('typeID').populate('brandID').populate('supplierIDs').exec();
+                
+                //-- query for in stock
+                
+                console.log(product);
+            }
+            else {
+                product = await _app.model.Product.findById(params._id);
+            }
+            return sysUtils.returnSuccess(product);
+        }
+        catch (err) {
+            console.log('getProduct:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     },

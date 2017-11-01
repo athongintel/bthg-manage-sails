@@ -108,7 +108,7 @@ module.exports = {
         try {
             let suppliers = await _app.model.Supplier.find({});
             if (params.query){
-                let regex = new RegExp(`.*${params.query}.*`, 'ig');
+                let regex = new RegExp(`.*${params.query}.*`, 'i');
                 suppliers = suppliers.filter(s=>{
                     return !!regex.exec(s.name);
                 });

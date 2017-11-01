@@ -19,22 +19,45 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                         div.row
                                             div.col-xs-12.col-sm-6
                                                 div.margin-bottom-15px
-                                                    label #{__('product_group')}
-                                                    select#select_product_group.form-control()
+                                                    div.row
+                                                        div.col-xs-6
+                                                            label #{__('product_group')}
+                                                        div.col-xs-6.text-right
+                                                            button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedGroup()')
+                                                                i.fa.fa-window-close.text-danger
+                                                    select#select_product_group.form-control
+
 
                                             div.col-xs-12.col-sm-6
                                                 div.margin-bottom-15px
-                                                    label #{__('product_type')}
+                                                    div.row
+                                                        div.col-xs-6
+                                                            label #{__('product_type')}
+                                                        div.col-xs-6.text-right
+                                                            button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedType()')
+                                                                i.fa.fa-window-close.text-danger
                                                     select#select_product_type.form-control(ng-disabled='!ctrl.selectedProductGroup')
                                         div.row
                                             div.col-xs-12.col-sm-6
                                                 div.margin-bottom-15px
-                                                    label #{__('product_brand')}
+                                                    div.row
+                                                        div.col-xs-6
+                                                            label #{__('product_brand')}
+                                                        div.col-xs-6.text-right
+                                                            button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedBrand()')
+                                                                i.fa.fa-window-close.text-danger
                                                     select#select_product_brand.form-control()
+                                                            button.btn.btn-default(ng-click='ctrl.clearSelectedBrand()')
                                             div.col-xs-12.col-sm-6
                                                 div.margin-bottom-15px
-                                                    label #{__('suppliers_')}
+                                                    div.row
+                                                        div.col-xs-6
+                                                            label #{__('suppliers_')}
+                                                        div.col-xs-6.text-right
+                                                            button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedSupplier()')
+                                                                i.fa.fa-window-close.text-danger
                                                     select#select_product_suppliers.form-control()
+
 
                                         div
                                             label #{__('model_filter')}
@@ -45,9 +68,10 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
 
                                         div.search-result
                                             div(ng-show='!ctrl.queryingProduct && ctrl.filteredProducts && ctrl.filteredProducts.length')
-                                                div.product-record(ng-repeat='product in ctrl.filteredProducts')
-                                                    span {{product.model}}
-                                                    span {{product._id}}
+                                                div.product-record(ng-click='ctrl.selectProduct(product)' ng-class='{selected: product === ctrl.selectedProduct}' ng-repeat='product in ctrl.filteredProducts')
+                                                    div.row
+                                                        div.col-xs-6
+                                                            span {{product.model}}
                                             div.text-center.no-data(ng-show='(!ctrl.filteredProducts || !ctrl.filteredProducts.length) && !ctrl.queryingProduct && !ctrl.queryFailed')
                                                 span #{__('no_result')}
                                             div.text-center(ng-show='ctrl.queryFailed')
@@ -61,6 +85,60 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                     div.col-xs-12.col-sm-6
                         div
                             div
-                                label #{'product_details'}
+                                div.row
+                                    div.col-xs-6
+                                        label #{'product_details'}
+                                    div.col-xs-6.text-right
+                                        button.btn.btn-xs.btn-default(ng-click='editProductForm.$show()' ng-disabled='!ctrl.product')
+                                            i.fa.fa-pencil
+                                            span &nbsp; #{__('edit_')}
                                 div.panel.panel-default
                                     div.panel-body
+                                        div.text-center(ng-show='ctrl.loadingProduct')
+                                            i.fa.fa-spinner.fa-spin
+                                        div(ng-show='ctrl.product')
+                                            form(editable-form='' name='editProductForm' onbeforesave='ctrl.saveProduct($data)')
+                                                div.row.margin-bottom-15px
+                                                    div.col-xs-12.col-sm-6
+                                                        div.row
+                                                            div.col-xs-6
+                                                                label #{__('model_')}
+                                                            div.col-xs-6
+                                                                div.text-right
+                                                                    div(editable-text="ctrl.product.model" e-name="model" onbeforesave='ctrl.checkProductAttribute("model", $data)' e-required) {{ctrl.product.model}}
+
+                                                    div.col-xs-12.col-sm-6
+                                                        div.row
+                                                            div.col-xs-6
+                                                                label #{__('in_stock')}
+                                                            div.col-xs-6
+                                                                div.text-right {{100}}
+
+                                                div.margin-bottom-15px
+                                                    label #{__('product_images')}
+                                                    div.panel.panel-default
+                                                        div.panel-body
+                                                            div.img-wrapper(ng-repeat='image in ctrl.product.photos')
+                                                                img(ng-src='{{image}}')
+
+                                                div.margin-bottom-15px
+                                                    label #{__('description_')}
+                                                    div(editable-textarea='ctrl.product.description' e-name='description')
+                                                        pre {{ctrl.product.description}}
+
+                                                div.margin-bottom-15px
+                                                    label #{__('suppliers_')}
+                                                    div.panel.panel-default
+                                                        div.panel-body
+                                                            div.text-center.no-data(ng-hide='ctrl.product.supplierIDs && ctrl.product.supplierIDs.length')
+                                                                span #{__('no_data')}
+                                                            a.margin-right-15px(ng-repeat='supplier in ctrl.product.supplierIDs' href='')
+                                                                span {{supplier.name}} &nbsp;
+                                                                i.fa.fa-external-link-square
+
+                                                div.text-right(ng-show='editProductForm.$visible')
+                                                    button.btn.btn-default.margin-right-5px(type='button' ng-click='editProductForm.$cancel()')
+                                                        span #{__('cancel_')}
+                                                    button.btn.btn-primary(type='submit')
+                                                        span #{__('save_')}
+
