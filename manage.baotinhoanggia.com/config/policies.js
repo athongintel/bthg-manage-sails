@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
+const sysUtils = require('../utils/system');
 
 module.exports.policies = {
     
     '*': [
-        //-- token parsing middleware
+        
         function (req, res, next) {
             "use strict";
             if (req.body.token) {
@@ -13,7 +14,7 @@ module.exports.policies = {
                         next();
                     }
                     else {
-                        res.json({success: false, error: _app.errors.TOKEN_INVALID_ERROR});
+                        res.json(sysUtils.returnError(_app.errors.TOKEN_INVALID_ERROR));
                     }
                 });
             }

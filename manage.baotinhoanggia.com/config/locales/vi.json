@@ -93,5 +93,7 @@
 	"NOT_AUTHENTICATED_ERROR": "Lỗi đăng nhập",
 	"DUPLICATED_ERROR": "Lỗi trùng lặp dữ liệu",
 	"RESOURCE_DIRTY_ERROR": "Lỗi xoá dữ liệu liên kết",
-	"TOKEN_INVALID_ERROR": "Lỗi hết hạn phiên làm việc"
+	"TOKEN_INVALID_ERROR": "Lỗi hết hạn phiên làm việc",
+	"english_": "English",
+	"vietnamese_": "Tiếng Việt"
 }

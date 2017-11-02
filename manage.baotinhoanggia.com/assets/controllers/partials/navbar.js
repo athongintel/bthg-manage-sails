@@ -23,6 +23,12 @@ app.controller('NavbarController', ['$scope', '$uibModal', function ($scope, $mo
         );
     };
     
+    ctrl.changeLanguage = function(lang){
+        Cookies.set('lang', lang);
+        //-- reload page
+        document.location.reload();
+    };
+    
     ctrl.logout = function(){
         delete $scope.global.user;
         //-- redirect to main view

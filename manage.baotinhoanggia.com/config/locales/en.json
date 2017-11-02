@@ -34,5 +34,20 @@
 	"description_": "description_",
 	"no_data": "no_data",
 	"cancel_": "cancel_",
-	"save_": "save_"
+	"save_": "save_",
+	"SYSTEM_ERROR": "SYSTEM_ERROR",
+	"INPUT_ERROR": "INPUT_ERROR",
+	"MALFORMED_REQUEST_ERROR": "MALFORMED_REQUEST_ERROR",
+	"NOT_FOUND_ERROR": "NOT_FOUND_ERROR",
+	"TOKEN_GENERATING_ERROR": "TOKEN_GENERATING_ERROR",
+	"WRONG_PASSWORD_ERROR": "WRONG_PASSWORD_ERROR",
+	"NOT_SUPER_ADMIN_ERROR": "NOT_SUPER_ADMIN_ERROR",
+	"NOT_AUTHENTICATED_ERROR": "NOT_AUTHENTICATED_ERROR",
+	"DUPLICATED_ERROR": "DUPLICATED_ERROR",
+	"RESOURCE_DIRTY_ERROR": "RESOURCE_DIRTY_ERROR",
+	"TOKEN_INVALID_ERROR": "TOKEN_INVALID_ERROR",
+	"english_": "English",
+	"vietnamese_": "Tiếng Việt",
+	"admin_dashboard": "admin_dashboard",
+	"add_customer": "add_customer"
 }
