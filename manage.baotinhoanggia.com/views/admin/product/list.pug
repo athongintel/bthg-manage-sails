@@ -10,7 +10,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                 i.fa.fa-spinner.fa-spin
             div(ng-hide='ctrl.initializing')
                 div.row
-                    div.col-xs-12.col-sm-6
+                    div.col-xs-12.col-sm-8
                         div
                             div
                                 label #{__('search_product')}
@@ -67,11 +67,11 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
 
                                         div.margin-bottom-5px.margin-left-5px.margin-right-5px
                                             div.row
-                                                div.col-xs-3
+                                                div.col-xs-5
                                                     label #{__('type_')}
                                                 div.col-xs-3
                                                     label #{__('model_')}
-                                                div.col-xs-3.text-right
+                                                div.col-xs-1.text-right
                                                     label #{__('available_')}
                                                 div.col-xs-3.text-right
                                                     label #{__('last_price')}
@@ -79,11 +79,11 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                             div(ng-show='!ctrl.queryingProduct && ctrl.filteredProducts && ctrl.filteredProducts.length')
                                                 div.product-record(ng-repeat='product in ctrl.filteredProducts track by $index' ng-click='ctrl.selectProduct(product)' ng-class='{even: $index%2, selected: product === ctrl.selectedProduct}' )
                                                     div.row
-                                                        div.col-xs-3
+                                                        div.col-xs-5
                                                             span {{product.typeID.name}}
                                                         div.col-xs-3
                                                             span {{product.model}}
-                                                        div.col-xs-3.text-right
+                                                        div.col-xs-1.text-right
                                                             span {{product.available}}
                                                         div.col-xs-3.text-right
                                                             span {{product.lastOutStock? (product.lastOutStock.price | currency : '' : '') : '-'}}
@@ -97,7 +97,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                 span
                                                     i.fa.fa-spinner.fa-spin
 
-                    div.col-xs-12.col-sm-6
+                    div.col-xs-12.col-sm-4
                         div
                             div
                                 div.row
@@ -113,6 +113,12 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                             i.fa.fa-spinner.fa-spin
                                         div(ng-show='ctrl.product')
                                             form(editable-form='' name='editProductForm' onbeforesave='ctrl.updateProduct($data)')
+                                                div.row.margin-bottom-5px
+                                                    div.col-xs-4
+                                                        label #{__('product_')}
+                                                    div.col-xs-8.text-right
+                                                        //div(editable-text="ctrl.product.model" e-name="model" onbeforesave='ctrl.checkProductAttribute("model", $data, ctrl.product.model)' e-required) {{ctrl.product.model}}
+                                                        span {{ctrl.product.typeID.name}}
                                                 div.row.margin-bottom-5px
                                                     div.col-xs-6
                                                         label #{__('model_')}
