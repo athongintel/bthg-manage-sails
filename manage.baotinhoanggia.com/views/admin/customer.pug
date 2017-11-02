@@ -60,7 +60,7 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
 
                         div.margin-bottom-15px
                             label #{__('company_info')}
-                            div(editable-text="ctrl.selectedCustomer.companyInfo" e-name="companyInfo") {{ctrl.selectedCustomer.companyInfo || "#{__('not_set')}"}}
+                            pre(editable-textarea="ctrl.selectedCustomer.companyInfo" e-name="companyInfo") {{ctrl.selectedCustomer.companyInfo || "#{__('not_set')}"}}
 
                         div.text-right(ng-show='customerEditForm.$visible')
                             button.btn.btn-default(type="button" ng-disabled='customerEditForm.$waiting' ng-click='customerEditForm.$cancel()')
