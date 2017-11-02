@@ -20,16 +20,19 @@
 
     .product-record{
         font-size:16px;
-        font-weight:bold;
-        padding:6px;
-        &:hover{
-            background-color: whitesmoke;
-        }
+        padding:0px 6px;
+    }
+    .product-record.even{
+        background-color: wheat;
+    }
+    .product-record:hover{
+        background-color: lightgrey;
     }
     .product-record.selected{
-        background-color: lightgray;
-        color: seagreen;
+        background-color: seagreen;
+        color: white;
     }
+
 
     .img-wrapper{
         position: relative;

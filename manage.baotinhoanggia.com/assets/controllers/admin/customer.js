@@ -133,7 +133,6 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                     resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                 },
                 function (err) {
-                    console.log(err);
                     resolve('Network error.');
                 }
             );

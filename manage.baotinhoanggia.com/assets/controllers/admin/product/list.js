@@ -19,34 +19,33 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
         if (ctrl.selectedProductSupplier) filter.push({attr: 'suppliersID', value: ctrl.selectedProductSupplier});
         
         //-- at least one query if not to select all products
-        if (filter.length) {
-            $http.post('/rpc', {
-                token: $scope.global.user.token,
-                name: 'filter_collection',
-                params: {
-                    collection: 'Product',
-                    filter: filter
+        //if (filter.length) {
+        $http.post('/rpc', {
+            token: $scope.global.user.token,
+            name: 'get_all_products_with_details',
+            params: {
+                filter: filter
+            }
+        }).then(
+            function (response) {
+                ctrl.queryingProduct = false;
+                if (response.data.success) {
+                    ctrl.allProducts = response.data.result;
+                    ctrl.filterProduct();
                 }
-            }).then(
-                function (response) {
-                    ctrl.queryingProduct = false;
-                    if (response.data.success) {
-                        ctrl.allProducts = response.data.result;
-                        ctrl.filterProduct();
-                    }
-                    else {
-                        ctrl.queryFailed = $scope.global.utils.errors[response.data.error.errorCode];
-                    }
-                },
-                function () {
-                    ctrl.queryingProduct = false;
-                    ctrl.queryFailed = 'Network error';
+                else {
+                    ctrl.queryFailed = $scope.global.utils.errors[response.data.error.errorCode];
                 }
-            )
-        }
-        else {
-            ctrl.queryingProduct = false;
-        }
+            },
+            function () {
+                ctrl.queryingProduct = false;
+                ctrl.queryFailed = 'Network error';
+            }
+        )
+        // }
+        // else {
+        //     ctrl.queryingProduct = false;
+        // }
     };
     
     ctrl.clearSelectedGroup = function () {
@@ -198,6 +197,45 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
                 }
             });
             ctrl.suppliersEditSelector.val(ids).trigger('change');
+            
+            ctrl.brandEditSelector = $('#select_edit_product_brand');
+            ctrl.brandEditSelector.select2({
+                data: [{id: ctrl.product.brandID._id, text: ctrl.product.brandID.name}],
+                ajax: {
+                    transport: function (params, success, failure) {
+                        $http.post('/rpc', {
+                            token: $scope.global.user.token,
+                            name: 'get_all_product_brands',
+                            params: {
+                                query: params.data.term,
+                                with_count: true
+                            }
+                        }).then(
+                            function (response) {
+                                if (response.data.success) {
+                                    success(response.data.result);
+                                }
+                                else {
+                                    failure();
+                                }
+                            },
+                            function (err) {
+                                failure();
+                            }
+                        );
+                    },
+                    processResults: function (data) {
+                        data.forEach(function (brand) {
+                            brand.id = brand._id;
+                            brand.text = `${brand.name} (${$scope.global.utils.originNameFromCode(brand.origin)})`;
+                        });
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+            ctrl.brandEditSelector.val([ctrl.product.brandID._id]).trigger('change');
         });
     };
     
@@ -256,6 +294,7 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
                     _id: ctrl.product._id,
                     model: data.model,
                     description: data.description,
+                    brandID: ctrl.brandEditSelector.val(),
                     supplierIDs: ctrl.suppliersEditSelector.val(),
                     addedPhotos: addedPhotos.length,
                 }
@@ -375,18 +414,18 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
                 $http.post('/rpc', {
                     token: $scope.global.user.token,
                     name: 'change_product_price_manually',
-                    params:{
+                    params: {
                         _id: product._id,
                         price: data.newValue,
                     }
                 }).then(
                     function (response) {
                         product.outPriceBeingChanged = false;
-                        if (response.data.success){
+                        if (response.data.success) {
                             product.lastOutStock = response.data.result;
                             alert('Success');
                         }
-                        else{
+                        else {
                             alert($scope.global.utils.errors[response.data.error.errorCode]);
                         }
                     },
@@ -582,6 +621,8 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
             //-- load product
             ctrl.loadProduct(queries.productID);
         }
+        
+        ctrl.queryProducts();
     };
     
 }]);

@@ -42,7 +42,7 @@ div.admin-product-brand(ng-controller='AdminProductBrandController as ctrl' ng-i
                                                         div.col-xs-6
                                                             span(ng-hide='!brand.isBeingRemoved && (ctrl.selectedBrand._id === brand._id || !brand._id)') {{global.utils.originNameFromCode(brand.origin) || '#{__("not_set")}'}}
                                                             a(ng-show='!brand.isBeingRemoved && ctrl.selectedBrand._id === brand._id' href=""
-                                                                e-form='rowform' e-name='origin' e-uib-typeahead='origin as origin.name for origin in origins | filter:$viewValue' typeahead-editable='false'
+                                                                e-form='rowform' e-name='origin' e-uib-typeahead='origin as origin.name for origin in global.utils.origins | filter:$viewValue' typeahead-editable='false'
                                                                 editable-text="global.utils.originNameFromCode(brand.origin)" buttons="no" e-required) {{global.utils.originNameFromCode(brand.origin) || '#{__("not_set")}'}}
 
                                                 div.col-xs-3.vf-center.text-right

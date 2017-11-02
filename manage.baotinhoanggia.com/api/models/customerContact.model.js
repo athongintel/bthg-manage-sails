@@ -6,7 +6,8 @@ const constants = {
 
 const customerContactSchema = new mongoose.Schema({
     customerID: {type: mongoose.Schema.ObjectId, ref: 'Customer', required: true},
-    name: {type: String, required: true, unique: true},
+    name: {type: String, required: true},
+    lastName: {type: String},
     position: {type: String},
     phoneNumber: {type: String},
     email: {type: String},

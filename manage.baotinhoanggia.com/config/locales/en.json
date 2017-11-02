@@ -88,5 +88,9 @@
 	"tax_number": "tax_number",
 	"outorder_": "outorder_",
 	"find_outorder": "find_outorder",
-	"new_outorder": "new_outorder"
+	"new_outorder": "new_outorder",
+	"last_name": "last_name",
+	"type_": "type_",
+	"available_": "available_",
+	"last_price": "last_price"
 }

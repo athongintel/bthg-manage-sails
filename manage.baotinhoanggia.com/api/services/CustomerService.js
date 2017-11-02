@@ -146,6 +146,7 @@ module.exports = {
             params:{
                 [required] customerID: customer id
                 [required] name: contact name
+                lastName: contact last name
                 position,
                 phoneNumber,
                 email,
@@ -156,6 +157,7 @@ module.exports = {
             let contact = await _app.model.CustomerContact({
                 customerID: params.customerID,
                 name: params.name,
+                lastName: params.lastName,
                 position: params.position,
                 phoneNumber: params.phoneNumber,
                 email: params.email,
@@ -176,6 +178,7 @@ module.exports = {
             params:{
                 [required] _id: customer id
                 [required] name: contact name
+                lastName: contact last name
                 position,
                 phoneNumber,
                 email,
@@ -185,6 +188,7 @@ module.exports = {
         try {
             let contact = await _app.model.CustomerContact.findById(params._id);
             contact.name = params.name;
+            contact.lastName = params.lastName;
             contact.position = params.position;
             contact.phoneNumber = params.phoneNumber;
             contact.email = params.email;

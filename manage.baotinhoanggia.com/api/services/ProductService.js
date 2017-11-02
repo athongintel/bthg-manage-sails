@@ -2,6 +2,21 @@ const BigNumber = require('bignumber.js');
 const mongoose = require('mongoose');
 const sysUtils = require('../../utils/system');
 
+const calculateProductAvailable = async function(productID){
+    "use strict";
+    let inStocks = await _app.model.InStock.find({productID: productID});
+    let outStocks = await _app.model.OutStock.find({productID: productID});
+    //-- sum
+    let sum = 0;
+    inStocks.forEach(stock => {
+        sum += stock.quantity;
+    });
+    outStocks.forEach(stock => {
+        sum -= stock.quantity;
+    });
+    return sum;
+};
+
 module.exports = {
     
     //----------- product category -------------
@@ -464,7 +479,7 @@ module.exports = {
                 metaInfo: _app.model.InStock.constants.STOCK_INIT_STOCK,
             });
             await inStock.save();
-    
+            
             let outStock = new _app.model.OutStock({
                 productID: product._id,
                 branchID: params.storeBranch,
@@ -501,7 +516,7 @@ module.exports = {
                             ContentType: 'image/*'
                         });
                         uploadUrls.push(uploadUrl);
-    
+                        
                         product.photos.push({
                             fileName: fileName,
                             url: url
@@ -531,6 +546,7 @@ module.exports = {
                 [required] _id: id of the product,
                 [required, unique] model: the product model,
                 description,
+                brandID,
                 supplierIDs,
                 addedPhotos,
             }
@@ -542,6 +558,7 @@ module.exports = {
             
             product.model = params.model;
             product.description = params.description;
+            product.brandID = params.brandID;
             product.supplierIDs = params.supplierIDs;
             
             let returnObject = {};
@@ -579,7 +596,7 @@ module.exports = {
                     returnObject.uploadUrls = uploadUrls;
                 }
             }
-    
+            
             //-- update to product
             product = await product.save();
             
@@ -613,28 +630,24 @@ module.exports = {
                 
                 product = await _app.model.Product.findById(params._id).populate('typeID').populate('brandID').populate('supplierIDs').lean().exec();
                 if (!product)
-                    return sysUtils .returnError(_app.errors.NOT_FOUND_ERROR);
+                    return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
                 
                 //-- query for available
                 let inStocks = await _app.model.InStock.find({productID: product._id});
                 let outStocks = await _app.model.OutStock.find({productID: product._id});
-                //-- sum
-                let sum = 0;
-                inStocks.forEach(stock=>{
-                   sum += stock.quantity;
-                });
-                outStocks.forEach(stock=>{
-                    sum -= stock.quantity;
-                });
-                product.available = sum;
+
+                product.available = await calculateProductAvailable(product._id);
                 
                 //-- get latest outPrice && latest average inPrice for each supplier
                 let lastOutStock = await _app.model.OutStock.findOne({productID: product._id}).sort({createdAt: '-1'});
                 
                 //console.log('lastOutStock:', lastOutStock);
                 
-                let lastInStockNoSup = await _app.model.InStock.findOne({productID: product._id, supplierID: null}).sort({createdAt: '-1'});
-    
+                let lastInStockNoSup = await _app.model.InStock.findOne({
+                    productID: product._id,
+                    supplierID: null
+                }).sort({createdAt: '-1'});
+                
                 //console.log('lastInStockNoSup:', lastInStockNoSup);
                 
                 let lastInStockForSups = [];
@@ -652,10 +665,10 @@ module.exports = {
                         if (!lastInStockForSups[i]) lastInStockForSups[i] = lastInStockNoSup;
                     }
                 }
-                else{
+                else {
                     if (lastInStockNoSup) lastInStockForSups.push(lastInStockNoSup);
                 }
-    
+                
                 // console.log('lastInStockForSups:', lastInStockForSups);
                 
                 product.lastOutStock = lastOutStock;
@@ -672,7 +685,41 @@ module.exports = {
         }
     },
     
-    removeProductPhoto: async function(principal, params){
+    getAllProductsWithDetails: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                filter: [
+                    {attr, value}
+                ]
+            }
+         */
+        try {
+            let productsPromise = _app.model.Product.find({}).populate('brandID').populate('typeID');
+            if (params.filter && params.filter.length)
+                params.filter.forEach(pair => {
+                    productsPromise = productsPromise.where(pair.attr, pair.value);
+                });
+            
+            productsPromise = productsPromise.lean().exec();
+            
+            let products = await productsPromise;
+            
+            //-- query for last stock
+            for (let i = 0; i < products.length; i++) {
+                products[i].lastOutStock = await _app.model.OutStock.findOne({productID: products[i]._id}).sort({createdAt: '-1'});
+                products[i].available = await calculateProductAvailable(products[i]._id);
+            }
+            
+            return sysUtils.returnSuccess(products);
+        }
+        catch (err) {
+            console.log('getAllProductsWithDetails:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    removeProductPhoto: async function (principal, params) {
         "use strict";
         /*
             params: {
@@ -685,7 +732,7 @@ module.exports = {
             if (!product)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             
-            let index = product.photos.findIndex(p=>{
+            let index = product.photos.findIndex(p => {
                 return p.fileName === params.fileName;
             });
             
@@ -711,7 +758,7 @@ module.exports = {
         }
     },
     
-    changeProductPrice: async function(principal, params){
+    changeProductPrice: async function (principal, params) {
         "use strict";
         /*
             params: {

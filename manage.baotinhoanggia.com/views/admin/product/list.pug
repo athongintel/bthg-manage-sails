@@ -20,9 +20,9 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                             div.col-xs-12.col-sm-6
                                                 div.margin-bottom-15px
                                                     div.row
-                                                        div.col-xs-6
+                                                        div.col-xs-9
                                                             label #{__('product_group')}
-                                                        div.col-xs-6.text-right
+                                                        div.col-xs-3.text-right
                                                             button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedGroup()')
                                                                 i.fa.fa-window-close.text-danger
                                                     select#select_product_group.form-control
@@ -30,9 +30,9 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                             div.col-xs-12.col-sm-6
                                                 div.margin-bottom-15px
                                                     div.row
-                                                        div.col-xs-6
+                                                        div.col-xs-9
                                                             label #{__('product_type')}
-                                                        div.col-xs-6.text-right
+                                                        div.col-xs-3.text-right
                                                             button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedType()')
                                                                 i.fa.fa-window-close.text-danger
                                                     select#select_product_type.form-control(ng-disabled='!ctrl.selectedProductGroup')
@@ -40,19 +40,19 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                             div.col-xs-12.col-sm-6
                                                 div.margin-bottom-15px
                                                     div.row
-                                                        div.col-xs-6
+                                                        div.col-xs-9
                                                             label #{__('product_brand')}
-                                                        div.col-xs-6.text-right
+                                                        div.col-xs-3.text-right
                                                             button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedBrand()')
                                                                 i.fa.fa-window-close.text-danger
                                                     select#select_product_brand.form-control()
-                                                            button.btn.btn-default(ng-click='ctrl.clearSelectedBrand()')
+                                                        button.btn.btn-default(ng-click='ctrl.clearSelectedBrand()')
                                             div.col-xs-12.col-sm-6
                                                 div.margin-bottom-15px
                                                     div.row
-                                                        div.col-xs-6
+                                                        div.col-xs-9
                                                             label #{__('suppliers_')}
-                                                        div.col-xs-6.text-right
+                                                        div.col-xs-3.text-right
                                                             button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedSupplier()')
                                                                 i.fa.fa-window-close.text-danger
                                                     select#select_product_supplier.form-control()
@@ -65,12 +65,28 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                     span.glyphicon.glyphicon-search
                                                 input.form-control(ng-model='ctrl.productFilter' ng-change='ctrl.filterProduct()' ng-disabled='ctrl.queryingProduct')
 
+                                        div.margin-bottom-5px.margin-left-5px.margin-right-5px
+                                            div.row
+                                                div.col-xs-3
+                                                    label #{__('type_')}
+                                                div.col-xs-3
+                                                    label #{__('model_')}
+                                                div.col-xs-3.text-right
+                                                    label #{__('available_')}
+                                                div.col-xs-3.text-right
+                                                    label #{__('last_price')}
                                         div.search-result
                                             div(ng-show='!ctrl.queryingProduct && ctrl.filteredProducts && ctrl.filteredProducts.length')
-                                                div.product-record(ng-click='ctrl.selectProduct(product)' ng-class='{selected: product === ctrl.selectedProduct}' ng-repeat='product in ctrl.filteredProducts')
+                                                div.product-record(ng-repeat='product in ctrl.filteredProducts track by $index' ng-click='ctrl.selectProduct(product)' ng-class='{even: $index%2, selected: product === ctrl.selectedProduct}' )
                                                     div.row
-                                                        div.col-xs-6
+                                                        div.col-xs-3
+                                                            span {{product.typeID.name}}
+                                                        div.col-xs-3
                                                             span {{product.model}}
+                                                        div.col-xs-3.text-right
+                                                            span {{product.available}}
+                                                        div.col-xs-3.text-right
+                                                            span {{product.lastOutStock? (product.lastOutStock.price | currency : '' : '') : '-'}}
                                             div.text-center.no-data(ng-show='(!ctrl.filteredProducts || !ctrl.filteredProducts.length) && !ctrl.queryingProduct && !ctrl.queryFailed')
                                                 span #{__('no_result')}
                                             div.text-center(ng-show='ctrl.queryFailed')
@@ -97,32 +113,45 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                             i.fa.fa-spinner.fa-spin
                                         div(ng-show='ctrl.product')
                                             form(editable-form='' name='editProductForm' onbeforesave='ctrl.updateProduct($data)')
-                                                div.row.margin-bottom-15px
-                                                    div.col-xs-12.col-sm-6
-                                                        div.row
-                                                            div.col-xs-6
-                                                                label #{__('model_')}
-                                                            div.col-xs-6
-                                                                div.text-right
-                                                                    div(editable-text="ctrl.product.model" e-name="model" onbeforesave='ctrl.checkProductAttribute("model", $data, ctrl.product.model)' e-required) {{ctrl.product.model}}
-                                                    div.col-xs-12.col-sm-6.text-right
-                                                        span {{ctrl.product.brandID.name}} ({{global.utils.originNameFromCode(ctrl.product.brandID.origin)}})
-                                                div.row.margin-bottom-15px
+                                                div.row.margin-bottom-5px
+                                                    div.col-xs-6
+                                                        label #{__('model_')}
+                                                    div.col-xs-6.text-right
+                                                        div(editable-text="ctrl.product.model" e-name="model" onbeforesave='ctrl.checkProductAttribute("model", $data, ctrl.product.model)' e-required) {{ctrl.product.model}}
+                                                div.row.margin-bottom-5px
+                                                    div.col-xs-6
+                                                        label #{__('product_brand')}
+                                                    div.col-xs-6.text-right
+                                                        span(ng-if='!ctrl.product.isBeingEdited') {{ctrl.product.brandID.name}} ({{global.utils.originNameFromCode(ctrl.product.brandID.origin)}})
+                                                        select#select_edit_product_brand.form-control(ng-if='ctrl.product.isBeingEdited')
+
+                                                div.row.margin-bottom-5px
+                                                    div.col-xs-3
+                                                        label #{__('suppliers_')}
+                                                    div.col-xs-9.text-right
+                                                        select#select_product_suppliers.form-control(ng-if='ctrl.product.isBeingEdited')
+                                                        div(ng-hide='ctrl.product.isBeingEdited')
+                                                            span.no-data(ng-hide='ctrl.product.supplierIDs && ctrl.product.supplierIDs.length') #{__('no_data')}
+                                                            a.margin-left-15px(target='_blank' ng-repeat='supplier in ctrl.product.supplierIDs' href='#/admin/supplier?supplierID={{supplier._id}}')
+                                                                span {{supplier.name}} &nbsp;
+                                                                i.fa.fa-external-link-square
+
+                                                div.row.margin-bottom-5px
                                                     div.col-xs-6
                                                         label #{__('in_stock')}
                                                         a.margin-left-15px(href='' ng-click='ctrl.showAvailableInStocks()') (#{__('detail_')})
                                                     div.col-xs-6
                                                         div.text-right {{ctrl.product.available}}/{{ctrl.product.stockPeek}}
-                                                div.row.margin-bottom-15px
+                                                div.row.margin-bottom-5px
                                                     div.col-xs-6
                                                         label #{__('average_import_price')}
                                                         a.margin-left-15px(href='' ng-click='ctrl.showImportPrice()') (#{__('detail_')})
                                                     div.col-xs-6
                                                         div.text-right {{ctrl.product.lastInStocks? (ctrl.calculateAveragePrice(ctrl.product.lastInStocks) | currency : '' : 0) : '#{__("not_available")}'}}
-                                                div.row.margin-bottom-15px
+                                                div.row.margin-bottom-5px
                                                     div.col-xs-6
                                                         label #{__('last_export_price')}
-                                                        a.margin-left-15px(ng-hide='ctrl.product.outPriceBeingChanged' href='' ng-click='ctrl.changeExportPriceManually(ctrl.product,"'+__('change_product_price_dialog_header')+'")') (#{__('change_')})
+                                                        a.margin-left-15px(ng-hide='ctrl.product.outPriceBeingChanged' href='' ng-click='ctrl.changeExportPriceManually(ctrl.product,"' + __('change_product_price_dialog_header') + '")') (#{__('change_')})
                                                     div.col-xs-6
                                                         div.text-right
                                                             span(ng-hide='ctrl.product.outPriceBeingChanged') {{ctrl.product.lastOutStock? (ctrl.product.lastOutStock.price | currency : '' : 0) : '#{__("not_available")}'}}
@@ -130,14 +159,16 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                                 i.fa.fa-spinner.fa-spin
                                                                 span &nbsp; #{__('is_being_updated')}
 
-                                                div.margin-bottom-15px
+
+
+                                                div.margin-bottom-5px
                                                     label #{__('product_images')}
                                                     div.panel.panel-default
                                                         div.panel-body(ngf-drop-disabled='!ctrl.product.isBeingEdited' ngf-drop="ctrl.addProductPhoto($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'")
                                                             div.img-wrapper(ng-repeat='image in ctrl.product.photos')
                                                                 img(ng-if='!image.localPhoto' ng-src='{{image.url+"?decache=" + Date.now()}}' image-on-load='image.loaded = true')
                                                                 img(ng-if='image.localPhoto' ngf-thumbnail='image.file')
-                                                                span.info-float.close-float.text-danger(ng-click='ctrl.removeProductImage(image, "'+__('confirm_remove_product_photo')+'")' ng-hide='!ctrl.product.isBeingEdited || !image.loaded || image.isBeingRemoved || image.isBeingUploaded || image.uploadProceeded')
+                                                                span.info-float.close-float.text-danger(ng-click='ctrl.removeProductImage(image, "' + __('confirm_remove_product_photo') + '")' ng-hide='!ctrl.product.isBeingEdited || !image.loaded || image.isBeingRemoved || image.isBeingUploaded || image.uploadProceeded')
                                                                     i.fa.fa-minus-circle(ng-if='image.localPhoto')
                                                                     i.fa.fa-times-circle(ng-if='!image.localPhoto')
                                                                 span.info-float(ng-show='image.isBeingUploaded || !image.loaded || image.isBeingRemoved')
@@ -151,21 +182,12 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                                     i.fa.fa-plus-circle
                                                                     input(style='display: none' type='file', ngf-select="ctrl.addProductPhoto($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'")
 
-                                                div.margin-bottom-15px
+                                                div.margin-bottom-5px
                                                     label #{__('description_')}
                                                     div(editable-textarea='ctrl.product.description' e-name='description')
                                                         pre {{ctrl.product.description}}
 
-                                                div.margin-bottom-15px
-                                                    label #{__('suppliers_')}
-                                                    select#select_product_suppliers.form-control(ng-if='ctrl.product.isBeingEdited')
-                                                    div.panel.panel-default(ng-hide='ctrl.product.isBeingEdited')
-                                                        div.panel-body
-                                                            div.text-center.no-data(ng-hide='ctrl.product.supplierIDs && ctrl.product.supplierIDs.length')
-                                                                span #{__('no_data')}
-                                                            a.margin-right-15px(target='_blank' ng-repeat='supplier in ctrl.product.supplierIDs' href='#/admin/supplier?supplierID={{supplier._id}}')
-                                                                span {{supplier.name}} &nbsp;
-                                                                i.fa.fa-external-link-square
+
 
                                                 div.text-right(ng-show='editProductForm.$visible')
                                                     button.btn.btn-default.margin-right-5px(type='button' ng-click='ctrl.cancelEditing()' ng-disabled='editProductForm.$waiting')

@@ -101,5 +101,9 @@
 	"is_being_updated": "đang cập nhật",
 	"outorder_": "Đơn bán hàng",
 	"find_outorder": "Tìm kiếm đơn hàng",
-	"new_outorder": "Tạo đơn hàng"
+	"new_outorder": "Tạo đơn hàng",
+	"type_": "Sản phẩm",
+	"available_": "Tồn kho",
+	"last_price": "Đơn giá",
+	"last_name": "Họ"
 }

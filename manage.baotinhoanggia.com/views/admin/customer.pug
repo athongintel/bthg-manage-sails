@@ -87,6 +87,7 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                             thead
                                 tr
                                     th #{__('name_')}
+                                    th #{__('last_name')}
                                     th #{__('position_')}
                                     th #{__('phone_number')}
                                     th #{__('email_')}
@@ -94,12 +95,14 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                                     td.text-right(style='width: 120px')
                             tbody(style='background: white')
                                 tr(ng-show='!ctrl.selectedCustomerContacts || !ctrl.selectedCustomerContacts.length')
-                                    td(colspan='6')
+                                    td(colspan='7')
                                         div.text-center
                                             span #{__('no_data')}
                                 tr(ng-repeat='contact in ctrl.selectedCustomerContacts')
                                     td
-                                        div(editable-text="contact.name" e-name="name" e-form="rowform" onbeforesave='ctrl.checkContactAttribute("name", $data, contact)' e-required='') {{contact.name || '#{__("not_set")}'}}
+                                        div(editable-text="contact.name" e-name="name" e-form="rowform" e-required='') {{contact.name || '#{__("not_set")}'}}
+                                    td
+                                        div(editable-text="contact.lastName" e-name="lastName" e-form="rowform") {{contact.lastName || '#{__("not_set")}'}}
                                     td
                                         div(editable-text="contact.position" e-name="position" e-form="rowform") {{contact.position || '#{__("not_set")}'}}
                                     td
