@@ -275,7 +275,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                 processResults: function (data) {
                     data.forEach(function (brand) {
                         brand.id = brand._id;
-                        brand.text = `${brand.name} (${$scope.originNameFromCode(brand.origin)})`;
+                        brand.text = `${brand.name} (${$scope.global.utils.originNameFromCode(brand.origin)})`;
                     });
                     return {
                         results: data

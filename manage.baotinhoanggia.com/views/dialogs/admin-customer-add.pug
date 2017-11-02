@@ -12,14 +12,14 @@ script(type="text/ng-template" id="adminCustomerAddDialog")
                 div.margin-bottom-15px
                     label #{__('code_')} *
                     div(editable-text="code" e-name="code" onbeforesave='checkCustomerAttribute("code", $data)' e-required) {{ code || '#{__("not_set")}'}}
+                div.row
+                    div.margin-bottom-15px.col-xs-12.col-sm-6
+                        label #{__('phone_number')}
+                        input.form-control(name='phoneNumber' ng-model='phoneNumber')
 
-                div.margin-bottom-15px
-                    label #{__('phone_number')}
-                    input.form-control(name='phoneNumber' ng-model='phoneNumber')
-
-                div.margin-bottom-15px
-                    label #{__('fax_number')}
-                    input.form-control(name='faxNumber' ng-model='faxNumber')
+                    div.margin-bottom-15px.col-xs-12.col-sm-6
+                        label #{__('fax_number')}
+                        input.form-control(name='faxNumber' ng-model='faxNumber')
 
                 div.margin-bottom-15px
                     label #{__('address_')}
