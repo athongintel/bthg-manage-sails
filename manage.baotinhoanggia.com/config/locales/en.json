@@ -82,5 +82,8 @@
 	"company_info": "company_info",
 	"customer_contact": "customer_contact",
 	"discount_": "discount_",
-	"remove_customer_contact_prompt": "remove_customer_contact_prompt"
+	"remove_customer_contact_prompt": "remove_customer_contact_prompt",
+	"is_being_updated": "is_being_updated",
+	"company_name": "company_name",
+	"tax_number": "tax_number"
 }

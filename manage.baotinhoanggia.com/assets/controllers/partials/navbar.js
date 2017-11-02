@@ -8,17 +8,17 @@ app.controller('NavbarController', ['$scope', '$uibModal', function ($scope, $mo
             templateUrl: 'loginDialog',
             controller: 'LoginDialogController',
             backdrop: 'static',
-            keyboard: false
+            keyboard: false,
+            scope: $scope,
         }).result.then(
             function (result) {
-                //-- show index based on roles...
+                //-- TODO show index based on roles...
                 if (!$scope.global.user) $scope.global.user = result;
                 if ($scope.global.user.userClass.indexOf(999) >= 0) {
                     document.location.href = '/#admin/index';
                 }
             },
-            function (err) {
-                //-- do nothing
+            function () {
             }
         );
     };

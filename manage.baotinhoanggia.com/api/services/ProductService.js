@@ -674,7 +674,6 @@ module.exports = {
     
     removeProductPhoto: async function(principal, params){
         "use strict";
-        "use strict";
         /*
             params: {
                 [required] _id: product id
@@ -708,6 +707,37 @@ module.exports = {
         }
         catch (err) {
             console.log('removeProductPhoto:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    changeProductPrice: async function(principal, params){
+        "use strict";
+        /*
+            params: {
+                [required] _id: product id
+                [required]: price, the new price to set
+            }
+         */
+        try {
+            let product = await _app.model.Product.findById(params._id);
+            if (!product)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            let outStock = new _app.model.OutStock({
+                productID: product._id,
+                branchID: principal.user.branchID,
+                userID: principal.user._id,
+                quantity: 0,
+                price: new BigNumber(params.price).toString(),
+                metaInfo: _app.model.OutStock.constants.STOCK_MANUAL_CHANGE
+            });
+            
+            outStock = await outStock.save();
+            return sysUtils.returnSuccess(outStock);
+        }
+        catch (err) {
+            console.log('changeProductPrice:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     }

@@ -50,6 +50,7 @@ const actions = {
     'get_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getProduct, validation: {required: ['_id']}},
     'update_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProduct, validation: {required: ['_id', 'model']}},
     'remove_product_photo': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductPhoto, validation: {required: ['_id', 'fileName']}},
+    'change_product_price_manually': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.changeProductPrice, validation: {required: ['_id', 'price']}},
     
     'get_all_branches': {policies: [PO.isAuthenticated, PO.isAdmin], action: BranchService.getAllBranches, validation: {required: []}},
 };

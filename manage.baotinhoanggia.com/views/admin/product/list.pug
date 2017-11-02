@@ -122,9 +122,13 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                 div.row.margin-bottom-15px
                                                     div.col-xs-6
                                                         label #{__('last_export_price')}
-                                                        a.margin-left-15px(href='' ng-click='ctrl.changeExportPriceManually(ctrl.product,"'+__('change_product_price_dialog_header')+'")') (#{__('change_')})
+                                                        a.margin-left-15px(ng-hide='ctrl.product.outPriceBeingChanged' href='' ng-click='ctrl.changeExportPriceManually(ctrl.product,"'+__('change_product_price_dialog_header')+'")') (#{__('change_')})
                                                     div.col-xs-6
-                                                        div.text-right {{ctrl.product.lastOutStock? (ctrl.product.lastOutStock.price | currency : '' : 0) : '#{__("not_available")}'}}
+                                                        div.text-right
+                                                            span(ng-hide='ctrl.product.outPriceBeingChanged') {{ctrl.product.lastOutStock? (ctrl.product.lastOutStock.price | currency : '' : 0) : '#{__("not_available")}'}}
+                                                            span(ng-show='ctrl.product.outPriceBeingChanged')
+                                                                i.fa.fa-spinner.fa-spin
+                                                                span &nbsp; #{__('is_being_updated')}
 
                                                 div.margin-bottom-15px
                                                     label #{__('product_images')}

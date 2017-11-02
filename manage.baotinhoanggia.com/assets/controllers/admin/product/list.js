@@ -361,17 +361,40 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
             templateUrl: 'changeValueDialog',
             controller: 'ChangeValueDialogController',
             resolve: {
-                options: function(){
+                options: function () {
                     return {
-                        oldValue: product.lastOutStock? product.lastOutStock.price : "",
+                        oldValue: product.lastOutStock ? product.lastOutStock.price : "",
                         dialogHeader: i18n_change_product_price_dialog_header
                     };
                 },
             },
             scope: $scope
         }).result.then(
-            function (response) {
-            
+            function (data) {
+                product.outPriceBeingChanged = true;
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'change_product_price_manually',
+                    params:{
+                        _id: product._id,
+                        price: data.newValue,
+                    }
+                }).then(
+                    function (response) {
+                        product.outPriceBeingChanged = false;
+                        if (response.data.success){
+                            product.lastOutStock = response.data.result;
+                            alert('Success');
+                        }
+                        else{
+                            alert($scope.global.utils.errors[response.data.error.errorCode]);
+                        }
+                    },
+                    function () {
+                        product.outPriceBeingChanged = false;
+                        alert('Network error');
+                    }
+                );
             },
             function () {
             }

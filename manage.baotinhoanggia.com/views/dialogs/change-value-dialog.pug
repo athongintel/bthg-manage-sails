@@ -11,5 +11,5 @@ script(type="text/ng-template" id="changeValueDialog")
             input.huge-input.form-control.text-right(cleave="global.utils.cleaveOptions.currency" ng-model="newValue" autofocus)
 
         div.text-right
-            button.action.btn.btn-primary(ng-click='changeValue()')
+            button.action.btn.btn-primary(ng-click='changeValue()' ng-disabled='!newValue')
                 span #{__('OK_')}

@@ -97,5 +97,6 @@
 	"english_": "English",
 	"vietnamese_": "Tiếng Việt",
 	"company_name": "company_name",
-	"tax_number": "tax_number"
+	"tax_number": "tax_number",
+	"is_being_updated": "is_being_updated"
 }

@@ -2,7 +2,8 @@
 const mongoose = require('mongoose');
 
 const constants = {
-    STOCK_INIT_STOCK: 'STOCK_INIT_STOCK'
+    STOCK_INIT_STOCK: 'STOCK_INIT_STOCK',
+    STOCK_MANUAL_CHANGE: 'STOCK_MANUAL_CHANGE'
 };
 
 const outStockSchema = new mongoose.Schema({
@@ -10,7 +11,6 @@ const outStockSchema = new mongoose.Schema({
     branchID: {type: mongoose.Schema.ObjectId, ref: 'Branch', required: true},
     userID: {type: mongoose.Schema.ObjectId, ref: 'User', required: true},
     quantity: {type: Number, required: true},
-    customerID: {type: mongoose.Schema.ObjectId, ref: 'Customer'},
     price: {type: String},
     outStockOrderID: {type: mongoose.Schema.ObjectId, ref: 'OutStockOrder'},
     metaInfo: {type: mongoose.Schema.Types.Mixed},
