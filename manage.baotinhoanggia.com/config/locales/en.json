@@ -85,5 +85,8 @@
 	"remove_customer_contact_prompt": "remove_customer_contact_prompt",
 	"is_being_updated": "is_being_updated",
 	"company_name": "company_name",
-	"tax_number": "tax_number"
+	"tax_number": "tax_number",
+	"outorder_": "outorder_",
+	"find_outorder": "find_outorder",
+	"new_outorder": "new_outorder"
 }

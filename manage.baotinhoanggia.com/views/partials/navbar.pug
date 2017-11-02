@@ -56,12 +56,13 @@
                     li(ng-class='{active: global.utils.isPath("admin/product/new")}')
                         a(href='#/admin/product/new') #{__('new_product')}
 
-            li(ng-class='{active: global.utils.isPath("admin/quotation")}')
+            li(ng-class='{active: global.utils.isPath("admin/outorder")}')
                 a.dropdown-toggle(href='', data-toggle='dropdown')
-                    span #{__('quotation_')}
+                    span #{__('outorder_')}
                     b.caret
                 ul.dropdown-menu
-                    li(ng-class='{active: global.utils.isPath("admin/quotation/list")}')
-                        a(href='#/admin/quotation/list') #{__('find_quotation')}
-                    li(ng-class='{active: global.utils.isPath("admin/quotation/new")}')
-                        a(href='#/admin/quotation/new') #{__('new_quotation')}
+                    li(ng-class='{active: global.utils.isPath("admin/outorder/list")}')
+                        a(href='#/admin/outorder/list') #{__('find_outorder')}
+                    li.divider
+                    li(ng-class='{active: global.utils.isPath("admin/outorder/new")}')
+                        a(href='#/admin/outorder/new') #{__('new_outorder')}

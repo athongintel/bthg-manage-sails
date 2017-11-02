@@ -14,6 +14,8 @@ _app.model = {
     InStock: require('../api/models/inStock.model'),
     OutStock: require('../api/models/outStock.model'),
     Branch: require('../api/models/branch.model'),
+    Quotation: require('../api/models/quotation.model'),
+    OutStockOrder: require('../api/models/outStockOrder.model'),
 };
 
 _app.errors = {

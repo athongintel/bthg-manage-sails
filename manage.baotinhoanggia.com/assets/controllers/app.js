@@ -32,6 +32,12 @@ app.config(function ($routeProvider) {
         .when('/admin/product/list', {
             templateUrl: '/admin/product/list',
         })
+        .when('/admin/outorder/list', {
+            templateUrl: '/admin/outorder/list',
+        })
+        .when('/admin/outorder/new', {
+            templateUrl: '/admin/outorder/new',
+        })
 });
 
 app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scope, $sessionStorage) {
