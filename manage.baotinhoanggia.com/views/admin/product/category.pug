@@ -29,13 +29,13 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
                                     span #{__('no_data')}
 
                                 div.category(ng-show='ctrl.isNewCategory')
-                                    a(href="" editable-text="ctrl.newCategory.name" buttons="no" e-form='newCategoryForm' oncancel='ctrl.cancelCategory()' onbeforesave='ctrl.updateCategory(ctrl.newCategory, $data)') {{ ctrl.newCategory.name || "#{__('not_set')}"}}
+                                    a(href="" editable-text="ctrl.newCategory.name" buttons="no" e-form='newCategoryForm' oncancel='ctrl.cancelCategory()' onbeforesave='ctrl.updateCategory(ctrl.newCategory, $data)') {{ ctrl.newCategory.name || '#{__("not_set")}'}}
                                 div.category-wrapper(ng-repeat='category in ctrl.filteredCategories')
                                     div.category(ng-class='{active: ctrl.selectedCategory._id === category._id}' ng-click='ctrl.selectCategory(category)')
                                         div.row.flex
                                             div.col-xs-8.vf-center
                                                 span(ng-hide='!category.isBeingRemoved && ctrl.selectedCategory._id === category._id') {{category.name}}
-                                                a(ng-show='!category.isBeingRemoved && ctrl.selectedCategory._id === category._id' href="" editable-text="category.name" buttons="no" onbeforesave='ctrl.updateCategory(category, $data)') {{ category.name || "#{__('not_set')}"}}
+                                                a(ng-show='!category.isBeingRemoved && ctrl.selectedCategory._id === category._id' href="" editable-text="category.name" buttons="no" onbeforesave='ctrl.updateCategory(category, $data)') {{ category.name || '#{__("not_set")}'}}
                                             div.col-xs-4.vf-center.text-right
                                                 span(ng-show='ctrl.selectedCategory._id === category._id || category.isBeingRemoved')
                                                     button.btn.btn-danger.btn-xs.margin-right-5px(ng-click='ctrl.removeCategory(category)' ng-disabled='category.size > 0 || category.isBeingRemoved')
@@ -64,14 +64,14 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
                                     span #{__('no_data')}
 
                                 div.category(ng-show='ctrl.isNewType')
-                                    a(href="" editable-text="ctrl.newType.name" buttons="no" e-form='newTypeForm' oncancel='ctrl.cancelType()' onbeforesave='ctrl.updateType(ctrl.newType, $data)') {{ ctrl.newType.name || "#{__('not_set')}"}}
+                                    a(href="" editable-text="ctrl.newType.name" buttons="no" e-form='newTypeForm' oncancel='ctrl.cancelType()' onbeforesave='ctrl.updateType(ctrl.newType, $data)') {{ ctrl.newType.name || '#{__("not_set")}'}}
 
                                 div.category-wrapper(ng-repeat='type in ctrl.filteredTypes')
                                     div.category(ng-class='{active: ctrl.selectedType._id === type._id}' ng-click='ctrl.selectType(type)')
                                         div.row.flex
                                             div.col-xs-8.vf-center
                                                 span(ng-hide='!type.isBeingRemoved && ctrl.selectedType._id === type._id') {{type.name}}
-                                                a(ng-show='!type.isBeingRemoved && ctrl.selectedType._id === type._id' href="" editable-text="type.name" buttons="no" onbeforesave='ctrl.updateType(type, $data)') {{ type.name || "#{__('not_set')}"}}
+                                                a(ng-show='!type.isBeingRemoved && ctrl.selectedType._id === type._id' href="" editable-text="type.name" buttons="no" onbeforesave='ctrl.updateType(type, $data)') {{ type.name || '#{__("not_set")}'}}
                                             div.col-xs-4.vf-center.text-right
                                                 span(ng-show='ctrl.selectedType._id === type._id || type.isBeingRemoved')
                                                     button.btn.btn-danger.btn-xs.margin-right-5px(ng-click='ctrl.removeType(type)' ng-disabled='type.size > 0 || type.isBeingRemoved')

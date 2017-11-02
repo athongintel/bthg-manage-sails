@@ -81,7 +81,8 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
             controller: 'AdminSupplierAddDialogController',
             scope: $scope,
             backdrop: 'static',
-            keyboard: false
+            keyboard: false,
+            size: 'lg',
         }).result.then(
             function (result) {
                 if (!$scope.global.data.suppliers) $scope.global.data.suppliers = [];
@@ -147,7 +148,6 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
     
     ctrl.updateSupplierContact = function (data, contact) {
         return new Promise(function (resolve) {
-            console.log(data, contact);
             let postData = {
                 token: $scope.global.user.token,
                 params: data
@@ -209,31 +209,31 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
     };
     
     ctrl.checkContactAttribute = function (attr, value, contact) {
-        // if (value === contact[attr]) {
-        //     return true;
-        // }
-        // else {
-        return new Promise(function (resolve) {
-            $http.post('/rpc', {
-                token: $scope.global.user.token,
-                name: 'check_attribute',
-                params: {
-                    collection: 'SupplierContact',
-                    pairs: [{
-                        attr: attr,
-                        value: value
-                    }]
-                }
-            }).then(
-                function (response) {
-                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
-                },
-                function (err) {
-                    resolve('Network error');
-                }
-            )
-        });
-        // }
+        if (value === contact[attr]) {
+            return true;
+        }
+        else {
+            return new Promise(function (resolve) {
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'check_attribute',
+                    params: {
+                        collection: 'SupplierContact',
+                        pairs: [{
+                            attr: attr,
+                            value: value
+                        }]
+                    }
+                }).then(
+                    function (response) {
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
+                    },
+                    function (err) {
+                        resolve('Network error');
+                    }
+                )
+            });
+        }
     };
     
     ctrl.init = function () {

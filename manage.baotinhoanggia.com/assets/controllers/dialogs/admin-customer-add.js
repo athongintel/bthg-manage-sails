@@ -35,4 +35,6 @@ app.controller('AdminCustomerAddDialogController', ['$uibModalInstance', '$scope
         );
     };
     
+    $scope.init = function(){};
+    
 }]);

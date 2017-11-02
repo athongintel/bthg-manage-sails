@@ -7,11 +7,11 @@ script(type="text/ng-template" id="adminCustomerAddDialog")
             fieldset(ng-disabled='processing')
                 div.margin-bottom-15px
                     label #{__('name_')} *
-                    div(editable-text="name" e-name="name" onbeforesave='checkCustomerAttribute("name", $data)' e-required) {{ name || "#{__('not_set')}"}}
+                    div(editable-text="name" e-name="name" onbeforesave='checkCustomerAttribute("name", $data)' e-required) {{ name || '#{__("not_set")}'}}
 
                 div.margin-bottom-15px
                     label #{__('code_')} *
-                    div(editable-text="code" e-name="code" onbeforesave='checkCustomerAttribute("code", $data)' e-required) {{ code || "#{__('not_set')}"}}
+                    div(editable-text="code" e-name="code" onbeforesave='checkCustomerAttribute("code", $data)' e-required) {{ code || '#{__("not_set")}'}}
 
                 div.margin-bottom-15px
                     label #{__('phone_number')}

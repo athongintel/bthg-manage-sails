@@ -43,10 +43,11 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
         $scope.global = $sessionStorage.global;
         $scope.global.data = $scope.global.data || {};
         $scope.global.locale = (Cookies.get('lang') || window.navigator.language || 'en');
-        console.log(Cookies.get('lang'), window.navigator.language, 'en', $scope.global.locale);
+    
+        console.log(initData);
         
         $scope.global.utils = {
-        
+            
             errors: initData.errors,
             
             isPath: function (path) {

@@ -48,31 +48,31 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
 
                         div.margin-bottom-15px
                             label #{__('address_')}
-                            div(editable-text="ctrl.selectedSupplier.address" e-name="address") {{ctrl.selectedSupplier.address}}
+                            div(editable-text="ctrl.selectedSupplier.address" e-name="address") {{ctrl.selectedSupplier.address || '#{__("not_set")}'}}
 
-                        div.margin-bottom-15px
-                            label #{__('phone_number')}
-                            div(editable-text="ctrl.selectedSupplier.phoneNumber" e-name="phoneNumber") {{ctrl.selectedSupplier.phoneNumber || "#{__('not_set')}"}}
+                        div.row
+                            div.col-xs-12.col-sm-6.margin-bottom-15px
+                                label #{__('phone_number')}
+                                div(editable-text="ctrl.selectedSupplier.phoneNumber" e-name="phoneNumber") {{ctrl.selectedSupplier.phoneNumber || '#{__("not_set")}'}}
+                            div.col-xs-12.col-sm-6.margin-bottom-15px
+                                label #{__('website_')}
+                                div(editable-text="ctrl.selectedSupplier.website" e-name="website") {{ctrl.selectedSupplier.website || '#{__("not_set")}'}}
 
-                        div.margin-bottom-15px
-                            label #{__('website_')}
-                            div(editable-text="ctrl.selectedSupplier.website" e-name="website") {{ctrl.selectedSupplier.website || "#{__('not_set')}"}}
-
-                        div.margin-bottom-15px
-                            label #{__('iban_')}
-                            div(editable-text="ctrl.selectedSupplier.iban" e-name="iban") {{ctrl.selectedSupplier.iban || "#{__('not_set')}"}}
+                        div.row
+                            div.col-xs-12.col-md-6.margin-bottom-15px
+                                label #{__('iban_')}
+                                div(editable-text="ctrl.selectedSupplier.iban" e-name="iban") {{ctrl.selectedSupplier.iban || '#{__("not_set")}'}}
+                            div.col-xs-12.col-md-6.margin-bottom-15px
+                                label #{__('swift_')}
+                                div(editable-text="ctrl.selectedSupplier.swift" e-name="swift") {{ctrl.selectedSupplier.swift || '#{__("not_set")}'}}
 
                         div.margin-bottom-15px
                             label #{__('bank_')}
-                            div(editable-text="ctrl.selectedSupplier.bank" e-name="bank") {{ctrl.selectedSupplier.bank || "#{__('not_set')}"}}
+                            div(editable-text="ctrl.selectedSupplier.bank" e-name="bank") {{ctrl.selectedSupplier.bank || '#{__("not_set")}'}}
 
                         div.margin-bottom-15px
                             label #{__('bank_address')}
-                            div(editable-text="ctrl.selectedSupplier.bankAddress" e-name="bankAddress") {{ctrl.selectedSupplier.bankAddress || "#{__('not_set')}"}}
-
-                        div.margin-bottom-15px
-                            label #{__('swift_')}
-                            div(editable-text="ctrl.selectedSupplier.swift" e-name="swift") {{ctrl.selectedSupplier.swift || "#{__('not_set')}"}}
+                            div(editable-text="ctrl.selectedSupplier.bankAddress" e-name="bankAddress") {{ctrl.selectedSupplier.bankAddress || '#{__("not_set")}'}}
 
                         div.text-right(ng-show='supplierEditForm.$visible')
                             button.btn.btn-default(type="button" ng-disabled='supplierEditForm.$waiting' ng-click='supplierEditForm.$cancel()')
@@ -90,31 +90,31 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
                                     th #{__('phone_number')}
                                     th #{__('email_')}
                                     td.text-right(style='width: 120px')
-                            tbody
+                            tbody(style='background: white')
                                 tr(ng-show='!ctrl.selectedSupplierContacts || !ctrl.selectedSupplierContacts.length')
                                     td(colspan='6')
                                         div.text-center
                                             span #{__('no_data')}
                                 tr(ng-repeat='contact in ctrl.selectedSupplierContacts')
                                     td
-                                        div(editable-text="contact.name" e-name="name" e-form="rowform" onbeforesave='ctrl.checkContactAttribute("name", $data, contact)' e-required='') {{contact.name || #{__('not_set')}}}
+                                        div(editable-text="contact.name" e-name="name" e-form="rowform" onbeforesave='ctrl.checkContactAttribute("name", $data, contact)' e-required='') {{contact.name || '#{__("not_set")}'}}
                                     td
-                                        div(editable-text="contact.position" e-name="position" e-form="rowform") {{contact.position || #{__('not_set')}}}
+                                        div(editable-text="contact.position" e-name="position" e-form="rowform") {{contact.position || '#{__("not_set")}'}}
                                     td
-                                        div(editable-text="contact.phoneNumber" e-name="phoneNumber" e-form="rowform") {{contact.phoneNumber || #{__('not_set')}}}
+                                        div(editable-text="contact.phoneNumber" e-name="phoneNumber" e-form="rowform") {{contact.phoneNumber || '#{__("not_set")}'}}
                                     td
-                                        div(editable-text="contact.email" e-name="email" e-form="rowform") {{contact.email || #{__('not_set')}}}
+                                        div(editable-text="contact.email" e-name="email" e-form="rowform") {{contact.email || '#{__("not_set")}'}}
 
                                     td.text-right
                                         form.form-buttons.form-inline(editable-form='', name='rowform', onbeforesave='ctrl.updateSupplierContact($data, contact)', ng-show='rowform.$visible', shown='!contact._id')
-                                            button.btn.btn-primary.margin-right-5px(type='submit', ng-disabled='rowform.$waiting')
+                                            button.btn.btn-sm.btn-primary.margin-right-5px(type='submit', ng-disabled='rowform.$waiting')
                                                 i.fa.fa-floppy-o
-                                            button.btn.btn-default(type='button', ng-disabled='rowform.$waiting', ng-click='rowform.$cancel(); ctrl.cancelEditSupplierContact(contact)')
+                                            button.btn.btn-sm.btn-default(type='button', ng-disabled='rowform.$waiting', ng-click='rowform.$cancel(); ctrl.cancelEditSupplierContact(contact)')
                                                 i.fa.fa-ban
                                         .buttons(ng-show='!rowform.$visible')
-                                            button.btn.btn-primary.margin-right-5px(type='button', ng-click='rowform.$show()')
+                                            button.btn.btn-sm.btn-primary.margin-right-5px(type='button', ng-click='rowform.$show()')
                                                 i.fa.fa-pencil
-                                            button.btn.btn-danger(type='button', ng-click='ctrl.removeSupplierContact(contact, "' + __('remove_supplier_contact_prompt') + '")')
+                                            button.btn.btn-sm.btn-danger(type='button', ng-click='ctrl.removeSupplierContact(contact, "' + __('remove_supplier_contact_prompt') + '")')
                                                 i.fa.fa-trash
 
 

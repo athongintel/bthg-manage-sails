@@ -7,35 +7,37 @@ script(type="text/ng-template" id="adminSupplierAddDialog")
             fieldset(ng-disabled='processing')
                 div.margin-bottom-15px
                     label #{__('name_')} *
-                    div(editable-text="name" e-name="name" onbeforesave='checkSupplierAttribute("name", $data)' e-required) {{ name || "#{__('not_set')}"}}
+                    div(editable-text="name" e-name="name" onbeforesave='checkSupplierAttribute("name", $data)' e-required) {{ name || '#{__("not_set")}'}}
 
                 div.margin-bottom-15px
                     label #{__('address_')}
-                    div(editable-text="address" e-name="address") {{ address || "#{__('not_set')}"}}
+                    div(editable-text="address" e-name="address") {{ address || '#{__("not_set")}'}}
+                div.row
+                    div.col-xs-12.col-sm-6.margin-bottom-15px
+                        label #{__('phone_number')}
+                        div(editable-text="phoneNumber" e-name="phoneNumber") {{ phoneNumber || '#{__("not_set")}'}}
 
-                div.margin-bottom-15px
-                    label #{__('phone_number')}
-                    div(editable-text="phoneNumber" e-name="phoneNumber") {{ phoneNumber || "#{__('not_set')}"}}
+                    div.col-xs-12.col-sm-6.margin-bottom-15px
+                        label #{__('website_')}
+                        div(editable-text="website" e-name="website") {{ website || '#{__("not_set")}'}}
 
-                div.margin-bottom-15px
-                    label #{__('website_')}
-                    div(editable-text="website" e-name="website") {{ website || "#{__('not_set')}"}}
-
-                div.margin-bottom-15px
-                    label #{__('iban_')}
-                    div(editable-text="iban" e-name="iban") {{ iban || "#{__('not_set')}"}}
+                div.row
+                    div.col-xs-12.col-sm-6.margin-bottom-15px
+                        label #{__('iban_')}
+                        div(editable-text="iban" e-name="iban") {{ iban || '#{__("not_set")}'}}
+                    div.col-xs-12.col-sm-6.margin-bottom-15px
+                        label #{__('swift_')}
+                        div(editable-text="swift" e-name="swift") {{ swift || '#{__("not_set")}'}}
 
                 div.margin-bottom-15px
                     label #{__('bank_')}
-                    div(editable-text="bank" e-name="bank") {{ bank || "#{__('not_set')}"}}
+                    div(editable-text="bank" e-name="bank") {{ bank || '#{__("not_set")}'}}
 
                 div.margin-bottom-15px
                     label #{__('bank_address')}
-                    div(editable-text="bankAddress" e-name="bankAddress") {{ bankAddress || "#{__('not_set')}"}}
+                    div(editable-text="bankAddress" e-name="bankAddress") {{ bankAddress || '#{__("not_set")}'}}
 
-                div.margin-bottom-15px
-                    label #{__('swift_')}
-                    div(editable-text="swift" e-name="swift") {{ swift || "#{__('not_set')}"}}
+
 
 
                 div.text-right

@@ -34,4 +34,6 @@ app.controller('AdminSupplierAddDialogController', ['$uibModalInstance', '$scope
             }
         );
     }
+    
+    $scope.init = function(){};
 }]);

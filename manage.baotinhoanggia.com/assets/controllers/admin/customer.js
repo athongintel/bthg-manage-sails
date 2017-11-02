@@ -167,31 +167,31 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
     };
     
     ctrl.checkContactAttribute = function (attr, value, contact) {
-        // if (value === contact[attr]) {
-        //     return true;
-        // }
-        // else {
-        return new Promise(function (resolve) {
-            $http.post('/rpc', {
-                token: $scope.global.user.token,
-                name: 'check_attribute',
-                params: {
-                    collection: 'CustomerContact',
-                    pairs: [{
-                        attr: attr,
-                        value: value
-                    }]
-                }
-            }).then(
-                function (response) {
-                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
-                },
-                function (err) {
-                    resolve('Network error');
-                }
-            )
-        });
-        // }
+        if (value === contact[attr]) {
+            return true;
+        }
+        else {
+            return new Promise(function (resolve) {
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'check_attribute',
+                    params: {
+                        collection: 'CustomerContact',
+                        pairs: [{
+                            attr: attr,
+                            value: value
+                        }]
+                    }
+                }).then(
+                    function (response) {
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
+                    },
+                    function (err) {
+                        resolve('Network error');
+                    }
+                )
+            });
+        }
     };
     
     ctrl.init = function () {
