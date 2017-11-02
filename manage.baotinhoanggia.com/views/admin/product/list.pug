@@ -111,7 +111,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                     div.panel-body
                                         div.text-center(ng-show='ctrl.loadingProduct')
                                             i.fa.fa-spinner.fa-spin
-                                        div(ng-show='ctrl.product')
+                                        div(ng-show='ctrl.product && !ctrl.loadingProduct')
                                             form(editable-form='' name='editProductForm' onbeforesave='ctrl.updateProduct($data)')
                                                 div.row.margin-bottom-5px
                                                     div.col-xs-4
