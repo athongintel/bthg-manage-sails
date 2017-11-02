@@ -29,11 +29,14 @@
 
     .img-wrapper{
         position: relative;
-        display: inline-block;
+        display: inline-flex;
         vertical-align: top;
         margin-right:10px;
         margin-bottom:10px;
         width:100px;
+        height: 100px;
+        justify-content: center;
+        align-items: center;
         border: 1px solid lightgray;
         border-radius: 4px;
         padding: 5px;

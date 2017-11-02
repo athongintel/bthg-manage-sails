@@ -337,3 +337,17 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
     
     moment.locale($scope.global.locale);
 }]);
+
+app.directive('imageOnLoad', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.bind('load', function () {
+                scope.$apply(attrs.imageOnLoad);
+            });
+            element.bind('error', function () {
+                scope.$apply(attrs.imageOnLoad);
+            });
+        }
+    };
+});

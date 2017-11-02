@@ -127,14 +127,14 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                 div.margin-bottom-15px
                                                     label #{__('product_images')}
                                                     div.panel.panel-default
-                                                        div.panel-body(ngf-drop-disabled='!ctrl.product.isBeingEdited' ngf-drop="ctrl.addProductPhoto($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'", ngf-max-size='1MB')
+                                                        div.panel-body(ngf-drop-disabled='!ctrl.product.isBeingEdited' ngf-drop="ctrl.addProductPhoto($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'")
                                                             div.img-wrapper(ng-repeat='image in ctrl.product.photos')
-                                                                img(ng-if='!image.localPhoto' ng-src='{{image.url}}')
+                                                                img(ng-if='!image.localPhoto' ng-src='{{image.url+"?decache=" + Date.now()}}' image-on-load='image.loaded = true')
                                                                 img(ng-if='image.localPhoto' ngf-thumbnail='image.file')
-                                                                span.info-float.close-float.text-danger(ng-click='ctrl.removeProductImage(image, "'+__('confirm_remove_product_photo')+'")' ng-hide='!ctrl.product.isBeingEdited || image.isBeingRemoved || image.isBeingUploaded || image.uploadProceeded')
+                                                                span.info-float.close-float.text-danger(ng-click='ctrl.removeProductImage(image, "'+__('confirm_remove_product_photo')+'")' ng-hide='!ctrl.product.isBeingEdited || !image.loaded || image.isBeingRemoved || image.isBeingUploaded || image.uploadProceeded')
                                                                     i.fa.fa-minus-circle(ng-if='image.localPhoto')
                                                                     i.fa.fa-times-circle(ng-if='!image.localPhoto')
-                                                                span.info-float(ng-show='image.isBeingUploaded || image.isBeingRemoved')
+                                                                span.info-float(ng-show='image.isBeingUploaded || !image.loaded || image.isBeingRemoved')
                                                                     i.fa.fa-refresh.fa-spin
                                                                 span.info-float.text-success(ng-show='image.uploadSucceeded === true')
                                                                     i.fa.fa-check-circle
@@ -143,7 +143,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                             div.img-upload-wrapper(ng-show='ctrl.product.isBeingEdited && (ctrl.product.photos && ctrl.product.photos.length < 5)')
                                                                 label
                                                                     i.fa.fa-plus-circle
-                                                                    input(style='display: none' type='file', ngf-select="ctrl.addProductPhoto($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'", ngf-max-size='1MB')
+                                                                    input(style='display: none' type='file', ngf-select="ctrl.addProductPhoto($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'")
 
                                                 div.margin-bottom-15px
                                                     label #{__('description_')}

@@ -22,14 +22,14 @@
             li(ng-class='{active: isPath("admin/index")}')
                 a(href='#/admin/index') #{__('home')}
             li(ng-class='{active: isPath("admin/customer")}')
-                a(href='#/admin/customer') #{_('customer_manage')}
+                a(href='#/admin/customer') #{__('customer_manage')}
 
             li(ng-class='{active: isPath("admin/supplier")}')
-                a(href='#/admin/supplier') #{_('supplier_manage')}
+                a(href='#/admin/supplier') #{__('supplier_manage')}
 
             li(ng-class='{active: isPath("admin/product")}')
                 a.dropdown-toggle(href='', data-toggle='dropdown')
-                    span #{_('product_')}
+                    span #{__('product_')}
                     b.caret
                 ul.dropdown-menu
                     li(ng-class='{active: isPath("admin/product/list")}')
@@ -44,7 +44,7 @@
 
             li(ng-class='{active: isPath("admin/quotation")}')
                 a.dropdown-toggle(href='', data-toggle='dropdown')
-                    span #{_('quotation_')}
+                    span #{__('quotation_')}
                     b.caret
                 ul.dropdown-menu
                     li(ng-class='{active: isPath("admin/quotation/list")}')

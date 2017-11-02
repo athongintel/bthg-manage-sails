@@ -76,12 +76,12 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                 div.margin-bottom-15px
                                     label #{__('product_images')}
                                     div.panel.panel-default
-                                        div.panel-body(ngf-drop-disabled='ctrl.addingProduct' ngf-drop="ctrl.loadProductFiles($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'", ngf-max-size='1MB')
+                                        div.panel-body(ngf-drop-disabled='ctrl.addingProduct' ngf-drop="ctrl.loadProductFiles($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'")
                                             div.img-wrapper(ng-repeat='image in ctrl.productImages')
-                                                img(ngf-thumbnail="image")
-                                                span.info-float.close-float.text-danger(ng-click='ctrl.removeProductImage(image)' ng-hide='image.isBeingUploaded || image.uploadProceeded')
+                                                img(ngf-thumbnail="image" image-on-load='image.loaded = true')
+                                                span.info-float.close-float.text-danger(ng-click='ctrl.removeProductImage(image)' ng-hide='image.isBeingUploaded || !image.loaded || image.uploadProceeded')
                                                     i.fa.fa-minus-circle
-                                                span.info-float(ng-show='image.isBeingUploaded')
+                                                span.info-float(ng-show='image.isBeingUploaded || !image.loaded')
                                                     i.fa.fa-refresh.fa-spin
                                                 span.info-float.text-success(ng-show='image.uploadSucceeded === true')
                                                     i.fa.fa-check-circle
@@ -90,7 +90,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                             div.img-upload-wrapper(ng-hide='ctrl.productImages && ctrl.productImages.length === 5 || ctrl.addingProduct')
                                                 label
                                                     i.fa.fa-plus-circle
-                                                    input(style='display: none' type='file', ngf-select="ctrl.loadProductFiles($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'", ngf-max-size='1MB')
+                                                    input(style='display: none' type='file', ngf-select="ctrl.loadProductFiles($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'")
                                 div.margin-bottom-15px
                                     label #{__('suppliers_')}
                                     select#select_product_suppliers.form-control(ng-disabled='ctrl.addingProduct')
