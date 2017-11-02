@@ -172,8 +172,8 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                     div.panel.panel-default
                                                         div.panel-body(ngf-drop-disabled='!ctrl.product.isBeingEdited' ngf-drop="ctrl.addProductPhoto($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'")
                                                             div.img-wrapper(ng-repeat='image in ctrl.product.photos')
-                                                                img(ng-if='!image.localPhoto' ng-src='{{image.url+"?decache=" + Date.now()}}' image-on-load='image.loaded = true')
-                                                                img(ng-if='image.localPhoto' ngf-thumbnail='image.file')
+                                                                img(ng-click='ctrl.viewPhoto(image)' ng-if='!image.localPhoto' ng-src='{{image.url+"?decache=" + Date.now()}}' image-on-load='image.loaded = true')
+                                                                img(ng-if='image.localPhoto' ngf-thumbnail='image.file' image-on-load='image.loaded = true')
                                                                 span.info-float.close-float.text-danger(ng-click='ctrl.removeProductImage(image, "' + __('confirm_remove_product_photo') + '")' ng-hide='!ctrl.product.isBeingEdited || !image.loaded || image.isBeingRemoved || image.isBeingUploaded || image.uploadProceeded')
                                                                     i.fa.fa-minus-circle(ng-if='image.localPhoto')
                                                                     i.fa.fa-times-circle(ng-if='!image.localPhoto')
@@ -205,4 +205,4 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                         span #{__('save_')}
 
     include ../../dialogs/change-value-dialog
-
+    include ../../dialogs/view-photo

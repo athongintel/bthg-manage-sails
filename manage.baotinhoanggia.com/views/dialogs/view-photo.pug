@@ -1,0 +1,10 @@
+script(type="text/ng-template" id="viewPhotoDialog")
+    .modal-header
+        button.close(type='button', ng-click='close()') x
+        //div.header #{__('login_')}
+    .modal-body
+        div.text-center
+            span(ng-hide='photoLoaded')
+                i.fa.fa-spinner.fa-spin
+                span &nbsp; #{__('loading_')}
+            img(ng-show='photoLoaded' image-on-load='photoLoaded = true;' style='width: 100%' ng-src='{{options.photoUrl}}')

@@ -6,6 +6,18 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
     ctrl.filteredProducts = [];
     ctrl.allProducts = [];
     
+    ctrl.viewPhoto = function (image) {
+        $modal.open({
+            templateUrl: 'viewPhotoDialog',
+            controller: 'ViewPhotoDialogController',
+            resolve: {
+                options: function(){
+                    return {photoUrl: image.url};
+                }
+            }
+        }).result.then(function(){}, function(){});
+    };
+    
     ctrl.queryProducts = function () {
         ctrl.queryFailed = false;
         ctrl.queryingProduct = true;

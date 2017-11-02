@@ -105,5 +105,6 @@
 	"type_": "Sản phẩm",
 	"available_": "Tồn kho",
 	"last_price": "Đơn giá",
-	"last_name": "Họ"
+	"last_name": "Họ",
+	"loading_": "đang tải ảnh..."
 }
