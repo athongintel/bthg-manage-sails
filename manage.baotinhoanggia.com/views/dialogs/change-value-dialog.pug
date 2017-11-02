@@ -1,0 +1,15 @@
+script(type="text/ng-template" id="changeValueDialog")
+    .modal-header(ng-init='init()')
+        button.close(type='button', ng-click='close()') x
+        div.header {{options.dialogHeader}}
+    .modal-body
+        div.margin-bottom-15px
+            label #{__('old_value')}
+            input.huge-input.form-control.text-right(ng-disabled='true' cleave="global.utils.cleaveOptions.currency" ng-model="options.oldValue")
+        div.margin-bottom-15px
+            label #{__('new_value')}
+            input.huge-input.form-control.text-right(cleave="global.utils.cleaveOptions.currency" ng-model="newValue" autofocus)
+
+        div.text-right
+            button.action.btn.btn-primary(ng-click='changeValue()')
+                span #{__('OK_')}

@@ -22,7 +22,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                     }
                 }).then(
                     function (response) {
-                        resolve(response.data.success || response.data.error.errorMessage);
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                     },
                     function (err) {
                         resolve(err)
@@ -67,7 +67,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                     if (!response.data.success) {
                         ctrl.selectedCustomer.customerSaveProblem = true;
                     }
-                    resolve(response.data.success || response.data.error.errorMessage);
+                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                 },
                 function () {
                     ctrl.selectedCustomer.customerSaveProblem = true;
@@ -123,7 +123,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                     if (response.data.success) {
                         ctrl.updateContact(contact._id, response.data.result);
                     }
-                    resolve(response.data.success || response.data.error.errorMessage);
+                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                 },
                 function (err) {
                     console.log(err);
@@ -184,7 +184,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                 }
             }).then(
                 function (response) {
-                    resolve(response.data.success || response.data.error.errorMessage);
+                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                 },
                 function (err) {
                     resolve('Network error');

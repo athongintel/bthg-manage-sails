@@ -80,7 +80,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                     ctrl.filterCategory();
                 }
                 else {
-                    alert(response.data.error.errorMessage);
+                    alert($scope.global.utils.errors[response.data.error.errorCode]);
                 }
             },
             function () {
@@ -128,7 +128,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                             resolve(true);
                         }
                         else {
-                            resolve(response.data.error.errorMessage);
+                            resolve($scope.global.utils.errors[response.data.error.errorCode]);
                         }
                     },
                     function (err) {
@@ -177,7 +177,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                     ctrl.filterType();
                 }
                 else {
-                    alert(response.data.error.errorMessage);
+                    alert($scope.global.utils.errors[response.data.error.errorCode]);
                 }
             },
             function () {
@@ -227,7 +227,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                             resolve(true);
                         }
                         else {
-                            resolve(response.data.error.errorMessage);
+                            resolve($scope.global.utils.errors[response.data.error.errorCode]);
                         }
                     },
                     function (err) {

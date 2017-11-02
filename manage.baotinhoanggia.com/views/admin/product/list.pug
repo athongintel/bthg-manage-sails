@@ -13,7 +13,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                     div.col-xs-12.col-sm-6
                         div
                             div
-                                label #{'search_product'}
+                                label #{__('search_product')}
                                 div.panel.panel-default
                                     div.panel-body
                                         div.row
@@ -26,7 +26,6 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                             button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedGroup()')
                                                                 i.fa.fa-window-close.text-danger
                                                     select#select_product_group.form-control
-
 
                                             div.col-xs-12.col-sm-6
                                                 div.margin-bottom-15px
@@ -87,7 +86,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                             div
                                 div.row
                                     div.col-xs-6
-                                        label #{'product_details'}
+                                        label #{__('product_details')}
                                     div.col-xs-6.text-right
                                         button.btn.btn-xs.btn-default(ng-click='ctrl.startEditing()' ng-disabled='!ctrl.product || editProductForm.$waiting')
                                             i.fa.fa-pencil
@@ -106,23 +105,26 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                             div.col-xs-6
                                                                 div.text-right
                                                                     div(editable-text="ctrl.product.model" e-name="model" onbeforesave='ctrl.checkProductAttribute("model", $data, ctrl.product.model)' e-required) {{ctrl.product.model}}
-
-                                                    div.col-xs-12.col-sm-6
-                                                        div.row
-                                                            div.col-xs-6
-                                                                label #{__('in_stock')}
-                                                            div.col-xs-6
-                                                                div.text-right {{ctrl.product.available}}/{{ctrl.product.stockPeek}}
-                                                        //div.row
-                                                            div.col-xs-6
-                                                                label #{__('current_import_price')}
-                                                            div.col-xs-6
-                                                                div.text-right {{ctrl.product.currentImportPrice}}
-                                                        //div.row
-                                                            div.col-xs-6
-                                                                label #{__('current_export_price')}
-                                                            div.col-xs-6
-                                                                div.text-right {{ctrl.product.currentExportPrice}}
+                                                    div.col-xs-12.col-sm-6.text-right
+                                                        span {{ctrl.product.brandID.name}} ({{global.utils.originNameFromCode(ctrl.product.brandID.origin)}})
+                                                div.row.margin-bottom-15px
+                                                    div.col-xs-6
+                                                        label #{__('in_stock')}
+                                                        a.margin-left-15px(href='' ng-click='ctrl.showAvailableInStocks()') (#{__('detail_')})
+                                                    div.col-xs-6
+                                                        div.text-right {{ctrl.product.available}}/{{ctrl.product.stockPeek}}
+                                                div.row.margin-bottom-15px
+                                                    div.col-xs-6
+                                                        label #{__('average_import_price')}
+                                                        a.margin-left-15px(href='' ng-click='ctrl.showImportPrice()') (#{__('detail_')})
+                                                    div.col-xs-6
+                                                        div.text-right {{ctrl.product.lastInStocks? (ctrl.calculateAveragePrice(ctrl.product.lastInStocks) | currency : '' : 0) : '#{__("not_available")}'}}
+                                                div.row.margin-bottom-15px
+                                                    div.col-xs-6
+                                                        label #{__('last_export_price')}
+                                                        a.margin-left-15px(href='' ng-click='ctrl.changeExportPriceManually(ctrl.product,"'+__('change_product_price_dialog_header')+'")') (#{__('change_')})
+                                                    div.col-xs-6
+                                                        div.text-right {{ctrl.product.lastOutStock? (ctrl.product.lastOutStock.price | currency : '' : 0) : '#{__("not_available")}'}}
 
                                                 div.margin-bottom-15px
                                                     label #{__('product_images')}
@@ -157,7 +159,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                         div.panel-body
                                                             div.text-center.no-data(ng-hide='ctrl.product.supplierIDs && ctrl.product.supplierIDs.length')
                                                                 span #{__('no_data')}
-                                                            a.margin-right-15px(ng-repeat='supplier in ctrl.product.supplierIDs' href='')
+                                                            a.margin-right-15px(target='_blank' ng-repeat='supplier in ctrl.product.supplierIDs' href='#/admin/supplier?supplierID={{supplier._id}}')
                                                                 span {{supplier.name}} &nbsp;
                                                                 i.fa.fa-external-link-square
 
@@ -169,4 +171,6 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                                                             i.fa.fa-spinner.fa-spin
                                                             span &nbsp;
                                                         span #{__('save_')}
+
+    include ../../dialogs/change-value-dialog
 

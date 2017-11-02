@@ -2,7 +2,8 @@
 const mongoose = require('mongoose');
 
 const constants = {
-    STOCK_INIT_STOCK: 'STOCK_INIT_STOCK'
+    STOCK_INIT_STOCK: 'STOCK_INIT_STOCK',
+    STOCK_MANUAL_CHANGE: 'STOCK_MANUAL_CHANGE'
 };
 
 const inStockSchema = new mongoose.Schema({

@@ -24,7 +24,7 @@ app.controller('AdminSupplierAddDialogController', ['$uibModalInstance', '$scope
                     $modalInstance.close(response.data.result);
                 }
                 else {
-                    alert(response.data.error.errorMessage);
+                    alert($scope.global.utils.errors[response.data.error.errorCode]);
                 }
             },
             function (err) {

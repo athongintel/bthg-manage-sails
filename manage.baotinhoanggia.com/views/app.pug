@@ -48,12 +48,27 @@ html(ng-app='app')
         script(src="/controllers/admin/supplier.js")
         script(src="/controllers/dialogs/admin-customer-add.js")
         script(src="/controllers/dialogs/admin-supplier-add.js")
+        script(src="/controllers/dialogs/change-value-dialog.js")
         script(src="/controllers/dialogs/login.js")
         script(src="/controllers/partials/navbar.js")
         // SCRIPTS END
 
     body
-        div.container(ng-controller='GlobalController')
+        div.container(ng-controller='GlobalController' ng-init='init({' +
+            'errors : {' +
+                '"1" : "' + __('SYSTEM_ERROR')+ '",' +
+                '"2" : "' + __('INPUT_ERROR')+ '",' +
+                '"3" : "' + __('MALFORMED_REQUEST_ERROR')+ '",' +
+                '"4" : "' + __('NOT_FOUND_ERROR')+ '",' +
+                '"5" : "' + __('TOKEN_GENERATING_ERROR')+ '",' +
+                '"6" : "' + __('WRONG_PASSWORD_ERROR')+ '",' +
+                '"7" : "' + __('NOT_SUPER_ADMIN_ERROR')+ '",' +
+                '"8" : "' + __('NOT_AUTHENTICATED_ERROR')+ '",' +
+                '"9" : "' + __('DUPLICATED_ERROR')+ '",' +
+                '"10" : "' + __('RESOURCE_DIRTY_ERROR')+ '",' +
+                '"11" : "' + __('TOKEN_INVALID_ERROR')+ '",' +
+            '}' +
+        '})')
             include ./partials/navbar
             div(ng-view='')
 

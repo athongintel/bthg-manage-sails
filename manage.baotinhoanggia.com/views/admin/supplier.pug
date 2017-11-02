@@ -24,7 +24,11 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
                 div.text-center(ng-show='ctrl.loadingSupplierInfo')
                     i.fa.fa-spinner.fa-spin
 
-                div(ng-hide='!ctrl.selectedSupplier || ctrl.loadingSupplierInfo')
+                div.text-center(ng-show='ctrl.loadSupplierError')
+                    span.text-warning
+                        i.fa.fa-exclamation-triangle
+                        span &nbsp; {{ctrl.loadSupplierError}}
+                div(ng-hide='!ctrl.selectedSupplier || ctrl.loadingSupplierInfo || ctrl.loadSupplierError')
                     div.row
                         div.col-xs-6
                             label #{__('supplier_info')}

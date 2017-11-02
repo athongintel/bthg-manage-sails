@@ -22,7 +22,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     }
                 }).then(
                     function (response) {
-                        resolve(response.data.success || response.data.error.errorMessage);
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                     },
                     function (err) {
                         resolve(err)
@@ -33,6 +33,47 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
     };
     
     ctrl.selectedSupplier = null;
+    
+    ctrl.loadSupplier = function (supplierID) {
+        $timeout(function () {
+            ctrl.loadingSupplierInfo = true;
+        });
+        $http.post('/batch', {
+            token: $scope.global.user.token,
+            options: {},
+            commands: [
+                {
+                    name: 'get_supplier_info',
+                    params: {_id: supplierID}
+                },
+                {
+                    name: 'get_all_supplier_contacts',
+                    params: {supplierID: supplierID}
+                }
+            ]
+        }).then(
+            function (response) {
+                $timeout(function () {
+                    ctrl.loadingSupplierInfo = false;
+                    if (response.data.success) {
+                        //-- load full supplier info
+                        ctrl.selectedSupplier = response.data.result[0].success ? response.data.result[0].result : null;
+                        ctrl.selectedSupplierContacts = response.data.result[1].success ? response.data.result[1].result : null;
+                    }
+                    else {
+                        ctrl.loadSupplierError = $scope.global.utils.errors[response.data.error.errorCode];
+                    }
+                });
+                
+            },
+            function (err) {
+                $timeout(function () {
+                    ctrl.loadingSupplierInfo = false;
+                    ctrl.loadSupplierError = 'Network error';
+                });
+            }
+        );
+    };
     
     ctrl.addSupplier = function () {
         $modal.open({
@@ -67,7 +108,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     if (!response.data.success) {
                         ctrl.selectedSupplier.supplierSaveProblem = true;
                     }
-                    resolve(response.data.success || response.data.error.errorMessage);
+                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                 },
                 function () {
                     ctrl.selectedSupplier.supplierSaveProblem = true;
@@ -124,7 +165,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     if (response.data.success) {
                         ctrl.updateContact(contact._id, response.data.result);
                     }
-                    resolve(response.data.success || response.data.error.errorMessage);
+                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                 },
                 function (err) {
                     console.log(err);
@@ -185,7 +226,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                 }
             }).then(
                 function (response) {
-                    resolve(response.data.success || response.data.error.errorMessage);
+                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                 },
                 function (err) {
                     resolve('Network error');
@@ -232,45 +273,15 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
             }
         });
         supplierSelector.on('select2:select', function (e) {
-            $timeout(function () {
-                ctrl.loadingSupplierInfo = true;
-            });
-            $http.post('/batch', {
-                token: $scope.global.user.token,
-                options: {},
-                commands: [
-                    {
-                        name: 'get_supplier_info',
-                        params: {_id: e.params.data._id}
-                    },
-                    {
-                        name: 'get_all_supplier_contacts',
-                        params: {supplierID: e.params.data._id}
-                    }
-                ]
-            }).then(
-                function (response) {
-                    $timeout(function () {
-                        ctrl.loadingSupplierInfo = false;
-                        if (response.data.success) {
-                            //-- load full supplier info
-                            ctrl.selectedSupplier = response.data.result[0].success ? response.data.result[0].result : null;
-                            ctrl.selectedSupplierContacts = response.data.result[1].success ? response.data.result[1].result : null;
-                        }
-                        else {
-                            ctrl.loadSupplierError = true;
-                        }
-                    });
-                    
-                },
-                function (err) {
-                    $timeout(function () {
-                        ctrl.loadingSupplierInfo = false;
-                        ctrl.loadSupplierError = true;
-                    });
-                }
-            );
+            ctrl.loadSupplier(e.params.data._id);
         });
+        
+        //-- check query
+        let queries = $scope.global.utils.breakQueries(document.location.hash);
+        if (queries && queries.supplierID) {
+            //-- load supplier
+            ctrl.loadSupplier(queries.supplierID);
+        }
     }
     
 }]);

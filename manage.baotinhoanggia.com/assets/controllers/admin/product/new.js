@@ -29,7 +29,9 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                                 ctrl.addingProduct = false;
                                 //-- reset fields
                                 if (ctrl.keepPage) {
-                                    ctrl.product = {};
+                                    ctrl.product = {
+                                        storeBranch: ctrl.product.storeBranch
+                                    };
                                     if (!ctrl.keepGroup) ctrl.groupSelector.val('').trigger('change');
                                     if (!ctrl.keepType) {
                                         ctrl.typeSelector.val('').trigger('change');
@@ -99,8 +101,8 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                     }
                     else {
                         ctrl.addingProduct = false;
-                        alert(response.data.error.errorMessage);
-                        resolve(response.data.error.errorMessage);
+                        alert($scope.global.utils.errors[response.data.error.errorCode]);
+                        resolve($scope.global.utils.errors[response.data.error.errorCode]);
                     }
                 },
                 function () {
@@ -128,7 +130,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                 }
             }).then(
                 function (response) {
-                    resolve(response.data.success || response.data.error.errorMessage);
+                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                 },
                 function (err) {
                     resolve('Network error');
@@ -323,7 +325,12 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
             }
         });
     
+        //-- pre-select stock branch
+        let values = [{id: $scope.global.user.branchID._id, text: $scope.global.user.branchID.name}];
+        let ids = [$scope.global.user.branchID._id];
+        ctrl.product.storeBranch = ids[0];
         ctrl.branchSelector.select2({
+            data: values,
             ajax: {
                 transport: function (params, success, failure) {
                     $http.post('/rpc', {
@@ -357,6 +364,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                 }
             }
         });
+        ctrl.branchSelector.val(ids).trigger('change');
         ctrl.branchSelector.on('select2:select', function (e) {
             $timeout(function () {
                 ctrl.product.storeBranch = e.params.data._id;

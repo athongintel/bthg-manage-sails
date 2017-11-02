@@ -40,10 +40,10 @@ div.admin-product-brand(ng-controller='AdminProductBrandController as ctrl' ng-i
                                                                 e-form='rowform' e-name='name' onbeforesave='ctrl.checkBrandAttribute("name", $data, brand.name)'
                                                                 editable-text="brand.name" buttons="no" e-required) {{ brand.name || "#{__('not_set')}"}}
                                                         div.col-xs-6
-                                                            span(ng-hide='!brand.isBeingRemoved && (ctrl.selectedBrand._id === brand._id || !brand._id)') {{originNameFromCode(brand.origin) || "#{__('not_set')}"}}
+                                                            span(ng-hide='!brand.isBeingRemoved && (ctrl.selectedBrand._id === brand._id || !brand._id)') {{global.utils.originNameFromCode(brand.origin) || "#{__('not_set')}"}}
                                                             a(ng-show='!brand.isBeingRemoved && ctrl.selectedBrand._id === brand._id' href=""
                                                                 e-form='rowform' e-name='origin' e-uib-typeahead='origin as origin.name for origin in origins | filter:$viewValue' typeahead-editable='false'
-                                                                editable-text="originNameFromCode(brand.origin)" buttons="no" e-required) {{originNameFromCode(brand.origin) || "#{__('not_set')}"}}
+                                                                editable-text="global.utils.originNameFromCode(brand.origin)" buttons="no" e-required) {{global.utils.originNameFromCode(brand.origin) || "#{__('not_set')}"}}
 
                                                 div.col-xs-3.vf-center.text-right
                                                         span(ng-show='ctrl.selectedBrand._id === brand._id || brand.isBeingRemoved')

@@ -63,7 +63,7 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
                     ctrl.filterBrand();
                 }
                 else {
-                    alert(response.data.error.errorMessage);
+                    alert($scope.global.utils.errors[response.data.error.errorCode]);
                 }
             },
             function (err) {
@@ -107,7 +107,7 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
                         resolve(true);
                     }
                     else {
-                        resolve(response.data.error.errorMessage);
+                        resolve($scope.global.utils.errors[response.data.error.errorCode]);
                     }
                 },
                 function (err) {
@@ -136,7 +136,7 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
                     }
                 }).then(
                     function (response) {
-                        resolve(response.data.success || response.data.error.errorMessage);
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                     },
                     function () {
                         resolve('Network error');

@@ -85,7 +85,7 @@ module.exports = {
 			}
 		 */
         try {
-            let user = await _app.model.User.findOne({username: params.username}).lean();
+            let user = await _app.model.User.findOne({username: params.username}).populate('branchID').lean();
             if (!user)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             

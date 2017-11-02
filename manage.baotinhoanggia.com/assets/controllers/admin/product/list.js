@@ -1,4 +1,4 @@
-app.controller('AdminProductListController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$uibModal', function ($scope, $http, $timeout, $modal) {
     "use strict";
     
     let ctrl = this;
@@ -35,7 +35,7 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', fun
                         ctrl.filterProduct();
                     }
                     else {
-                        ctrl.queryFailed = response.data.error.errorMessage;
+                        ctrl.queryFailed = $scope.global.utils.errors[response.data.error.errorCode];
                     }
                 },
                 function () {
@@ -76,6 +76,18 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', fun
         ctrl.queryProducts();
     };
     
+    ctrl.calculateAveragePrice = function (prices) {
+        let total = new BigNumber(0);
+        if (prices.length) {
+            prices.forEach(function (price) {
+                if (price)
+                    total = total.add(new BigNumber(price.price));
+            });
+            total = total.dividedBy(prices.length);
+        }
+        return total.toString();
+    };
+    
     ctrl.loadProduct = function (productID) {
         ctrl.loadingProduct = true;
         $http.post('/rpc', {
@@ -90,9 +102,10 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', fun
                 ctrl.loadingProduct = false;
                 if (response.data.success) {
                     ctrl.product = response.data.result;
+                    // console.log(ctrl.product);
                 }
                 else {
-                    alert(response.data.error.errorMessage);
+                    alert($scope.global.utils.errors[response.data.error.errorCode]);
                 }
             },
             function () {
@@ -216,7 +229,7 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', fun
                     }
                 }).then(
                     function (response) {
-                        resolve(response.data.success || response.data.error.errorMessage);
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                     },
                     function (err) {
                         resolve('Network error');
@@ -290,8 +303,8 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', fun
                             );
                         }
                     }
-                    else{
-                        resolve(true);
+                    else {
+                        updateSuccessHook();
                     }
                 },
                 function () {
@@ -331,7 +344,7 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', fun
                             ctrl.product.photos.splice(index, 1);
                         }
                         else {
-                            alert(response.data.error.errorMessage);
+                            alert($scope.global.utils.errors[response.data.error.errorCode]);
                         }
                     },
                     function () {
@@ -341,6 +354,28 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', fun
                 );
             }
         }
+    };
+    
+    ctrl.changeExportPriceManually = function (product, i18n_change_product_price_dialog_header) {
+        $modal.open({
+            templateUrl: 'changeValueDialog',
+            controller: 'ChangeValueDialogController',
+            resolve: {
+                options: function(){
+                    return {
+                        oldValue: product.lastOutStock? product.lastOutStock.price : "",
+                        dialogHeader: i18n_change_product_price_dialog_header
+                    };
+                },
+            },
+            scope: $scope
+        }).result.then(
+            function (response) {
+            
+            },
+            function () {
+            }
+        );
     };
     
     ctrl.init = function () {
@@ -462,7 +497,7 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', fun
                 processResults: function (data) {
                     data.forEach(function (brand) {
                         brand.id = brand._id;
-                        brand.text = `${brand.name} (${$scope.originNameFromCode(brand.origin)})`;
+                        brand.text = `${brand.name} (${$scope.global.utils.originNameFromCode(brand.origin)})`;
                     });
                     return {
                         results: data

@@ -576,11 +576,12 @@ module.exports = {
                         });
                     }
                     
-                    //-- update to product
-                    product = await product.save();
                     returnObject.uploadUrls = uploadUrls;
                 }
             }
+    
+            //-- update to product
+            product = await product.save();
             
             //-- return a full object
             let productFull = await ProductService.getProduct(principal, {_id: product._id, full_info: true});
@@ -622,12 +623,43 @@ module.exports = {
                 inStocks.forEach(stock=>{
                    sum += stock.quantity;
                 });
-    
                 outStocks.forEach(stock=>{
                     sum -= stock.quantity;
                 });
-                
                 product.available = sum;
+                
+                //-- get latest outPrice && latest average inPrice for each supplier
+                let lastOutStock = await _app.model.OutStock.findOne({productID: product._id}).sort({createdAt: '-1'});
+                
+                //console.log('lastOutStock:', lastOutStock);
+                
+                let lastInStockNoSup = await _app.model.InStock.findOne({productID: product._id, supplierID: null}).sort({createdAt: '-1'});
+    
+                //console.log('lastInStockNoSup:', lastInStockNoSup);
+                
+                let lastInStockForSups = [];
+                if (product.supplierIDs.length) {
+                    product.supplierIDs.forEach(sup => {
+                        lastInStockForSups.push({
+                            supplierID: sup._id
+                        });
+                    });
+                    for (let i = 0; i < lastInStockForSups.length; i++) {
+                        lastInStockForSups[i] = await _app.model.InStock.findOne({
+                            productID: product._id,
+                            supplierID: lastInStockForSups[i].supplierID
+                        }).sort({createdAt: '-1'});
+                        if (!lastInStockForSups[i]) lastInStockForSups[i] = lastInStockNoSup;
+                    }
+                }
+                else{
+                    if (lastInStockNoSup) lastInStockForSups.push(lastInStockNoSup);
+                }
+    
+                // console.log('lastInStockForSups:', lastInStockForSups);
+                
+                product.lastOutStock = lastOutStock;
+                product.lastInStocks = lastInStockForSups;
             }
             else {
                 product = await _app.model.Product.findById(params._id);
