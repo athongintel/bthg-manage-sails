@@ -73,7 +73,8 @@ module.exports = {
                 [required] code: customer's code
                 phoneNumber,
                 faxNumber,
-                address
+                address,
+                companyInfo
             }
          */
         
@@ -87,6 +88,7 @@ module.exports = {
             customer.phoneNumber = params.phoneNumber;
             customer.faxNumber = params.faxNumber;
             customer.address = params.address;
+            customer.companyInfo = params.companyInfo;
             
             await customer.save();
             

@@ -95,5 +95,7 @@
 	"RESOURCE_DIRTY_ERROR": "Lỗi xoá dữ liệu liên kết",
 	"TOKEN_INVALID_ERROR": "Lỗi hết hạn phiên làm việc",
 	"english_": "English",
-	"vietnamese_": "Tiếng Việt"
+	"vietnamese_": "Tiếng Việt",
+	"company_name": "company_name",
+	"tax_number": "tax_number"
 }

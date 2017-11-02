@@ -55,9 +55,16 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
     };
     
     ctrl.saveCustomer = function (data) {
+        console.log(data);
         return new Promise(function (resolve) {
             ctrl.selectedCustomer.customerSaveProblem = false;
             data._id = ctrl.selectedCustomer._id;
+            data.companyInfo = {
+                name: data.companyInfo_name,
+                taxNumber: data.companyInfo_taxNumber,
+                address: data.companyInfo_address,
+            };
+            
             $http.post('/rpc', {
                 token: $scope.global.user.token,
                 name: 'update_customer_info',

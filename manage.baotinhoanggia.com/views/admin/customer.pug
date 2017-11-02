@@ -61,7 +61,19 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
 
                         div.margin-bottom-15px
                             label #{__('company_info')}
-                            pre(editable-textarea="ctrl.selectedCustomer.companyInfo" e-name="companyInfo") {{ctrl.selectedCustomer.companyInfo ||  '#{__("not_set")}'}}
+                            div.panel.panel-default
+                                div.panel-body
+                                    div.row
+                                        div.col-xs-12.col-sm-6
+                                            label #{__('company_name')}
+                                            div(editable-text="ctrl.selectedCustomer.companyInfo.name" e-name='companyInfo_name' ng-model='ctrl.selectedCustomer.companyInfo.name') {{ctrl.selectedCustomer.companyInfo.name ||  '#{__("not_set")}'}}
+                                        div.col-xs-12.col-sm-6
+                                            label #{__('tax_number')}
+                                            div(editable-text="ctrl.selectedCustomer.companyInfo.taxNumber" e-name='companyInfo_taxNumber' ng-model='ctrl.selectedCustomer.companyInfo.taxNumber') {{ctrl.selectedCustomer.companyInfo.taxNumber ||  '#{__("not_set")}'}}
+                                    div.margin-top-15px
+                                        label #{__('address_')}
+                                        div(editable-text="ctrl.selectedCustomer.companyInfo.address" e-name='companyInfo_address' ng-model='ctrl.selectedCustomer.companyInfo.address') {{ctrl.selectedCustomer.companyInfo.address ||  '#{__("not_set")}'}}
+                            //pre(editable-textarea="ctrl.selectedCustomer.companyInfo" e-name="companyInfo") {{ctrl.selectedCustomer.companyInfo ||  '#{__("not_set")}'}}
 
                         div.text-right(ng-show='customerEditForm.$visible')
                             button.btn.btn-default(type="button" ng-disabled='customerEditForm.$waiting' ng-click='customerEditForm.$cancel()')
