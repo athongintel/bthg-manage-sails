@@ -100,7 +100,7 @@ module.exports = {
         }
     },
     
-    getCustomerMetaInfo: async function (principal, params) {
+    getAllCustomers: async function (principal, params) {
         "use strict";
         /*
             params:{
@@ -108,17 +108,17 @@ module.exports = {
             }
          */
         try {
-            let customers = await _app.model.Customer.find({}).select('_id name companyInfo');
+            let customers = await _app.model.Customer.find({});
             if (params.query){
                 let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`,'i');
                 customers = customers.filter(c=>{
-                    return !!regex.exec(c.name+c.companyInfo);
+                    return !!regex.exec(c.name+JSON.stringify(c.companyInfo));
                 });
             }
             return sysUtils.returnSuccess(customers);
         }
         catch (err) {
-            console.log('getCustomerMetaInfo:', err);
+            console.log('getAllCustomers:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     },
@@ -153,6 +153,7 @@ module.exports = {
         /*
             params:{
                 [required] customerID: customer id
+                title,
                 [required] name: contact name
                 lastName: contact last name
                 position,
@@ -164,6 +165,7 @@ module.exports = {
         try {
             let contact = await _app.model.CustomerContact({
                 customerID: params.customerID,
+                title: params.title,
                 name: params.name,
                 lastName: params.lastName,
                 position: params.position,
@@ -185,6 +187,7 @@ module.exports = {
         /*
             params:{
                 [required] _id: customer id
+                title,
                 [required] name: contact name
                 lastName: contact last name
                 position,
@@ -195,6 +198,7 @@ module.exports = {
          */
         try {
             let contact = await _app.model.CustomerContact.findById(params._id);
+            contact.title = params.title;
             contact.name = params.name;
             contact.lastName = params.lastName;
             contact.position = params.position;

@@ -36,6 +36,13 @@ textarea.editable-input.form-control{
     font-family: monospace;
 }
 
+.no-data{
+    padding:6px;
+    text-align: center;
+    font-style: italic;
+    font-size: 14px;
+}
+
 .flex{
     display: flex;
     flex-wrap: wrap;
@@ -56,6 +63,29 @@ textarea.editable-input.form-control{
 
 .select2-container--default .select2-selection--single .select2-selection__rendered{
     line-height:34px;
+}
+
+//- table
+.search-result-list{
+    background-color: white;
+
+    .search-result-record{
+        background-color: whitesmoke;
+        padding:4px 6px;
+        font-size:20px;
+    }
+
+    .search-result-record:nth-child(odd){
+        background-color: wheat;
+    }
+
+    .search-result-record:hover{
+        background-color: lightgrey;
+    }
+    .search-result-record:active{
+        background-color: seagreen;
+        color: white;
+    }
 }
 
 //-- margin

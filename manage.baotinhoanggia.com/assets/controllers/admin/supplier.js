@@ -32,23 +32,20 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
         }
     };
     
-    ctrl.selectedSupplier = null;
-    
-    ctrl.loadSupplier = function (supplierID) {
-        $timeout(function () {
-            ctrl.loadingSupplierInfo = true;
-        });
+    ctrl.selectSupplier = function(supplier){
+        ctrl.showSupplierDetails = true;
+        ctrl.loadingSupplierInfo = true;
         $http.post('/batch', {
             token: $scope.global.user.token,
             options: {},
             commands: [
                 {
                     name: 'get_supplier_info',
-                    params: {_id: supplierID}
+                    params: {_id: supplier._id}
                 },
                 {
                     name: 'get_all_supplier_contacts',
-                    params: {supplierID: supplierID}
+                    params: {supplierID: supplier._id}
                 }
             ]
         }).then(
@@ -61,7 +58,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                         ctrl.selectedSupplierContacts = response.data.result[1].success ? response.data.result[1].result : null;
                     }
                     else {
-                        ctrl.loadSupplierError = $scope.global.utils.errors[response.data.error.errorCode];
+                        ctrl.loadSupplierError = true;
                     }
                 });
                 
@@ -69,7 +66,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
             function (err) {
                 $timeout(function () {
                     ctrl.loadingSupplierInfo = false;
-                    ctrl.loadSupplierError = 'Network error';
+                    ctrl.loadSupplierError = true;
                 });
             }
         );
@@ -81,8 +78,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
             controller: 'AdminSupplierAddDialogController',
             scope: $scope,
             backdrop: 'static',
-            keyboard: false,
-            size: 'lg',
+            keyboard: false
         }).result.then(
             function (result) {
                 if (!$scope.global.data.suppliers) $scope.global.data.suppliers = [];
@@ -100,6 +96,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
         return new Promise(function (resolve) {
             ctrl.selectedSupplier.supplierSaveProblem = false;
             data._id = ctrl.selectedSupplier._id;
+            
             $http.post('/rpc', {
                 token: $scope.global.user.token,
                 name: 'update_supplier_info',
@@ -200,7 +197,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                         }
                     },
                     function (err) {
-                        //-- TODO: remove failed
+                        alert('Network error');
                     }
                 );
             }
@@ -227,7 +224,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     function (response) {
                         resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                     },
-                    function (err) {
+                    function () {
                         resolve('Network error');
                     }
                 )
@@ -235,51 +232,43 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
         }
     };
     
+    ctrl.filterSupplier = function(){
+        let regex = new RegExp(`.*${ctrl.supplierFilter? $scope.global.utils.regexEscape(ctrl.supplierFilter) : ""}.*`, 'i');
+        ctrl.filteredSuppliers = ctrl.allSuppliers.filter(function(c){
+            return !!regex.exec(c.name);
+        });
+    };
+    
     ctrl.init = function () {
-        
-        let supplierSelector = $('#select_supplier');
-        supplierSelector.select2({
-            ajax: {
-                transport: function (params, success, failure) {
-                    $http.post('/rpc', {
-                        token: $scope.global.user.token,
-                        name: 'get_all_suppliers',
-                        params: {query: params.data.term}
-                    }).then(
-                        function (response) {
-                            if (response.data.success) {
-                                success(response.data.result);
-                            }
-                            else {
-                                failure();
-                            }
-                        },
-                        function (err) {
-                            failure();
-                        }
-                    );
-                },
-                processResults: function (data) {
-                    data.forEach(function (supplier) {
-                        supplier.id = supplier._id;
-                        supplier.text = supplier.name;
-                    });
-                    
-                    return {
-                        results: data
-                    };
+        //-- get all supplier
+        ctrl.initializing = true;
+        ctrl.initFailure = false;
+        $http.post('/rpc', {
+            token: $scope.global.user.token,
+            name: 'get_all_suppliers',
+            params: {}
+        }).then(
+            function(response){
+                ctrl.initializing = false;
+                if (response.data.success){
+                    ctrl.allSuppliers = response.data.result;
+                    ctrl.filterSupplier();
                 }
+                else{
+                    ctrl.initFailure = $scope.global.utils.errors[response.data.error.errorCode];
+                }
+            },
+            function(){
+                ctrl.initializing = false;
+                ctrl.initFailure = 'Network error';
             }
-        });
-        supplierSelector.on('select2:select', function (e) {
-            ctrl.loadSupplier(e.params.data._id);
-        });
+        );
         
-        //-- check query
+        //-- check hash
         let queries = $scope.global.utils.breakQueries(document.location.hash);
         if (queries && queries.supplierID) {
-            //-- load supplier
-            ctrl.loadSupplier(queries.supplierID);
+            //-- load product
+            $scope.supplierSelect(queries.supplierID);
         }
     }
     

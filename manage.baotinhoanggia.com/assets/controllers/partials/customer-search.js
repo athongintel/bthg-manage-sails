@@ -13,7 +13,7 @@ app.controller('CustomerSearchPartialController', ['$scope', '$http', '$timeout'
                 transport: function (params, success, failure) {
                     $http.post('/rpc', {
                         token: $scope.global.user.token,
-                        name: 'get_customer_meta_info',
+                        name: 'get_all_customers',
                         params: {query: params.data.term}
                     }).then(
                         function (response) {

@@ -16,7 +16,7 @@ const actions = {
     'add_customer': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.addCustomer, validation: {required: ['name', 'code']}},
     'update_customer_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.updateCustomerInfo, validation: {required: ['_id', 'name', 'code']}},
     'get_customer_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.getCustomerInfo, validation: {required: ['_id']}},
-    'get_customer_meta_info': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.getCustomerMetaInfo, validation: {}},
+    'get_all_customers': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.getAllCustomers, validation: {}},
     'get_all_customer_contacts': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.getAllCustomerContacts, validation: {required: ['customerID']}},
     'add_customer_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.addCustomerContact, validation: {required: ['customerID', 'name']}},
     'update_customer_contact': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.updateCustomerContact, validation: {required: ['_id', 'name']}},

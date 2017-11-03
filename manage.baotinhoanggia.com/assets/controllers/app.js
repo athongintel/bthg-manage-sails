@@ -64,6 +64,8 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
                     numeral: true
                 }
             },
+            
+            titles: ["Mr", "Ms", "Mrs"],
         
             origins: [
                 {"name": "Afghanistan", "code": "AF"},

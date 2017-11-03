@@ -32,8 +32,8 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
         }
     };
     
-    //-- @implement partials_customer-search
-    $scope.customerSelect = function(customerID) {
+    ctrl.selectCustomer = function(customer){
+        ctrl.showCustomerDetails = true;
         ctrl.loadingCustomerInfo = true;
         $http.post('/batch', {
             token: $scope.global.user.token,
@@ -41,11 +41,11 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
             commands: [
                 {
                     name: 'get_customer_info',
-                    params: {_id: customerID}
+                    params: {_id: customer._id}
                 },
                 {
                     name: 'get_all_customer_contacts',
-                    params: {customerID: customerID}
+                    params: {customerID: customer._id}
                 }
             ]
         }).then(
@@ -72,8 +72,6 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
         );
     };
     
-    ctrl.selectedCustomer = null;
-    
     ctrl.addCustomer = function () {
         $modal.open({
             templateUrl: 'adminCustomerAddDialog',
@@ -95,7 +93,6 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
     };
     
     ctrl.saveCustomer = function (data) {
-        console.log(data);
         return new Promise(function (resolve) {
             ctrl.selectedCustomer.customerSaveProblem = false;
             data._id = ctrl.selectedCustomer._id;
@@ -240,7 +237,38 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
         }
     };
     
+    ctrl.filterCustomer = function(){
+        let regex = new RegExp(`.*${ctrl.customerFilter? $scope.global.utils.regexEscape(ctrl.customerFilter) : ""}.*`, 'i');
+        ctrl.filteredCustomers = ctrl.allCustomers.filter(function(c){
+            return !!regex.exec(c.name + JSON.stringify(c.companyInfo));
+        });
+    };
+    
     ctrl.init = function () {
+        //-- get all customer
+        ctrl.initializing = true;
+        ctrl.initFailure = false;
+        $http.post('/rpc', {
+            token: $scope.global.user.token,
+            name: 'get_all_customers',
+            params: {}
+        }).then(
+            function(response){
+                ctrl.initializing = false;
+                if (response.data.success){
+                    ctrl.allCustomers = response.data.result;
+                    ctrl.filterCustomer();
+                }
+                else{
+                    ctrl.initFailure = $scope.global.utils.errors[response.data.error.errorCode];
+                }
+            },
+            function(){
+                ctrl.initializing = false;
+                ctrl.initFailure = 'Network error';
+            }
+        );
+        
         //-- check hash
         let queries = $scope.global.utils.breakQueries(document.location.hash);
         if (queries && queries.customerID) {

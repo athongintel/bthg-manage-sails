@@ -13,117 +13,131 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
 
     div.panel.panel-default.main-panel
         div.panel-body
-            div
+            div.text-center(ng-show='ctrl.initializing')
+                i.fa.fa-spinner.fa-spin
+            div(ng-hide='ctrl.initializing')
                 label #{__('search_supplier')}
-                select#select_supplier.form-control
+                div(ng-hide='ctrl.showSupplierDetails')
+                    div.input-group
+                        span.input-group-addon
+                            span.glyphicon.glyphicon-search
+                        input.form-control(ng-model='ctrl.supplierFilter' ng-change='ctrl.filterSupplier()')
 
-            div.margin-top-15px
-                div.text-center(ng-show='!ctrl.selectedSupplier && !ctrl.loadingSupplierInfo')
-                    span #{__('select_a_supplier')}
+                    div.search-result.margin-top-15px(style='max-height:500px; overflow-y: auto')
+                        div.no-data(ng-show='!ctrl.filteredSuppliers || !ctrl.filteredSuppliers.length') #{__('no_result_found')}
+                        div.search-result-list
+                            div.search-result-record(ng-repeat='supplier in ctrl.filteredSuppliers' ng-class='{active: supplier == ctrl.selectedSupplier}' ng-click='ctrl.selectSupplier(supplier)')
+                                div {{supplier.name}}
 
-                div.text-center(ng-show='ctrl.loadingSupplierInfo')
-                    i.fa.fa-spinner.fa-spin
+                div(ng-show='ctrl.showSupplierDetails')
+                    div.margin-bottom-15px
+                        button.btn.btn-default(ng-click='ctrl.showSupplierDetails=false;')
+                            span #{__('go_back')}
+                    div
+                        div.text-center(ng-show='ctrl.loadingSupplierInfo')
+                            i.fa.fa-spinner.fa-spin
 
-                div.text-center(ng-show='ctrl.loadSupplierError')
-                    span.text-warning
-                        i.fa.fa-exclamation-triangle
-                        span &nbsp; {{ctrl.loadSupplierError}}
-                div(ng-hide='!ctrl.selectedSupplier || ctrl.loadingSupplierInfo || ctrl.loadSupplierError')
-                    div.row
-                        div.col-xs-6
-                            label #{__('supplier_info')}
-                            span.text-danger.margin-left-15px(ng-show='ctrl.selectedSupplier.supplierSaveProblem')
-                                i.fa.fa-exclamation-circle
-                                span &nbsp;
-                                span #{__('save_problem')}
-                        div.col-xs-6
-                            div.text-right
-                                a(href='' ng-click='supplierEditForm.$show()')
-                                    span #{__('edit_')} &nbsp;
-                                    i.fa.fa-pencil
-                    form.row-table.margin-bottom-15px(editable-form='' name='supplierEditForm' onbeforesave='ctrl.saveSupplier($data)')
-                        div.margin-bottom-15px
-                            label #{__('name_')}
-                            div(editable-text="ctrl.selectedSupplier.name" e-name="name" e-required='', onbeforesave='checkSupplierAttribute("name", $data, ctrl.selectedSupplier.name)') {{ctrl.selectedSupplier.name}}
+                        div(ng-show='!ctrl.loadingSupplierInfo')
+                            div.row
+                                div.col-xs-6
+                                    label #{__('supplier_info')}
+                                    span.text-danger.margin-left-15px(ng-show='ctrl.selectedSupplier.supplierSaveProblem')
+                                        i.fa.fa-exclamation-circle
+                                        span &nbsp;
+                                        span #{__('save_problem')}
+                                div.col-xs-6
+                                    div.text-right
+                                        a(href='' ng-click='supplierEditForm.$show()')
+                                            span #{__('edit_')} &nbsp;
+                                            i.fa.fa-pencil
+                            form.row-table.margin-bottom-15px(editable-form='' name='supplierEditForm' onbeforesave='ctrl.saveSupplier($data)')
+                                div.margin-bottom-15px
+                                    label #{__('name_')}
+                                    div(editable-text="ctrl.selectedSupplier.name" e-name="name" e-required onbeforesave='checkSupplierAttribute("name", $data, ctrl.selectedSupplier.name)') {{ctrl.selectedSupplier.name}}
 
-                        div.margin-bottom-15px
-                            label #{__('address_')}
-                            div(editable-text="ctrl.selectedSupplier.address" e-name="address") {{ctrl.selectedSupplier.address || '#{__("not_set")}'}}
+                                div.margin-bottom-15px
+                                    label #{__('address_')}
+                                    div(editable-text="ctrl.selectedSupplier.address" e-name="address") {{ctrl.selectedSupplier.address ||  '#{__("not_set")}'}}
 
-                        div.row
-                            div.col-xs-12.col-sm-6.margin-bottom-15px
-                                label #{__('phone_number')}
-                                div(editable-text="ctrl.selectedSupplier.phoneNumber" e-name="phoneNumber") {{ctrl.selectedSupplier.phoneNumber || '#{__("not_set")}'}}
-                            div.col-xs-12.col-sm-6.margin-bottom-15px
-                                label #{__('website_')}
-                                div(editable-text="ctrl.selectedSupplier.website" e-name="website") {{ctrl.selectedSupplier.website || '#{__("not_set")}'}}
+                                div.row
+                                    div.margin-bottom-15px.col-xs-12.col-sm-6
+                                        label #{__('phone_number')}
+                                        div(editable-text="ctrl.selectedSupplier.phoneNumber" e-name="phoneNumber") {{ctrl.selectedSupplier.phoneNumber ||  '#{__("not_set")}'}}
 
-                        div.row
-                            div.col-xs-12.col-md-6.margin-bottom-15px
-                                label #{__('iban_')}
-                                div(editable-text="ctrl.selectedSupplier.iban" e-name="iban") {{ctrl.selectedSupplier.iban || '#{__("not_set")}'}}
-                            div.col-xs-12.col-md-6.margin-bottom-15px
-                                label #{__('swift_')}
-                                div(editable-text="ctrl.selectedSupplier.swift" e-name="swift") {{ctrl.selectedSupplier.swift || '#{__("not_set")}'}}
+                                    div.margin-bottom-15px.col-xs-12.col-sm-6
+                                        label #{__('website_')}
+                                        div
+                                            a(target='_blank' href='{{ctrl.selectedSupplier.website || ""}}' editable-text="ctrl.selectedSupplier.website" e-name="website") {{ctrl.selectedSupplier.website ||  '#{__("not_set")}'}}
+                                div.row
+                                    div.margin-bottom-15px.col-xs-12.col-sm-6
+                                        label #{__('iban_')}
+                                        div(editable-text="ctrl.selectedSupplier.iban" e-name="iban") {{ctrl.selectedSupplier.iban ||  '#{__("not_set")}'}}
 
-                        div.margin-bottom-15px
-                            label #{__('bank_')}
-                            div(editable-text="ctrl.selectedSupplier.bank" e-name="bank") {{ctrl.selectedSupplier.bank || '#{__("not_set")}'}}
+                                    div.margin-bottom-15px.col-xs-12.col-sm-6
+                                        label #{__('swift_')}
+                                        div(editable-text="ctrl.selectedSupplier.swift" e-name="swift") {{ctrl.selectedSupplier.swift ||  '#{__("not_set")}'}}
 
-                        div.margin-bottom-15px
-                            label #{__('bank_address')}
-                            div(editable-text="ctrl.selectedSupplier.bankAddress" e-name="bankAddress") {{ctrl.selectedSupplier.bankAddress || '#{__("not_set")}'}}
+                                div.margin-bottom-15px
+                                    label #{__('bank_')}
+                                    div(editable-text="ctrl.selectedSupplier.bank" e-name="bank") {{ctrl.selectedSupplier.bank ||  '#{__("not_set")}'}}
 
-                        div.text-right(ng-show='supplierEditForm.$visible')
-                            button.btn.btn-default(type="button" ng-disabled='supplierEditForm.$waiting' ng-click='supplierEditForm.$cancel()')
-                                span #{__('cancel_')}
-                            button.btn.btn-primary.margin-left-15px(type='submit' ng-disabled='supplierEditForm.$waiting')
-                                span #{__('save_')}
+                                div.margin-bottom-15px
+                                    label #{__('bank_address')}
+                                    div(editable-text="ctrl.selectedSupplier.bankAddress" e-name="bankAddress") {{ctrl.selectedSupplier.bankAddress ||  '#{__("not_set")}'}}
 
-                    label #{__('supplier_contact')}
-                    div.table-responsive
-                        table.table.table-striped.table-hover
-                            thead
-                                tr
-                                    th #{__('name_')}
-                                    th #{__('last_name')}
-                                    th #{__('position_')}
-                                    th #{__('phone_number')}
-                                    th #{__('email_')}
-                                    td.text-right(style='width: 120px')
-                            tbody(style='background: white')
-                                tr(ng-show='!ctrl.selectedSupplierContacts || !ctrl.selectedSupplierContacts.length')
-                                    td(colspan='7')
-                                        div.text-center
-                                            span #{__('no_data')}
-                                tr(ng-repeat='contact in ctrl.selectedSupplierContacts')
-                                    td
-                                        div(editable-text="contact.name" e-name="name" e-form="rowform" e-required='') {{contact.name || '#{__("not_set")}'}}
-                                    td
-                                        div(editable-text="contact.lastName" e-name="lastName" e-form="rowform") {{contact.lastName || '#{__("not_set")}'}}
-                                    td
-                                        div(editable-text="contact.position" e-name="position" e-form="rowform") {{contact.position || '#{__("not_set")}'}}
-                                    td
-                                        div(editable-text="contact.phoneNumber" e-name="phoneNumber" e-form="rowform") {{contact.phoneNumber || '#{__("not_set")}'}}
-                                    td
-                                        div(editable-text="contact.email" e-name="email" e-form="rowform") {{contact.email || '#{__("not_set")}'}}
+                                div.text-right(ng-show='supplierEditForm.$visible')
+                                    button.btn.btn-default(type="button" ng-disabled='supplierEditForm.$waiting' ng-click='supplierEditForm.$cancel()')
+                                        span #{__('cancel_')}
+                                    button.btn.btn-primary.margin-left-15px(type='submit' ng-disabled='supplierEditForm.$waiting')
+                                        span #{__('save_')}
 
-                                    td.text-right
-                                        form.form-buttons.form-inline(editable-form='', name='rowform', onbeforesave='ctrl.updateSupplierContact($data, contact)', ng-show='rowform.$visible', shown='!contact._id')
-                                            button.btn.btn-sm.btn-primary.margin-right-5px(type='submit', ng-disabled='rowform.$waiting')
-                                                i.fa.fa-floppy-o
-                                            button.btn.btn-sm.btn-default(type='button', ng-disabled='rowform.$waiting', ng-click='rowform.$cancel(); ctrl.cancelEditSupplierContact(contact)')
-                                                i.fa.fa-ban
-                                        .buttons(ng-show='!rowform.$visible')
-                                            button.btn.btn-sm.btn-primary.margin-right-5px(type='button', ng-click='rowform.$show()')
-                                                i.fa.fa-pencil
-                                            button.btn.btn-sm.btn-danger(type='button', ng-click='ctrl.removeSupplierContact(contact, "' + __('remove_supplier_contact_prompt') + '")')
-                                                i.fa.fa-trash
+                            div.row
+                                div.col-xs-6
+                                    label #{__('supplier_contact')}
+                                div.col-xs-6.text-right
+                                    button.btn.btn-primary.btn-sm(ng-click='ctrl.addSupplierContact()')
+                                        span #{__('add_')}
+                            div.table-responsive
+                                table.table.table-striped.table-hover
+                                    thead
+                                        tr
+                                            th #{__('title_')}
+                                            th #{__('name_')}
+                                            th #{__('last_name')}
+                                            th #{__('position_')}
+                                            th #{__('phone_number')}
+                                            th #{__('email_')}
+                                            td.text-right(style='width: 120px')
+                                    tbody(style='background: white')
+                                        tr(ng-show='!ctrl.selectedSupplierContacts || !ctrl.selectedSupplierContacts.length')
+                                            td(colspan='7')
+                                                div.text-center
+                                                    span #{__('no_data')}
+                                        tr(ng-repeat='contact in ctrl.selectedSupplierContacts')
+                                            td
+                                                div(editable-select="contact.title" e-name="title" e-form="rowform" e-ng-options='title as title for title in global.utils.titles') {{contact.title || '#{__("not_set")}'}}
+                                            td
+                                                div(editable-text="contact.name" e-name="name" e-form="rowform" e-required='') {{contact.name || '#{__("not_set")}'}}
+                                            td
+                                                div(editable-text="contact.lastName" e-name="lastName" e-form="rowform") {{contact.lastName || '#{__("not_set")}'}}
+                                            td
+                                                div(editable-text="contact.position" e-name="position" e-form="rowform") {{contact.position || '#{__("not_set")}'}}
+                                            td
+                                                div(editable-text="contact.phoneNumber" e-name="phoneNumber" e-form="rowform") {{contact.phoneNumber || '#{__("not_set")}'}}
+                                            td
+                                                div(editable-text="contact.email" e-name="email" e-form="rowform") {{contact.email || '#{__("not_set")}'}}
 
-
-                        div.text-right
-                            button.btn.btn-primary(ng-click='ctrl.addSupplierContact()')
-                                span #{__('add_')}
+                                            td.text-right
+                                                form.form-buttons.form-inline(editable-form='', name='rowform', onbeforesave='ctrl.updateSupplierContact($data, contact)', ng-show='rowform.$visible', shown='!contact._id')
+                                                    button.btn.btn-sm.btn-primary.margin-right-5px(type='submit', ng-disabled='rowform.$waiting')
+                                                        i.fa.fa-floppy-o
+                                                    button.btn.btn-sm.btn-default(type='button', ng-disabled='rowform.$waiting', ng-click='rowform.$cancel(); ctrl.cancelEditSupplierContact(contact)')
+                                                        i.fa.fa-ban
+                                                .buttons(ng-show='!rowform.$visible')
+                                                    button.btn.btn-sm.btn-primary.margin-right-5px(type='button', ng-click='rowform.$show()')
+                                                        i.fa.fa-pencil
+                                                    button.btn.btn-sm.btn-danger(type='button', ng-click='ctrl.removeSupplierContact(contact, "' + __('remove_supplier_contact_prompt') + '")')
+                                                        i.fa.fa-trash
 
 
     include ../dialogs/admin-supplier-add

@@ -6,6 +6,7 @@ const constants = {
 
 const supplierContactSchema = new mongoose.Schema({
     supplierID: {type: mongoose.Schema.ObjectId, ref: 'Supplier', required: true},
+    title: {type: String},
     name: {type: String, required: true},
     lastName: {type: String},
     position: {type: String},
