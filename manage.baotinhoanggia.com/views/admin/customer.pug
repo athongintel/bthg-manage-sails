@@ -14,8 +14,7 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
     div.panel.panel-default.main-panel
         div.panel-body
             div
-                label #{__('search_customer')}
-                select#select_customer.form-control
+                include ../partials/customer-search
 
             div.margin-top-15px
                 div.text-center(ng-show='!ctrl.selectedCustomer && !ctrl.loadingCustomerInfo')

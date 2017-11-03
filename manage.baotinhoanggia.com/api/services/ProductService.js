@@ -2,7 +2,7 @@ const BigNumber = require('bignumber.js');
 const mongoose = require('mongoose');
 const sysUtils = require('../../utils/system');
 
-const calculateProductAvailable = async function(productID){
+const calculateProductAvailable = async function (productID) {
     "use strict";
     let inStocks = await _app.model.InStock.find({productID: productID});
     let outStocks = await _app.model.OutStock.find({productID: productID});
@@ -113,7 +113,7 @@ module.exports = {
         /*
             params: {
                 query: query by name
-                with_count: count the product type of each product
+                with_count: count the product type & product of each product
             }
          */
         try {
@@ -127,12 +127,39 @@ module.exports = {
                             foreignField: "groupID",
                             as: "productTypes"
                         }
-                    }
+                    },
+                    {
+                        $unwind: "$productTypes"
+                    },
+                    {
+                        $lookup: {
+                            from: "product",
+                            localField: "productTypes._id",
+                            foreignField: "typeID",
+                            as: "products"
+                        },
+                    },
+                    {
+                        $addFields: {
+                            productCount: {$size: "$products"}
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$_id",
+                            name: {$first: "$name"},
+                            types: {$push: "$productTypes"},
+                            productSize: {$sum: "$productCount"}
+                        }
+                    },
+                    {
+                        $project: {
+                            name: "$name",
+                            productCount: "$productSize",
+                            typeCount: {$size: "$types"},
+                        }
+                    },
                 ]);
-                categories.forEach(cat => {
-                    cat.size = cat.productTypes.length;
-                    delete cat.productTypes;
-                });
             }
             else {
                 categories = await _app.model.ProductGroup.find({});
@@ -635,7 +662,7 @@ module.exports = {
                 //-- query for available
                 let inStocks = await _app.model.InStock.find({productID: product._id});
                 let outStocks = await _app.model.OutStock.find({productID: product._id});
-
+                
                 product.available = await calculateProductAvailable(product._id);
                 
                 //-- get latest outPrice && latest average inPrice for each supplier
@@ -689,9 +716,6 @@ module.exports = {
         "use strict";
         /*
             params: {
-                filter: [
-                    {attr, value}
-                ]
             }
          */
         try {

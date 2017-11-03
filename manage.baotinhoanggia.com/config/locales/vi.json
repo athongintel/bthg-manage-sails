@@ -106,5 +106,14 @@
 	"available_": "Tồn kho",
 	"last_price": "Đơn giá",
 	"last_name": "Họ",
-	"loading_": "đang tải ảnh..."
+	"loading_": "đang tải ảnh...",
+	"outorder_info": "outorder_info",
+	"outorder_name": "outorder_name",
+	"select_customer": "select_customer",
+	"select_contact": "select_contact",
+	"outorder_code": "outorder_code",
+	"quotation_info": "quotation_info",
+	"product_search": "product_search",
+	"search_customer_contact": "search_customer_contact",
+	"refresh_": "refresh_"
 }

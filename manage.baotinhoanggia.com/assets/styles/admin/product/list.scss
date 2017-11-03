@@ -9,31 +9,6 @@
         border-radius: 4px;
     }
 
-    .search-result{
-        max-height:300px;
-        overflow-x: hidden;
-        overflow-y: auto;
-        border: 1px solid lightgray;
-        padding: 2px;
-        border-radius: 4px;
-    }
-
-    .product-record{
-        font-size:16px;
-        padding:0px 6px;
-    }
-    .product-record.even{
-        background-color: wheat;
-    }
-    .product-record:hover{
-        background-color: lightgrey;
-    }
-    .product-record.selected{
-        background-color: seagreen;
-        color: white;
-    }
-
-
     .img-wrapper{
         position: relative;
         display: inline-flex;

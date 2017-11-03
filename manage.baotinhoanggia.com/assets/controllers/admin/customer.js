@@ -32,6 +32,46 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
         }
     };
     
+    //-- @implement partials_customer-search
+    $scope.customerSelect = function(customerID) {
+        ctrl.loadingCustomerInfo = true;
+        $http.post('/batch', {
+            token: $scope.global.user.token,
+            options: {},
+            commands: [
+                {
+                    name: 'get_customer_info',
+                    params: {_id: customerID}
+                },
+                {
+                    name: 'get_all_customer_contacts',
+                    params: {customerID: customerID}
+                }
+            ]
+        }).then(
+            function (response) {
+                $timeout(function () {
+                    ctrl.loadingCustomerInfo = false;
+                    if (response.data.success) {
+                        //-- load full customer info
+                        ctrl.selectedCustomer = response.data.result[0].success ? response.data.result[0].result : null;
+                        ctrl.selectedCustomerContacts = response.data.result[1].success ? response.data.result[1].result : null;
+                    }
+                    else {
+                        ctrl.loadCustomerError = true;
+                    }
+                });
+            
+            },
+            function (err) {
+                $timeout(function () {
+                    ctrl.loadingCustomerInfo = false;
+                    ctrl.loadCustomerError = true;
+                });
+            }
+        );
+    };
+    
     ctrl.selectedCustomer = null;
     
     ctrl.addCustomer = function () {
@@ -165,7 +205,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                         }
                     },
                     function (err) {
-                        //-- TODO: remove failed
+                        alert('Network error');
                     }
                 );
             }
@@ -192,7 +232,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                     function (response) {
                         resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
                     },
-                    function (err) {
+                    function () {
                         resolve('Network error');
                     }
                 )
@@ -201,81 +241,12 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
     };
     
     ctrl.init = function () {
-        
-        let customerSelector = $('#select_customer');
-        customerSelector.select2({
-            ajax: {
-                transport: function (params, success, failure) {
-                    $http.post('/rpc', {
-                        token: $scope.global.user.token,
-                        name: 'get_customer_meta_info',
-                        params: {query: params.data.term}
-                    }).then(
-                        function (response) {
-                            if (response.data.success) {
-                                success(response.data.result);
-                            }
-                            else {
-                                failure();
-                            }
-                        },
-                        function (err) {
-                            failure();
-                        }
-                    );
-                },
-                processResults: function (data) {
-                    data.forEach(function (customer) {
-                        customer.id = customer._id;
-                        customer.text = customer.name;
-                    });
-                    
-                    return {
-                        results: data
-                    };
-                }
-            }
-        });
-        customerSelector.on('select2:select', function (e) {
-            $timeout(function () {
-                ctrl.loadingCustomerInfo = true;
-            });
-            $http.post('/batch', {
-                token: $scope.global.user.token,
-                options: {},
-                commands: [
-                    {
-                        name: 'get_customer_info',
-                        params: {_id: e.params.data._id}
-                    },
-                    {
-                        name: 'get_all_customer_contacts',
-                        params: {customerID: e.params.data._id}
-                    }
-                ]
-            }).then(
-                function (response) {
-                    $timeout(function () {
-                        ctrl.loadingCustomerInfo = false;
-                        if (response.data.success) {
-                            //-- load full customer info
-                            ctrl.selectedCustomer = response.data.result[0].success ? response.data.result[0].result : null;
-                            ctrl.selectedCustomerContacts = response.data.result[1].success ? response.data.result[1].result : null;
-                        }
-                        else {
-                            ctrl.loadCustomerError = true;
-                        }
-                    });
-                    
-                },
-                function (err) {
-                    $timeout(function () {
-                        ctrl.loadingCustomerInfo = false;
-                        ctrl.loadCustomerError = true;
-                    });
-                }
-            );
-        });
+        //-- check hash
+        let queries = $scope.global.utils.breakQueries(document.location.hash);
+        if (queries && queries.customerID) {
+            //-- load product
+            $scope.customerSelect(queries.customerID);
+        }
     }
     
 }]);

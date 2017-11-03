@@ -92,5 +92,12 @@
 	"last_name": "last_name",
 	"type_": "type_",
 	"available_": "available_",
-	"last_price": "last_price"
+	"last_price": "last_price",
+	"outorder_info": "outorder_info",
+	"outorder_code": "outorder_code",
+	"outorder_name": "outorder_name",
+	"select_customer": "select_customer",
+	"select_contact": "select_contact",
+	"product_search": "product_search",
+	"quotation_info": "quotation_info"
 }

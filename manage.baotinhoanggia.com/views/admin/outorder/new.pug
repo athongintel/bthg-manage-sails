@@ -3,13 +3,35 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
         div.row
             div.col-xs-12.col-sm-6
                 div.panel-header-title #{__('new_outorder')}
-            //div.col-xs-12.col-sm-6
-                div.text-right
-                    button.action.btn.btn-primary.margin-bottom-15px(ng-click='ctrl.addCustomer()')
-                        span
-                            i.fa.fa-plus
-                            span &nbsp;
-                        span #{__('add_customer')}
 
     div.panel.panel-default.main-panel
         div.panel-body
+            label #{__('outorder_info')}
+            div.panel.panel-default
+                div.panel-body
+                    form(name='newOutOrderForm' editable-form='')
+                        div.margin-bottom-5px.row
+                            div.col-xs-12.col-sm-3
+                                label #{__('outorder_code')}
+                            div.col-xs-12.col-sm-9.text-right
+                                span {{}}
+                        div.margin-bottom-5px
+                            label #{__('outorder_name')}
+                            input.form-control()
+                        div.row
+                            div.col-xs-12.col-sm-6.margin-bottom-5px
+                                include ../../partials/customer-search
+                            div.col-xs-12.col-sm-6
+                                include ../../partials/customer-contact-search
+            div.row
+                div.col-xs-12.col-sm-6
+                    label #{__('product_search')}
+                    div.panel.panel-default
+                        div.panel-body
+                            include ../../partials/product-search
+                div.col-xs-12.col-sm-6
+                    label #{__('quotation_info')}
+                    div.panel.panel-default
+                        div.panel-body
+
+

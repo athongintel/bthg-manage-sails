@@ -164,7 +164,7 @@ module.exports = {
             }
         }).then(
             function (result) {
-                console.log(result);
+                if (!result.success) console.log(result);
                 res.json(result);
             },
             function (err) {
@@ -249,7 +249,7 @@ module.exports = {
             }
         }).then(
             function (result) {
-                console.log(result);
+                if (!result.success) console.log(result);
                 res.json(result);
             },
             function (err) {

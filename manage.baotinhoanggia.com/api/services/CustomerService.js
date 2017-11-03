@@ -128,10 +128,18 @@ module.exports = {
         /*
             params:{
                 [required] customerID: customer id
+                query: query
             }
          */
         try {
             let contacts = await _app.model.CustomerContact.find({customerID: params.customerID});
+            if (params.query){
+                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`,'i');
+                contacts = contacts.filter(c=>{
+                    return !!regex.exec(c.name+c.lastName);
+                });
+            }
+            
             return sysUtils.returnSuccess(contacts);
         }
         catch (err) {

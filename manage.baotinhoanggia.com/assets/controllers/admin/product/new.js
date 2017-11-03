@@ -190,7 +190,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                 processResults: function (data) {
                     data.forEach(function (group) {
                         group.id = group._id;
-                        group.text = `${group.name} (${group.size})`;
+                        group.text = `${group.name} (${group.productCount})`;
                     });
                     return {
                         results: data
