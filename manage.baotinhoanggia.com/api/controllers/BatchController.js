@@ -37,13 +37,16 @@ const actions = {
     'get_all_product_categories': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllProductCategories, validation: {}},
     
     'add_product_brand': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.addProductBrand, validation: {required: ['name']}},
+    'get_product_brand': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getProductBrand, validation: {required: ['_id']}},
     'remove_product_brand': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductBrand, validation: {required: ['_id']}},
     'update_product_brand': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProductBrand, validation: {required: ['_id', 'name']}},
     'get_all_product_brands': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllProductBrands, validation: {}},
     
     'add_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.addProductType, validation: {required: ['groupID', 'name']}},
+    'get_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getProductType, validation: {required: ['_id']}},
     'remove_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductType, validation: {required: ['_id']}},
     'update_product_type': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProductType, validation: {required: ['_id', 'name']}},
+    'get_all_product_types': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllProductTypes, validation: {required: []}},
     'get_all_types_from_category': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllTypesFromCategory, validation: {required: ['groupID']}},
     
     'add_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.addProduct, validation: {required: ['typeID', 'brandID', 'model']}},

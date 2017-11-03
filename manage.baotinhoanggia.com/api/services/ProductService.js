@@ -129,7 +129,10 @@ module.exports = {
                         }
                     },
                     {
-                        $unwind: "$productTypes"
+                        $unwind: {
+                            path: "$productTypes",
+                            preserveNullAndEmptyArrays: true
+                        }
                     },
                     {
                         $lookup: {
@@ -160,6 +163,7 @@ module.exports = {
                         }
                     },
                 ]);
+                console.log(categories);
             }
             else {
                 categories = await _app.model.ProductGroup.find({});
@@ -202,6 +206,25 @@ module.exports = {
             
             brand = await brand.save();
             
+            return sysUtils.returnSuccess(brand);
+        }
+        catch (err) {
+            console.log('addProductBrand:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    getProductBrand: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                [required] _id: brand id
+            }
+         */
+        try {
+            let brand = await _app.model.ProductBrand.findById(params._id);
+            if (!brand)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             return sysUtils.returnSuccess(brand);
         }
         catch (err) {
@@ -351,6 +374,27 @@ module.exports = {
         }
     },
     
+    getProductType: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                [required] _id: id of type
+            }
+         */
+        try {
+            //-- check if the name existed
+            let type = await _app.model.ProductType.findById(params._id).populate('groupID');
+            if (!type)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+
+            return sysUtils.returnSuccess(type);
+        }
+        catch (err) {
+            console.log('getProductType:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     updateProductType: async function (principal, params) {
         "use strict";
         /*
@@ -454,6 +498,29 @@ module.exports = {
         }
         catch (err) {
             console.log('getAllTypesFromCategory:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    getAllProductTypes: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                query: filter by name
+            }
+         */
+        try {
+            let types = await _app.model.ProductType.find({});
+            if (params.query) {
+                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'i');
+                types = types.filter(t => {
+                    return !!regex.exec(t.name);
+                })
+            }
+            return sysUtils.returnSuccess(types);
+        }
+        catch (err) {
+            console.log('getAllProductTypes:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     },

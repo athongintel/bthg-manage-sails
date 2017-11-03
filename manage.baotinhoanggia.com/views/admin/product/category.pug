@@ -41,7 +41,7 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
                                                     button.btn.btn-danger.btn-xs.margin-right-5px(ng-click='ctrl.removeCategory(category)' ng-disabled='category.size > 0 || category.isBeingRemoved')
                                                         i.fa.fa-trash(ng-hide='category.isBeingRemoved')
                                                         i.fa.fa-spinner.fa-spin(ng-show='category.isBeingRemoved')
-                                                span.badge {{category.size || "0"}}
+                                                span.badge {{category.typeCount || "0"}}
                     div.col-xs-12.col-sm-6
                         div
                             div.row.flex

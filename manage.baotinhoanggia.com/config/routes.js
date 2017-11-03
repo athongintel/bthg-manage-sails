@@ -45,4 +45,16 @@ module.exports.routes = {
         view: 'admin/outorder/new', locals: {layout: false}
     },
     
+    'GET /partials/brand-selector': {
+        view: 'partials/brand-selector', locals: {layout: false}
+    },
+    
+    'GET /partials/type-selector': {
+        view: 'partials/type-selector', locals: {layout: false}
+    },
+    
+    'GET /partials/product-search': {
+        view: 'partials/product-search', locals: {layout: false}
+    },
+    
 };

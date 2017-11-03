@@ -258,11 +258,13 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
             function (response) {
                 ctrl.initializing = false;
                 if (response.data.success) {
+                    // console.log(response.data.result);
                     //-- desc sort
                     response.data.result.sort(function (a, b) {
                         return String(b._id).localeCompare(String(a._id));
                     });
                     ctrl.categories = response.data.result;
+                    console.log(ctrl.categories);
                     ctrl.filterCategory();
                 }
                 else {

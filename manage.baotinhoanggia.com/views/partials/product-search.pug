@@ -1,4 +1,4 @@
-div.partials_product-search(ng-controller='ProductSearchPartialController as ctrl' ng-init='ctrl.init()')
+div.partials_product-search
     div.row
         div.col-xs-12.col-sm-6
             div.margin-bottom-15px
@@ -8,7 +8,7 @@ div.partials_product-search(ng-controller='ProductSearchPartialController as ctr
                     div.col-xs-3.text-right
                         button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedGroup()')
                             i.fa.fa-window-close.text-danger
-                select#partials_product-search_select-product-group.form-control
+                //include ../partials/product-group-search
 
         div.col-xs-12.col-sm-6
             div.margin-bottom-15px
@@ -18,7 +18,7 @@ div.partials_product-search(ng-controller='ProductSearchPartialController as ctr
                     div.col-xs-3.text-right
                         button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedType()')
                             i.fa.fa-window-close.text-danger
-                select#partials_product-search_select-product-type.form-control(ng-disabled='!ctrl.selectedProductGroup')
+                //include ../partials/product-type-search
     div.row
         div.col-xs-12.col-sm-6
             div.margin-bottom-15px
@@ -28,8 +28,7 @@ div.partials_product-search(ng-controller='ProductSearchPartialController as ctr
                     div.col-xs-3.text-right
                         button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedBrand()')
                             i.fa.fa-window-close.text-danger
-                select#partials_product-search_select-product-brand.form-control()
-                    button.btn.btn-default(ng-click='ctrl.clearSelectedBrand()')
+                brand-selector(global='$ctrl.global' selected-brand='ctrl.selectedBrand' on-brand-changed='ctrl.changeSelectedBrand(selectedBrand)')
         div.col-xs-12.col-sm-6
             div.margin-bottom-15px
                 div.row

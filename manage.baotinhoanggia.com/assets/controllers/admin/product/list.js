@@ -3,25 +3,76 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
     
     let ctrl = this;
     
-    ctrl.filteredProducts = [];
-    ctrl.allProducts = [];
-    
     //-- @implement product-search.selectProduct
     $scope.selectProduct = function (product) {
-        ctrl.selectedProduct = product;
-        ctrl.loadProduct(product._id);
+        $scope.loadProduct(product._id);
     };
+    
+    ctrl.filteredProducts = [];
+    ctrl.allProducts = [];
     
     ctrl.viewPhoto = function (image) {
         $modal.open({
             templateUrl: 'viewPhotoDialog',
             controller: 'ViewPhotoDialogController',
             resolve: {
-                options: function(){
+                options: function () {
                     return {photoUrl: image.url};
                 }
             }
-        }).result.then(function(){}, function(){});
+        }).result.then(function () {
+        }, function () {
+        });
+    };
+    
+    $scope.loadProduct = function (productID) {
+        $scope.loadingProduct = true;
+        $http.post('/rpc', {
+            token: $scope.global.user.token,
+            name: 'get_product',
+            params: {
+                _id: productID,
+                full_info: true
+            }
+        }).then(
+            function (response) {
+                $scope.loadingProduct = false;
+                if (response.data.success) {
+                    $scope.product = response.data.result;
+                }
+                else {
+                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                }
+            },
+            function () {
+                $scope.loadingProduct = false;
+                alert('Network error');
+            }
+        );
+    };
+    
+    ctrl.init = function () {
+        
+        //-- check hash
+        let queries = $scope.global.utils.breakQueries(document.location.hash);
+        if (queries && queries.productID) {
+            //-- load product
+            ctrl.loadProduct(queries.productID);
+        }
+    };
+    
+}]);
+
+app.controller('AdminProductListDetailsController', ['$scope', '$http', '$timeout', '$uibModal', function ($scope, $http, $timeout, $modal) {
+    "use strict";
+    
+    const ctrl = this;
+    
+    //-- shared variables
+    ctrl.selectedBrand = null;
+    
+    ctrl.changeSelectedBrand = function(brand){
+        ctrl.selectedBrand = brand;
     };
     
     ctrl.calculateAveragePrice = function (prices) {
@@ -36,35 +87,8 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
         return total.toString();
     };
     
-    ctrl.loadProduct = function (productID) {
-        ctrl.loadingProduct = true;
-        $http.post('/rpc', {
-            token: $scope.global.user.token,
-            name: 'get_product',
-            params: {
-                _id: productID,
-                full_info: true
-            }
-        }).then(
-            function (response) {
-                ctrl.loadingProduct = false;
-                if (response.data.success) {
-                    ctrl.product = response.data.result;
-                    // console.log(ctrl.product);
-                }
-                else {
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
-                }
-            },
-            function () {
-                ctrl.loadingProduct = false;
-                alert('Network error');
-            }
-        );
-    };
-    
     ctrl.addProductPhoto = function ($files) {
-        let currentCount = ctrl.product.photos.length;
+        let currentCount = $scope.product.photos.length;
         let left = 5 - currentCount;
         let newPhotos = [];
         for (let i = 0; i < Math.min($files.length, left); i++) {
@@ -73,105 +97,7 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
                 file: $files[i]
             });
         }
-        ctrl.product.photos = ctrl.product.photos.concat(newPhotos);
-    };
-    
-    ctrl.cancelEditing = function () {
-        $scope.editProductForm.$cancel();
-        ctrl.product.isBeingEdited = false;
-        for (let i = ctrl.product.photos.length - 1; i > 0; i--) {
-            if (ctrl.product.photos[i].localPhoto) ctrl.product.photos.splice(i, 1);
-        }
-    };
-    
-    ctrl.startEditing = function () {
-        $scope.editProductForm.$show();
-        ctrl.product.isBeingEdited = true;
-        $timeout(function () {
-            let values = [];
-            let ids = [];
-            ctrl.product.supplierIDs.forEach(function (supplier) {
-                ids.push(supplier._id);
-                values.push({id: supplier._id, text: supplier.name});
-            });
-            ctrl.suppliersEditSelector = $('#select_product_suppliers');
-            ctrl.suppliersEditSelector.select2({
-                data: values,
-                multiple: true,
-                ajax: {
-                    transport: function (params, success, failure) {
-                        $http.post('/rpc', {
-                            token: $scope.global.user.token,
-                            name: 'get_all_suppliers',
-                            params: {
-                                query: params.data.term
-                            }
-                        }).then(
-                            function (response) {
-                                if (response.data.success) {
-                                    success(response.data.result);
-                                }
-                                else {
-                                    failure();
-                                }
-                            },
-                            function (err) {
-                                failure();
-                            }
-                        );
-                    },
-                    processResults: function (data) {
-                        data.forEach(function (supplier) {
-                            supplier.id = supplier._id;
-                            supplier.text = supplier.name;
-                        });
-                        return {
-                            results: data
-                        };
-                    }
-                }
-            });
-            ctrl.suppliersEditSelector.val(ids).trigger('change');
-            
-            ctrl.brandEditSelector = $('#select_edit_product_brand');
-            ctrl.brandEditSelector.select2({
-                data: [{id: ctrl.product.brandID._id, text: ctrl.product.brandID.name}],
-                ajax: {
-                    transport: function (params, success, failure) {
-                        $http.post('/rpc', {
-                            token: $scope.global.user.token,
-                            name: 'get_all_product_brands',
-                            params: {
-                                query: params.data.term,
-                                with_count: true
-                            }
-                        }).then(
-                            function (response) {
-                                if (response.data.success) {
-                                    success(response.data.result);
-                                }
-                                else {
-                                    failure();
-                                }
-                            },
-                            function (err) {
-                                failure();
-                            }
-                        );
-                    },
-                    processResults: function (data) {
-                        data.forEach(function (brand) {
-                            brand.id = brand._id;
-                            brand.text = `${brand.name} (${$scope.global.utils.originNameFromCode(brand.origin)})`;
-                        });
-                        return {
-                            results: data
-                        };
-                    }
-                }
-            });
-            ctrl.brandEditSelector.val([ctrl.product.brandID._id]).trigger('change');
-        });
+        $scope.product.photos = $scope.product.photos.concat(newPhotos);
     };
     
     ctrl.checkProductAttribute = function (attr, value, oldValue) {
@@ -188,11 +114,11 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
                         pairs: [
                             {
                                 attr: 'typeID',
-                                value: ctrl.product.typeID._id
+                                value: $scope.product.typeID._id
                             },
                             {
                                 attr: 'brandID',
-                                value: ctrl.product.brandID._id
+                                value: $scope.product.brandID._id
                             },
                             {
                                 attr: 'model',
@@ -215,18 +141,18 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
     ctrl.updateProduct = function (data) {
         return new Promise(function (resolve) {
             //-- temporary disable editting
-            ctrl.product.isBeingEdited = false;
+            $scope.product.isBeingEdited = false;
             
             //-- calculate added photo counts;
             let addedPhotos = [];
-            ctrl.product.photos.forEach(function (p) {
+            $scope.product.photos.forEach(function (p) {
                 if (p.localPhoto) addedPhotos.push(p);
             });
             $http.post('/rpc', {
                 token: $scope.global.user.token,
                 name: 'update_product',
                 params: {
-                    _id: ctrl.product._id,
+                    _id: $scope.product._id,
                     model: data.model,
                     description: data.description,
                     brandID: ctrl.brandEditSelector.val(),
@@ -238,7 +164,8 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
                     //-- upload photos
                     let updateSuccessHook = function () {
                         $timeout(function () {
-                            ctrl.product = response.data.result.product;
+                            //-- change the parent product, so we don't create any local product object
+                            $scope.$parent.product = response.data.result.product;
                         }, 50);
                         resolve(true);
                     };
@@ -290,13 +217,13 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
     };
     
     ctrl.removeProductImage = function (image, i18n_remove_confirm) {
-        let index = ctrl.product.photos.findIndex(function (p) {
+        let index = $scope.product.photos.findIndex(function (p) {
             return p === image;
         });
         
         if (image.localPhoto) {
             if (index >= 0)
-                ctrl.product.photos.splice(index, 1);
+                $scope.product.photos.splice(index, 1);
         }
         else {
             let okRemove = confirm(i18n_remove_confirm);
@@ -307,7 +234,7 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
                     token: $scope.global.user.token,
                     name: 'remove_product_photo',
                     params: {
-                        _id: ctrl.product._id,
+                        _id: $scope.product._id,
                         fileName: image.fileName
                     }
                 }).then(
@@ -315,7 +242,7 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
                         image.isBeingRemoved = false;
                         if (response.data.success) {
                             //-- update local model
-                            ctrl.product.photos.splice(index, 1);
+                            $scope.product.photos.splice(index, 1);
                         }
                         else {
                             alert($scope.global.utils.errors[response.data.error.errorCode]);
@@ -375,14 +302,68 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
         );
     };
     
-    ctrl.init = function () {
-        
-        //-- check hash
-        let queries = $scope.global.utils.breakQueries(document.location.hash);
-        if (queries && queries.productID) {
-            //-- load product
-            ctrl.loadProduct(queries.productID);
+    ctrl.cancelEditing = function () {
+        $scope.editProductForm.$cancel();
+        $scope.product.isBeingEdited = false;
+        for (let i = $scope.product.photos.length - 1; i > 0; i--) {
+            if ($scope.product.photos[i].localPhoto) $scope.product.photos.splice(i, 1);
         }
+    };
+    
+    ctrl.startEditing = function () {
+        ctrl.selectedBrand = $scope.product.brandID._id;
+        
+        //console.log($scope.product);
+        
+        $scope.editProductForm.$show();
+        $scope.product.isBeingEdited = true;
+        $timeout(function () {
+            let values = [];
+            let ids = [];
+            $scope.product.supplierIDs.forEach(function (supplier) {
+                ids.push(supplier._id);
+                values.push({id: supplier._id, text: supplier.name});
+            });
+            ctrl.suppliersEditSelector = $('#select_product_suppliers');
+            ctrl.suppliersEditSelector.select2({
+                data: values,
+                multiple: true,
+                ajax: {
+                    transport: function (params, success, failure) {
+                        $http.post('/rpc', {
+                            token: $scope.global.user.token,
+                            name: 'get_all_suppliers',
+                            params: {
+                                query: params.data.term
+                            }
+                        }).then(
+                            function (response) {
+                                if (response.data.success) {
+                                    success(response.data.result);
+                                }
+                                else {
+                                    failure();
+                                }
+                            },
+                            function (err) {
+                                failure();
+                            }
+                        );
+                    },
+                    processResults: function (data) {
+                        data.forEach(function (supplier) {
+                            supplier.id = supplier._id;
+                            supplier.text = supplier.name;
+                        });
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+            ctrl.suppliersEditSelector.val(ids).trigger('change');
+            
+        });
     };
     
 }]);
