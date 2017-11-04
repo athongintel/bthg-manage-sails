@@ -4,9 +4,12 @@ const ProductSearchPartialController = function ($scope, $http) {
     const ctrl = this;
     
     ctrl.$onInit = function () {
-    
-        ctrl.refreshProducts();
+        ctrl.selectedGroup = {};
+        ctrl.selectedType = {};
+        ctrl.selectedBrand = {};
+        ctrl.selectedSupplier = {};
         
+        ctrl.refreshProducts();
     };
     
     ctrl.changeSelectedType = function(type){
@@ -54,9 +57,9 @@ const ProductSearchPartialController = function ($scope, $http) {
     
     ctrl.filterProduct = function () {
         let filter = [];
-        if (ctrl.selectedGroup) filter.push({attr: 'typeID.groupID._id', value: ctrl.selectedGroup._id});
-        if (ctrl.selectedType) filter.push({attr: 'typeID._id', value: ctrl.selectedType._id});
-        if (ctrl.selectedBrand) filter.push({attr: 'brandID._id', value: ctrl.selectedBrand._id});
+        if (ctrl.selectedGroup && ctrl.selectedGroup._id) filter.push({attr: 'typeID.groupID._id', value: ctrl.selectedGroup._id});
+        if (ctrl.selectedType && ctrl.selectedType._id) filter.push({attr: 'typeID._id', value: ctrl.selectedType._id});
+        if (ctrl.selectedBrand && ctrl.selectedBrand._id) filter.push({attr: 'brandID._id', value: ctrl.selectedBrand._id});
         
         let regex = new RegExp(`.*${ctrl.productFilter ? ctrl.global.utils.regexEscape(ctrl.productFilter) : ''}.*`, 'i');
         ctrl.filteredProducts = ctrl.allProducts.filter(function (p) {
@@ -78,7 +81,7 @@ const ProductSearchPartialController = function ($scope, $http) {
             return passed;
         });
     
-        if (ctrl.selectedSupplier) {
+        if (ctrl.selectedSupplier && ctrl.selectedSupplier._id) {
             ctrl.filteredProducts = ctrl.filteredProducts.filter(function (p) {
                 return p.supplierIDs.findIndex(function (supp) {
                     return String(supp) === ctrl.selectedSupplier._id;

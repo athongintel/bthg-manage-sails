@@ -662,7 +662,8 @@ module.exports = {
                 [required] _id: id of the product,
                 [required, unique] model: the product model,
                 description,
-                brandID,
+                [required] typeID,
+                [required] brandID,
                 supplierIDs,
                 addedPhotos,
             }
@@ -674,6 +675,7 @@ module.exports = {
             
             product.model = params.model;
             product.description = params.description;
+            product.typeID = params.typeID;
             product.brandID = params.brandID;
             product.supplierIDs = params.supplierIDs;
             
@@ -744,7 +746,7 @@ module.exports = {
             let product;
             if (params.full_info) {
                 
-                product = await _app.model.Product.findById(params._id).populate('typeID').populate('brandID').populate('supplierIDs').lean().exec();
+                product = await _app.model.Product.findById(params._id).populate({path: 'typeID', populate: {path: 'groupID'}}).populate('brandID').populate('supplierIDs').lean().exec();
                 if (!product)
                     return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
                 

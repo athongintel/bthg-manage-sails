@@ -20,7 +20,7 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                         label #{__('product_details')}
                         div.panel.panel-default
                             div.panel-body
-                                product-details(ng-show='ctrl.selectedProductId' global='global' selected-product-id='ctrl.selectedProductId')
+                                product-details(global='global' ng-show='ctrl.selectedProductId' selected-product-id='ctrl.selectedProductId')
 
     //include ../../dialogs/change-value-dialog
     //include ../../dialogs/view-photo

@@ -1,4 +1,4 @@
-const TypeSelectorPartialController = function ($scope, $http) {
+const TypeSelectorPartialController = function ($scope, $element, $http) {
     "use strict";
     
     const ctrl = this;
@@ -30,7 +30,7 @@ const TypeSelectorPartialController = function ($scope, $http) {
             });
         
             //-- filter if ctrl.selectedGroup is present
-            if (ctrl.selectedGroup){
+            if (ctrl.selectedGroup && ctrl.selectedGroup._id){
                 data = data.filter(function(type){
                     return String(type.groupID) === ctrl.selectedGroup._id;
                 });
@@ -47,20 +47,13 @@ const TypeSelectorPartialController = function ($scope, $http) {
             data: data,
             ajax: typeSelectorAjax
         });
-        ctrl.typeSelector.one('select2:select', function (e) {
-            $scope.$apply(function () {
-                //-- keep a local change
-                ctrl.type = e.params.data;
-                ctrl.onTypeChanged({selectedType: e.params.data});
-            });
-        });
         ctrl.typeSelector.val(value).trigger('change');
     };
     
     const initSelectorWithData = function(selectedType){
         let data = [];
         let ids = [];
-        if (selectedType){
+        if (selectedType && selectedType._id){
             data.push({id: selectedType._id, text: selectedType.name});
             ids.push(selectedType._id);
         }
@@ -68,7 +61,12 @@ const TypeSelectorPartialController = function ($scope, $http) {
     };
     
     ctrl.$onInit = function () {
-        ctrl.typeSelector = $('.partials_type-selector_selector');
+        ctrl.typeSelector = $element.find('.partials_type-selector_selector');
+        ctrl.typeSelector.on('select2:select', function (e) {
+            $scope.$apply(function () {
+                ctrl.onTypeChanged({selectedType: e.params.data});
+            });
+        });
         initSelectorWithData(ctrl.selectedType);
     };
     

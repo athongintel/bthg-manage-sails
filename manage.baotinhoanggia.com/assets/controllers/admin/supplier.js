@@ -243,9 +243,11 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
         //-- get all supplier
         ctrl.initializing = true;
         ctrl.initFailure = false;
+        ctrl.allSuppliers = [];
+        
         $http.post('/rpc', {
             token: $scope.global.user.token,
-            name: 'get_all_suppliers',
+            name: 'get_all_product_suppliers',
             params: {}
         }).then(
             function(response){

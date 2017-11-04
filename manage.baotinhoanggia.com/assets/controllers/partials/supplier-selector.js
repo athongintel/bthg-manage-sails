@@ -1,4 +1,4 @@
-const SupplierSelectorPartialController = function ($scope, $http) {
+const SupplierSelectorPartialController = function ($scope, $element, $http) {
     "use strict";
     
     const ctrl = this;
@@ -42,8 +42,6 @@ const SupplierSelectorPartialController = function ($scope, $http) {
         });
         ctrl.supplierSelector.one('select2:select', function (e) {
             $scope.$apply(function () {
-                //-- keep a local change
-                ctrl.supplier = e.params.data;
                 ctrl.onSupplierChanged({selectedSupplier: e.params.data});
             });
         });
@@ -53,7 +51,7 @@ const SupplierSelectorPartialController = function ($scope, $http) {
     const initSelectorWithData = function(selectedSupplier){
         let data = [];
         let ids = [];
-        if (selectedSupplier){
+        if (selectedSupplier && selectedSupplier._id){
             data.push({id: selectedSupplier._id, text: selectedSupplier.name});
             ids.push(selectedSupplier._id);
         }
@@ -61,7 +59,7 @@ const SupplierSelectorPartialController = function ($scope, $http) {
     };
     
     ctrl.$onInit = function () {
-        ctrl.supplierSelector = $('.partials_supplier-selector_selector');
+        ctrl.supplierSelector = $element.find('.partials_supplier-selector_selector');
         initSelectorWithData(ctrl.selectedSupplier);
     };
     

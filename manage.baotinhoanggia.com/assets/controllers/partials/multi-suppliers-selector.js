@@ -1,4 +1,4 @@
-const MultiSuppliersSelectorPartialController = function ($scope, $http) {
+const MultiSuppliersSelectorPartialController = function ($scope, $element, $http) {
     "use strict";
     
     const ctrl = this;
@@ -41,13 +41,7 @@ const MultiSuppliersSelectorPartialController = function ($scope, $http) {
             data: data,
             ajax: multiSuppliersSelectorAjax
         });
-        ctrl.multiSuppliersSelector.one('select2:select', function (e) {
-            $scope.$apply(function () {
-                //-- keep a local change
-                ctrl.supplier = e.params.data;
-                ctrl.onSuppliersChanged({selectedSuppliers: e.params.data});
-            });
-        });
+        
         ctrl.multiSuppliersSelector.val(value).trigger('change');
     };
     
@@ -56,16 +50,24 @@ const MultiSuppliersSelectorPartialController = function ($scope, $http) {
         let ids = [];
         if (selectedSuppliers && selectedSuppliers.length){
             selectedSuppliers.forEach(function(supplier){
-                data.push({id: supplier._id, text: supplier.name});
-                ids.push(supplier._id);
+                if (supplier && supplier._id) {
+                    data.push({id: supplier._id, text: supplier.name});
+                    ids.push(supplier._id);
+                }
             });
         }
         initSelector(data, ids);
     };
     
     ctrl.$onInit = function () {
-        ctrl.multiSuppliersSelector = $('.partials_supplier-selector_selector');
-        initSelectorWithData(ctrl.selectedSupplier);
+        ctrl.multiSuppliersSelector = $element.find('.partials_multi-suppliers-selector_selector');
+        ctrl.multiSuppliersSelector.on('select2:change', function () {
+            $scope.$apply(function () {
+                console.log(ctrl.multiSuppliersSelector.val());
+                // ctrl.onSuppliersChanged({selectedSuppliers: e.params.data});
+            });
+        });
+        initSelectorWithData(ctrl.selectedSuppliers);
     };
     
     ctrl.$onChanges = function (objs) {

@@ -1,4 +1,4 @@
-const BrandSelectorPartialController = function ($scope, $http) {
+const BrandSelectorPartialController = function ($scope, $element, $http) {
     "use strict";
     
     const ctrl = this;
@@ -40,20 +40,13 @@ const BrandSelectorPartialController = function ($scope, $http) {
             data: data,
             ajax: brandSelectorAjax
         });
-        ctrl.brandSelector.one('select2:select', function (e) {
-            $scope.$apply(function () {
-                //-- keep a local change
-                ctrl.brand = e.params.data;
-                ctrl.onBrandChanged({selectedBrand: e.params.data});
-            });
-        });
         ctrl.brandSelector.val(value).trigger('change');
     };
     
     const initSelectorWithData = function(selectedBrand){
         let data = [];
         let ids = [];
-        if (selectedBrand){
+        if (selectedBrand && selectedBrand._id){
             data.push({id: selectedBrand._id, text: selectedBrand.name});
             ids.push(selectedBrand._id);
         }
@@ -61,7 +54,12 @@ const BrandSelectorPartialController = function ($scope, $http) {
     };
     
     ctrl.$onInit = function () {
-        ctrl.brandSelector = $('.partials_brand-selector_selector');
+        ctrl.brandSelector = $element.find('.partials_brand-selector_selector');
+        ctrl.brandSelector.on('select2:select', function (e) {
+            $scope.$apply(function () {
+                ctrl.onBrandChanged({selectedBrand: e.params.data});
+            });
+        });
         initSelectorWithData(ctrl.selectedBrand);
     };
     

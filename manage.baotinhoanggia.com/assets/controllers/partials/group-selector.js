@@ -1,4 +1,4 @@
-const GroupSelectorPartialController = function ($scope, $http) {
+const GroupSelectorPartialController = function ($scope, $element, $http) {
     "use strict";
     
     const ctrl = this;
@@ -40,20 +40,13 @@ const GroupSelectorPartialController = function ($scope, $http) {
             data: data,
             ajax: groupSelectorAjax
         });
-        ctrl.groupSelector.one('select2:select', function (e) {
-            $scope.$apply(function () {
-                //-- keep a local change
-                ctrl.group = e.params.data;
-                ctrl.onGroupChanged({selectedGroup: e.params.data});
-            });
-        });
         ctrl.groupSelector.val(value).trigger('change');
     };
     
     const initSelectorWithData = function(selectedGroup){
         let data = [];
         let ids = [];
-        if (selectedGroup){
+        if (selectedGroup && selectedGroup._id){
             data.push({id: selectedGroup._id, text: selectedGroup.name});
             ids.push(selectedGroup._id);
         }
@@ -61,7 +54,12 @@ const GroupSelectorPartialController = function ($scope, $http) {
     };
     
     ctrl.$onInit = function () {
-        ctrl.groupSelector = $('.partials_group-selector_selector');
+        ctrl.groupSelector = $element.find('.partials_group-selector_selector');
+        ctrl.groupSelector.on('select2:select', function (e) {
+            $scope.$apply(function () {
+                ctrl.onGroupChanged({selectedGroup: e.params.data});
+            });
+        });
         initSelectorWithData(ctrl.selectedGroup);
     };
     
