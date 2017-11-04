@@ -128,7 +128,7 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                                             td
                                                 div(editable-text="contact.phoneNumber" e-name="phoneNumber" e-form="rowform") {{contact.phoneNumber || '#{__("not_set")}'}}
                                             td
-                                                div(editable-text="contact.email" e-name="email" e-form="rowform") {{contact.email || '#{__("not_set")}'}}
+                                                a(href='{{contact.email? "mailto:" + contact.email : ""}}' editable-text="contact.email" e-name="email" e-form="rowform") {{contact.email || '#{__("not_set")}'}}
                                             td
                                                 div(editable-text="contact.discount" e-name="discount" e-form="rowform") {{contact.discount || '#{__("not_set")}'}}
                                             td.text-right

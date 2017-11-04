@@ -67,7 +67,7 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
                                     div.margin-bottom-15px.col-xs-12.col-sm-6
                                         label #{__('website_')}
                                         div
-                                            a(target='_blank' href='{{ctrl.selectedSupplier.website || ""}}' editable-text="ctrl.selectedSupplier.website" e-name="website") {{ctrl.selectedSupplier.website ||  '#{__("not_set")}'}}
+                                            a(target='_blank' href='{{"//" + ctrl.selectedSupplier.website || ""}}' editable-text="ctrl.selectedSupplier.website" e-name="website") {{ctrl.selectedSupplier.website ||  '#{__("not_set")}'}}
                                 div.row
                                     div.margin-bottom-15px.col-xs-12.col-sm-6
                                         label #{__('iban_')}
@@ -125,7 +125,7 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
                                             td
                                                 div(editable-text="contact.phoneNumber" e-name="phoneNumber" e-form="rowform") {{contact.phoneNumber || '#{__("not_set")}'}}
                                             td
-                                                div(editable-text="contact.email" e-name="email" e-form="rowform") {{contact.email || '#{__("not_set")}'}}
+                                                a(href='{{contact.email? "mailto:" + contact.email : ""}}' editable-text="contact.email" e-name="email" e-form="rowform") {{contact.email || '#{__("not_set")}'}}
 
                                             td.text-right
                                                 form.form-buttons.form-inline(editable-form='', name='rowform', onbeforesave='ctrl.updateSupplierContact($data, contact)', ng-show='rowform.$visible', shown='!contact._id')
