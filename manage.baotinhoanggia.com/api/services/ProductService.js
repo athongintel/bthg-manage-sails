@@ -49,6 +49,28 @@ module.exports = {
         }
     },
     
+    getProductCategory: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                [required] _id: product id
+            }
+         */
+        try {
+            //-- check if the name existed
+            
+            let category = await _app.model.ProductGroup.findById(params._id);
+            if (!category)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            return sysUtils.returnSuccess(category);
+        }
+        catch (err) {
+            console.log('getProductCategory:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     updateProductCategory: async function (principal, params) {
         "use strict";
         /*
@@ -386,7 +408,7 @@ module.exports = {
             let type = await _app.model.ProductType.findById(params._id).populate('groupID');
             if (!type)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
-
+            
             return sysUtils.returnSuccess(type);
         }
         catch (err) {

@@ -98,7 +98,7 @@ module.exports = {
         }
     },
     
-    getAllSuppliers: async function (principal, params) {
+    getAllProductSuppliers: async function (principal, params) {
         "use strict";
         /*
             params:{

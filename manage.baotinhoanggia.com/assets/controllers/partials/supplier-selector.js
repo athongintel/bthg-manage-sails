@@ -1,13 +1,13 @@
-const BrandSelectorPartialController = function ($scope, $http) {
+const SupplierSelectorPartialController = function ($scope, $http) {
     "use strict";
     
     const ctrl = this;
     
-    const brandSelectorAjax = {
+    const supplierSelectorAjax = {
         transport: function (params, success, failure) {
             $http.post('/rpc', {
                 token: ctrl.global.user.token,
-                name: 'get_all_product_brands',
+                name: 'get_all_product_suppliers',
                 params: {query: params.data.term}
             }).then(
                 function (response) {
@@ -24,9 +24,9 @@ const BrandSelectorPartialController = function ($scope, $http) {
             );
         },
         processResults: function (data) {
-            data.forEach(function (brand) {
-                brand.id = brand._id;
-                brand.text = brand.name;
+            data.forEach(function (supplier) {
+                supplier.id = supplier._id;
+                supplier.text = supplier.name;
             });
             
             return {
@@ -36,51 +36,51 @@ const BrandSelectorPartialController = function ($scope, $http) {
     };
     
     const initSelector = function (data, value) {
-        ctrl.brandSelector.select2({
+        ctrl.supplierSelector.select2({
             data: data,
-            ajax: brandSelectorAjax
+            ajax: supplierSelectorAjax
         });
-        ctrl.brandSelector.one('select2:select', function (e) {
+        ctrl.supplierSelector.one('select2:select', function (e) {
             $scope.$apply(function () {
                 //-- keep a local change
-                ctrl.brand = e.params.data;
-                ctrl.onBrandChanged({selectedBrand: e.params.data});
+                ctrl.supplier = e.params.data;
+                ctrl.onSupplierChanged({selectedSupplier: e.params.data});
             });
         });
-        ctrl.brandSelector.val(value).trigger('change');
+        ctrl.supplierSelector.val(value).trigger('change');
     };
     
-    const initSelectorWithData = function(selectedBrand){
+    const initSelectorWithData = function(selectedSupplier){
         let data = [];
         let ids = [];
-        if (selectedBrand){
-            data.push({id: selectedBrand._id, text: selectedBrand.name});
-            ids.push(selectedBrand._id);
+        if (selectedSupplier){
+            data.push({id: selectedSupplier._id, text: selectedSupplier.name});
+            ids.push(selectedSupplier._id);
         }
         initSelector(data, ids);
     };
     
     ctrl.$onInit = function () {
-        ctrl.brandSelector = $('.partials_brand-selector_selector');
-        initSelectorWithData(ctrl.selectedBrand);
+        ctrl.supplierSelector = $('.partials_supplier-selector_selector');
+        initSelectorWithData(ctrl.selectedSupplier);
     };
     
     ctrl.$onChanges = function (objs) {
-        if (ctrl.brandSelector){
+        if (ctrl.supplierSelector){
             //-- reflect change in UI level, not to trigger value change
-            if(objs['selectedBrand']) {
-                initSelectorWithData(objs['selectedBrand'].currentValue);
+            if(objs['selectedSupplier']) {
+                initSelectorWithData(objs['selectedSupplier'].currentValue);
             }
         }
     };
 };
 
-app.component('brandSelector', {
-    templateUrl: 'partials/brand-selector',
-    controller: BrandSelectorPartialController,
+app.component('supplierSelector', {
+    templateUrl: 'partials/supplier-selector',
+    controller: SupplierSelectorPartialController,
     bindings: {
         global: '<',
-        selectedBrand: '<',
-        onBrandChanged: '&'
+        selectedSupplier: '<',
+        onSupplierChanged: '&'
     }
 });

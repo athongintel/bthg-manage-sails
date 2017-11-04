@@ -53,8 +53,24 @@ module.exports.routes = {
         view: 'partials/type-selector', locals: {layout: false}
     },
     
+    'GET /partials/group-selector': {
+        view: 'partials/group-selector', locals: {layout: false}
+    },
+    
+    'GET /partials/supplier-selector': {
+        view: 'partials/supplier-selector', locals: {layout: false}
+    },
+    
+    'GET /partials/multi-suppliers-selector': {
+        view: 'partials/multi-suppliers-selector', locals: {layout: false}
+    },
+    
     'GET /partials/product-search': {
         view: 'partials/product-search', locals: {layout: false}
+    },
+    
+    'GET /partials/product-details': {
+        view: 'partials/product-details', locals: {layout: false}
     },
     
 };

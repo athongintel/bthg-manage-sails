@@ -6,9 +6,9 @@ div.partials_product-search
                     div.col-xs-9
                         label #{__('product_group')}
                     div.col-xs-3.text-right
-                        button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedGroup()')
+                        button.btn.btn-xs.btn-default(ng-click='$ctrl.changeSelectedGroup(null)')
                             i.fa.fa-window-close.text-danger
-                //include ../partials/product-group-search
+                group-selector(global='$ctrl.global' selected-group='$ctrl.selectedGroup' on-group-changed='$ctrl.changeSelectedGroup(selectedGroup)')
 
         div.col-xs-12.col-sm-6
             div.margin-bottom-15px
@@ -16,9 +16,9 @@ div.partials_product-search
                     div.col-xs-9
                         label #{__('product_type')}
                     div.col-xs-3.text-right
-                        button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedType()')
+                        button.btn.btn-xs.btn-default(ng-click='$ctrl.changeSelectedType(null)')
                             i.fa.fa-window-close.text-danger
-                //include ../partials/product-type-search
+                type-selector(global='$ctrl.global' selected-type='$ctrl.selectedType' selected-group='$ctrl.selectedGroup' on-type-changed='$ctrl.changeSelectedType(selectedType)')
     div.row
         div.col-xs-12.col-sm-6
             div.margin-bottom-15px
@@ -26,31 +26,31 @@ div.partials_product-search
                     div.col-xs-9
                         label #{__('product_brand')}
                     div.col-xs-3.text-right
-                        button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedBrand()')
+                        button.btn.btn-xs.btn-default(ng-click='$ctrl.changeSelectedBrand(null)')
                             i.fa.fa-window-close.text-danger
-                brand-selector(global='$ctrl.global' selected-brand='ctrl.selectedBrand' on-brand-changed='ctrl.changeSelectedBrand(selectedBrand)')
+                brand-selector(global='$ctrl.global' selected-brand='$ctrl.selectedBrand' on-brand-changed='$ctrl.changeSelectedBrand(selectedBrand)')
         div.col-xs-12.col-sm-6
             div.margin-bottom-15px
                 div.row
                     div.col-xs-9
-                        label #{__('suppliers_')}
+                        label #{__('supplier_')}
                     div.col-xs-3.text-right
-                        button.btn.btn-xs.btn-default(ng-click='ctrl.clearSelectedSupplier()')
+                        button.btn.btn-xs.btn-default(ng-click='$ctrl.changeSelectedSupplier(null)')
                             i.fa.fa-window-close.text-danger
-                select#partials_product-search_select-product-supplier.form-control()
+                supplier-selector(global='$ctrl.global' selected-supplier='$ctrl.selectedSupplier' on-supplier-changed='$ctrl.changeSelectedSupplier(selectedSupplier)')
 
     div
         div.row
             div.col-xs-6
                 label #{__('model_filter')}
             div.col-xs-6.text-right
-                button.btn.btn-xs.btn-default(ng-click='ctrl.refreshProducts()')
+                button.btn.btn-xs.btn-default(ng-click='$ctrl.refreshProducts()')
                     i.fa.fa-refresh
                     span &nbsp; #{__('refresh_')}
         div.input-group.margin-bottom-15px
             span.input-group-addon
                 span.glyphicon.glyphicon-search
-            input.form-control(ng-model='ctrl.productFilter' ng-change='ctrl.filterProduct()' ng-disabled='ctrl.queryingProduct')
+            input.form-control(ng-model='$ctrl.productFilter' ng-change='$ctrl.filterProduct()' ng-disabled='$ctrl.queryingProduct')
 
     div.margin-bottom-5px.margin-left-5px.margin-right-5px
         div.row(style='white-space: pre')
@@ -63,8 +63,8 @@ div.partials_product-search
             div.col-xs-3.text-right
                 label #{__('last_price')}
     div.search-result
-        div(ng-show='!ctrl.queryingProduct && ctrl.filteredProducts && ctrl.filteredProducts.length')
-            div.product-record(ng-repeat='product in ctrl.filteredProducts track by $index' ng-click='selectProduct(product)' ng-class='{even: $index%2, selected: product === ctrl.selectedProduct}' )
+        div(ng-show='!$ctrl.queryingProduct && $ctrl.filteredProducts && $ctrl.filteredProducts.length')
+            div.product-record(ng-click='$ctrl.selectProduct(product)' ng-repeat='product in $ctrl.filteredProducts track by $index' ng-class='{even: $index%2, selected: product === $ctrl.selectedProduct}' )
                 div.row
                     div.col-xs-5
                         span {{product.typeID.name}}
@@ -74,12 +74,12 @@ div.partials_product-search
                         span {{product.available}}
                     div.col-xs-3.text-right
                         span {{product.lastOutStock? (product.lastOutStock.price | currency : '' : '') : '-'}}
-        div.text-center.no-data(ng-show='(!ctrl.filteredProducts || !ctrl.filteredProducts.length) && !ctrl.queryingProduct && !ctrl.queryFailed')
+        div.text-center.no-data(ng-show='(!$ctrl.filteredProducts || !$ctrl.filteredProducts.length) && !$ctrl.queryingProduct && !$ctrl.queryFailed')
             span #{__('no_result')}
-        div.text-center(ng-show='ctrl.queryFailed')
+        div.text-center(ng-show='$ctrl.queryFailed')
             span.text-danger
                 i.fa.fa-exclamation-triangle
-                span &nbsp; {{ctrl.queryFailed}}
-        div.text-center(ng-show='ctrl.queryingProduct')
+                span &nbsp; {{$ctrl.queryFailed}}
+        div.text-center(ng-show='$ctrl.queryingProduct')
             span
                 i.fa.fa-spinner.fa-spin

@@ -115,8 +115,9 @@
 	"quotation_info": "quotation_info",
 	"product_search": "product_search",
 	"search_customer_contact": "search_customer_contact",
-	"refresh_": "refresh_",
-	"go_back": "go_back",
-	"no_result_found": "no_result_found",
-	"title_": "title_"
+	"refresh_": "Tải lại",
+	"go_back": "Quay lại",
+	"no_result_found": "không có kết quả",
+	"title_": "Danh xưng",
+	"supplier_": "N.C.C"
 }
