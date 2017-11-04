@@ -53,8 +53,8 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                     div(editable-text="ctrl.product.model" e-name="model" e-form='addProductForm' onbeforesave='ctrl.checkProductAttribute("model", $data)' e-required)
 
                                 div.margin-bottom-15px
-                                    label #{__('description_')}
-                                    textarea.form-control.fixed-textarea(ng-model='ctrl.product.description' style='height: 250px')
+                                    label #{__('suppliers_')}
+                                    multi-suppliers-selector(global='global' selected-suppliers='ctrl.selectedSuppliers' on-supplier-added='ctrl.addSupplier(supplier)' on-supplier-removed='ctrl.removeSupplier(supplier)')
 
                         div.col-xs-12.col-sm-6
                             div
@@ -75,7 +75,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                         input.form-control(cleave="global.utils.cleaveOptions.currency" type='text' ng-model='ctrl.product.initOutPrice' )
                                 div.margin-bottom-15px
                                     label #{__('product_images')}
-                                    div.panel.panel-default
+                                    div.panel.panel-default(style='min-height: 194px')
                                         div.panel-body(ngf-drop-disabled='ctrl.addingProduct' ngf-drop="ctrl.loadProductFiles($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'")
                                             div.img-wrapper(ng-repeat='image in ctrl.productImages')
                                                 img(ngf-thumbnail="image" image-on-load='image.loaded = true')
@@ -91,9 +91,10 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                                 label
                                                     i.fa.fa-plus-circle
                                                     input(style='display: none' type='file', ngf-select="ctrl.loadProductFiles($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'")
-                                div.margin-bottom-15px
-                                    label #{__('suppliers_')}
-                                    multi-suppliers-selector(global='global' selected-suppliers='ctrl.selectedSuppliers' on-supplier-added='ctrl.addSupplier(supplier)' on-supplier-removed='ctrl.removeSupplier(supplier)')
+
+                    div.margin-bottom-15px
+                        label #{__('description_')}
+                        textarea.form-control.fixed-textarea(ng-model='ctrl.product.description' style='height: 350px')
 
                     div.row.flex
                         div.col-xs-6.vf-center
