@@ -81,10 +81,9 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
             keyboard: false
         }).result.then(
             function (result) {
-                if (!$scope.global.data.customers) $scope.global.data.customers = [];
-                $scope.global.data.customers.push(result);
-                ctrl.selectedCustomer = result;
-                ctrl.selectedCustomerContacts = [];
+                ctrl.allCustomers.push(result);
+                ctrl.filterCustomer();
+                ctrl.selectCustomer(result);
             },
             function () {
                 //-- do nothing

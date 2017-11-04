@@ -81,10 +81,9 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
             keyboard: false
         }).result.then(
             function (result) {
-                if (!$scope.global.data.suppliers) $scope.global.data.suppliers = [];
-                $scope.global.data.suppliers.push(result);
-                ctrl.selectedSupplier = result;
-                ctrl.selectedSupplierContacts = [];
+                ctrl.allSuppliers.push(result);
+                ctrl.filterSupplier();
+                ctrl.selectSupplier(result);
             },
             function () {
                 //-- do nothing

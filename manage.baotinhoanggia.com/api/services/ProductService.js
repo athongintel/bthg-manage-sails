@@ -2,19 +2,22 @@ const BigNumber = require('bignumber.js');
 const mongoose = require('mongoose');
 const sysUtils = require('../../utils/system');
 
-const calculateProductAvailable = async function (productID) {
+const calculateProductAvailable = async function (currentStockID, productID) {
     "use strict";
     let inStocks = await _app.model.InStock.find({productID: productID});
     let outStocks = await _app.model.OutStock.find({productID: productID});
     //-- sum
+    let stockSum = 0;
     let sum = 0;
     inStocks.forEach(stock => {
         sum += stock.quantity;
+        if (stock.branchID === currentStockID) stockSum += stock.quantity;
     });
     outStocks.forEach(stock => {
         sum -= stock.quantity;
+        if (stock.branchID === currentStockID) stockSum -= stock.quantity;
     });
-    return sum;
+    return {localAvailable: stockSum, available: sum};
 };
 
 module.exports = {
@@ -547,21 +550,21 @@ module.exports = {
         }
     },
     
-    removeProduct: async function(principal, params){
+    removeProduct: async function (principal, params) {
         "use strict";
         /*
             params: {
                 [required] _id: the product id
             }
          */
-        try{
+        try {
             let product = await _app.model.Product.findById(params._id);
             if (!product)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             await product.remove();
             return sysUtils.returnSuccess();
         }
-        catch(err){
+        catch (err) {
             console.log('removeProduct:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
@@ -766,15 +769,19 @@ module.exports = {
             let product;
             if (params.full_info) {
                 
-                product = await _app.model.Product.findById(params._id).populate({path: 'typeID', populate: {path: 'groupID'}}).populate('brandID').populate('supplierIDs').lean().exec();
+                product = await _app.model.Product.findById(params._id).populate({
+                    path: 'typeID',
+                    populate: {path: 'groupID'}
+                }).populate('brandID').populate('supplierIDs').lean().exec();
                 if (!product)
                     return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
                 
                 //-- query for available
-                let inStocks = await _app.model.InStock.find({productID: product._id});
-                let outStocks = await _app.model.OutStock.find({productID: product._id});
+                let stocks = await calculateProductAvailable(principal.user.branchID, product._id);
+                product.available = stocks.available;
+                product.localAvailable = stocks.localAvailable;
                 
-                product.available = await calculateProductAvailable(product._id);
+                console.log(product.localAvailable, product.available);
                 
                 //-- get latest outPrice && latest average inPrice for each supplier
                 let lastOutStock = await _app.model.OutStock.findOne({productID: product._id}).sort({createdAt: '-1'});
