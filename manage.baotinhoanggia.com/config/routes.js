@@ -65,6 +65,10 @@ module.exports.routes = {
         view: 'partials/branch-selector', locals: {layout: false}
     },
     
+    'GET /partials/customer-selector': {
+        view: 'partials/customer-selector', locals: {layout: false}
+    },
+    
     'GET /partials/multi-suppliers-selector': {
         view: 'partials/multi-suppliers-selector', locals: {layout: false}
     },

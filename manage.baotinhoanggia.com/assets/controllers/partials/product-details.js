@@ -277,10 +277,10 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                 image.isBeingRemoved = true;
                 $http.post('/rpc', {
                     token: ctrl.global.user.token,
-                    name: 'remove_product_photo',
+                    name: 'remove_product_photos',
                     params: {
                         _id: ctrl.product._id,
-                        fileName: image.fileName
+                        fileNames: [image.fileName]
                     }
                 }).then(
                     function (response) {

@@ -23,4 +23,8 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                     div.col-xs-8
                                         div.text-right
                                             span {{ahihi}}
+                                div
+                                    label #{__('select_customer')}
+                                    customer-selector(global='global' selected-customer='' on-customer-changed='')
+
 

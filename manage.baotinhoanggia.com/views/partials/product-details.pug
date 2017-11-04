@@ -74,7 +74,7 @@ div.partials_product-details
                         label #{__('in_stock')}
                         a.margin-left-15px(href='' ng-click='$ctrl.showAvailableInStocks()') (#{__('detail_')})
                     div.col-xs-6
-                        div.text-right {{$ctrl.product.available}}/{{$ctrl.product.stockPeek}}
+                        div.text-right {{$ctrl.product.stockSum.localAvailable}}/{{$ctrl.product.stockSum.available}}
                 div.row.margin-bottom-5px
                     div.col-xs-6
                         label #{__('average_import_price')}

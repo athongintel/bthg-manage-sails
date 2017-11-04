@@ -11,11 +11,11 @@ const calculateProductAvailable = async function (currentStockID, productID) {
     let sum = 0;
     inStocks.forEach(stock => {
         sum += stock.quantity;
-        if (stock.branchID === currentStockID) stockSum += stock.quantity;
+        if (String(stock.branchID) === String(currentStockID)) stockSum += stock.quantity;
     });
     outStocks.forEach(stock => {
         sum -= stock.quantity;
-        if (stock.branchID === currentStockID) stockSum -= stock.quantity;
+        if (String(stock.branchID) === String(currentStockID)) stockSum -= stock.quantity;
     });
     return {localAvailable: stockSum, available: sum};
 };
@@ -561,7 +561,10 @@ module.exports = {
             let product = await _app.model.Product.findById(params._id);
             if (!product)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            //-- remove s3 photos
+            ProductService.removeProductPhotos(principal, {_id: product._id, fileNames: product.photos.map(photo=>{return photo.fileName})});
             await product.remove();
+            
             return sysUtils.returnSuccess();
         }
         catch (err) {
@@ -777,11 +780,8 @@ module.exports = {
                     return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
                 
                 //-- query for available
-                let stocks = await calculateProductAvailable(principal.user.branchID, product._id);
-                product.available = stocks.available;
-                product.localAvailable = stocks.localAvailable;
                 
-                console.log(product.localAvailable, product.available);
+                product.stockSum = await calculateProductAvailable(principal.user.branchID._id, product._id);
                 
                 //-- get latest outPrice && latest average inPrice for each supplier
                 let lastOutStock = await _app.model.OutStock.findOne({productID: product._id}).sort({createdAt: '-1'});
@@ -842,7 +842,7 @@ module.exports = {
                 params.filter.forEach(pair => {
                     productsPromise = productsPromise.where(pair.attr, pair.value);
                 });
-            
+    
             productsPromise = productsPromise.lean().exec();
             
             let products = await productsPromise;
@@ -850,7 +850,7 @@ module.exports = {
             //-- query for last stock
             for (let i = 0; i < products.length; i++) {
                 products[i].lastOutStock = await _app.model.OutStock.findOne({productID: products[i]._id}).sort({createdAt: '-1'});
-                products[i].available = await calculateProductAvailable(products[i]._id);
+                products[i].stockSum = await calculateProductAvailable(principal.user.branchID._id, products[i]._id);
             }
             
             return sysUtils.returnSuccess(products);
@@ -861,12 +861,12 @@ module.exports = {
         }
     },
     
-    removeProductPhoto: async function (principal, params) {
+    removeProductPhotos: async function (principal, params) {
         "use strict";
         /*
             params: {
                 [required] _id: product id
-                fileName: the file name of product photo
+                [required] fileNames: the file names of product photo
             }
          */
         try {
@@ -874,22 +874,37 @@ module.exports = {
             if (!product)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             
-            let index = product.photos.findIndex(p => {
-                return p.fileName === params.fileName;
-            });
+            let deleteFiles = {
+                Objects: [],
+                Quiet: false,
+            };
+            let fileNames = [];
+            if (params.fileNames.length){
+                params.fileNames.forEach(file=>{
+                    if (product.photos.findIndex(photo=>{return photo.fileName === file;}) >= 0) {
+                        deleteFiles.Objects.push({Key: sails.config.PRODUCT_PHOTO_BUCKET_PREFIX + '/' + file});
+                        fileNames.push(file);
+                    }
+                });
+            }
             
-            if (index < 0)
+            if (!deleteFiles.Objects.length)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             
             //-- call s3 to remove file
             let s3Params = {
                 Bucket: sails.config.S3_ASSET_BUCKET,
-                Key: sails.config.PRODUCT_PHOTO_BUCKET_PREFIX + '/' + product.photos[index].fileName
+                Delete: deleteFiles,
             };
-            await _app.S3.deleteObject(s3Params).promise();
+            await _app.S3.deleteObjects(s3Params).promise();
             
             //-- update database
-            product.photos.splice(index, 1);
+            fileNames.forEach(file=>{
+                let index = product.photos.findIndex(photo=>{return photo.fileName === file;});
+                if (index >= 0)
+                    product.photos.splice(index, 1);
+            });
+            
             await product.save();
             
             return sysUtils.returnSuccess();

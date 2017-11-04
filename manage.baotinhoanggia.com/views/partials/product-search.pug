@@ -71,7 +71,7 @@ div.partials_product-search
                     div.col-xs-3
                         span {{product.model}}
                     div.col-xs-1.text-right
-                        span {{product.localAvailable}}/{{product.available}}
+                        span {{product.stockSum.localAvailable}}/{{product.stockSum.available}}
                     div.col-xs-3.text-right
                         span {{product.lastOutStock? (product.lastOutStock.price | currency : '' : '') : '-'}}
         div.text-center.no-data(ng-show='(!$ctrl.filteredProducts || !$ctrl.filteredProducts.length) && !$ctrl.queryingProduct && !$ctrl.queryFailed')

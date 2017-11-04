@@ -55,7 +55,7 @@ const actions = {
     'get_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getProduct, validation: {required: ['_id']}},
     'get_all_products_with_details': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllProductsWithDetails, validation: {required: []}},
     'update_product': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.updateProduct, validation: {required: ['_id', 'model', 'typeID', 'brandID']}},
-    'remove_product_photo': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductPhoto, validation: {required: ['_id', 'fileName']}},
+    'remove_product_photos': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductPhotos, validation: {required: ['_id', 'fileNames']}},
     'change_product_price_manually': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.changeProductPrice, validation: {required: ['_id', 'price']}},
     
     'get_all_branches': {policies: [PO.isAuthenticated, PO.isAdmin], action: BranchService.getAllBranches, validation: {required: []}},
