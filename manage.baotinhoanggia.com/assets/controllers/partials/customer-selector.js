@@ -67,6 +67,9 @@ const CustomerSelectorPartialController = function ($scope, $element, $http) {
     ctrl.$onChanges = function (objs) {
         if (ctrl.customerSelector){
             //-- reflect change in UI level, not to trigger value change
+                if(objs['selectDisabled']){
+                    ctrl.customerSelector.select2().enable(objs['selectDisabled'].currentValue === null || objs['selectDisabled'].currentValue);
+                }
             if(objs['selectedCustomer'] && objs['selectedCustomer'].currentValue !== ctrl.customer) {
                 initSelectorWithData(objs['selectedCustomer'].currentValue);
             }
@@ -79,6 +82,7 @@ app.component('customerSelector', {
     controller: CustomerSelectorPartialController,
     bindings: {
         global: '<',
+        selectDisabled: '<',
         selectedCustomer: '<',
         onCustomerChanged: '&'
     }

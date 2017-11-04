@@ -7,6 +7,7 @@ const constants = {
 const quotationSchema = new mongoose.Schema({
     outStockOrderID: {type: mongoose.Schema.ObjectId, ref: 'OutStockOrder', required: true},
     userID: {type: mongoose.Schema.ObjectId, ref: 'User'},
+    customerContactID: {type: mongoose.Schema.ObjectId, ref: 'User'},
     metaInfo: {type: mongoose.Schema.Types.Mixed},
     createdAt: {type: Date, default: Date.now}
 });

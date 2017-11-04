@@ -17,14 +17,19 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                     div.panel.panel-default
                         div.panel-body
                             div
-                                div.row
-                                    div.col-xs-4
-                                        label #{__('order_no')}
-                                    div.col-xs-8
-                                        div.text-right
-                                            span {{ahihi}}
-                                div
+                                div.margin-bottom-5px
+                                    label #{__('select_stock')}
+                                    branch-selector(global='global' select-disabled='!global.utils.isSuperAdmin()' selected-branch='ctrl.selectedBranch')
+                                div.margin-bottom-5px
                                     label #{__('select_customer')}
-                                    customer-selector(global='global' selected-customer='' on-customer-changed='')
+                                    customer-selector(global='global' selected-customer='ctrl.selectedCustomer' on-customer-changed='ctrl.selectCustomer(selectedCustomer)')
+                                div.margin-bottom-5px
+                                    label #{__('select_customer_contact')}
+                                    customer-contact-selector(global='global' select-disabled='ctrl.customerContactDisabled' selected-customer='ctrl.selectedCustomer' selected-customer-contact='ctrl.selectedCustomerContact')
+                    label #{__('quotation_')}
+                    div.panel.panel-default
+                        div.panel-body
+
+
 
 

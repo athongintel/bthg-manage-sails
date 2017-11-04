@@ -35,12 +35,17 @@ const BranchSelectorPartialController = function ($scope, $element, $http) {
         }
     };
     
+    const disableSelection = function(disabled){
+        ctrl.branchSelector.prop("disabled", disabled);
+    };
+    
     const initSelector = function (data, value) {
         ctrl.branchSelector.select2({
             data: data,
             ajax: branchSelectorAjax
         });
         ctrl.branchSelector.val(value).trigger('change');
+        disableSelection(ctrl.selectDisabled) ;
     };
     
     const initSelectorWithData = function(selectedBranch){
@@ -67,6 +72,9 @@ const BranchSelectorPartialController = function ($scope, $element, $http) {
     ctrl.$onChanges = function (objs) {
         if (ctrl.branchSelector){
             //-- reflect change in UI level, not to trigger value change
+            if(objs['selectDisabled']){
+                disableSelection(objs['selectDisabled'].currentValue);
+            }
             if(objs['selectedBranch'] && objs['selectedBranch'].currentValue !== ctrl.branch) {
                 initSelectorWithData(objs['selectedBranch'].currentValue);
             }
@@ -79,6 +87,7 @@ app.component('branchSelector', {
     controller: BranchSelectorPartialController,
     bindings: {
         global: '<',
+        selectDisabled: '<',
         selectedBranch: '<',
         onBranchChanged: '&'
     }

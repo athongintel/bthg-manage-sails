@@ -69,6 +69,10 @@ module.exports.routes = {
         view: 'partials/customer-selector', locals: {layout: false}
     },
     
+    'GET /partials/customer-contact-selector': {
+        view: 'partials/customer-contact-selector', locals: {layout: false}
+    },
+    
     'GET /partials/multi-suppliers-selector': {
         view: 'partials/multi-suppliers-selector', locals: {layout: false}
     },

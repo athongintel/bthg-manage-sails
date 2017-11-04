@@ -65,7 +65,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                             input.form-control(type='number' ng-model='ctrl.product.initInStock')
                                         div.col-xs-12.col-sm-6
                                             label #{__('store_branch')}
-                                            branch-selector(global='global' selected-branch='ctrl.selectedBranch' on-branch-changed='ctrl.changeBranch(selectedBranch)')
+                                            branch-selector(global='global' select-disabled='!global.utils.isSuperAdmin()' selected-branch='ctrl.selectedBranch' on-branch-changed='ctrl.changeBranch(selectedBranch)')
                                 div.row.margin-bottom-15px
                                     div.col-xs-12.col-sm-6
                                         label #{__('in_price_init')}

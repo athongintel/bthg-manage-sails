@@ -49,7 +49,7 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
         $scope.global = $sessionStorage.global;
         $scope.global.data = $scope.global.data || {};
         $scope.global.locale = (Cookies.get('lang') || window.navigator.language || 'en');
-    
+        
         $scope.global.utils = {
             
             errors: initData.errors,
@@ -58,7 +58,11 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
                 let subPath = document.location.pathname + document.location.search + document.location.hash;
                 return subPath.indexOf(path) === 3;
             },
-        
+            
+            isSuperAdmin: function () {
+                return $scope.global.user.userClass.indexOf(999) >= 0;
+            },
+            
             cleaveOptions: {
                 currency: {
                     numeral: true
@@ -66,7 +70,7 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
             },
             
             titles: ["Mr", "Ms", "Mrs"],
-        
+            
             origins: [
                 {"name": "Afghanistan", "code": "AF"},
                 {"name": "Åland Islands", "code": "AX"},
@@ -312,19 +316,19 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
                 {"name": "Zambia", "code": "ZM"},
                 {"name": "Zimbabwe", "code": "ZW"}
             ],
-        
+            
             originNameFromCode: function (code) {
                 let origin = $scope.global.utils.origins.find(function (o) {
                     return o.code === code;
                 });
                 return origin ? origin.name : null;
             },
-        
+            
             regexEscape: function (exp) {
                 "use strict";
                 return String(exp).replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
             },
-        
+            
             breakQueries: function (path) {
                 //-- find the ?
                 let result = {};

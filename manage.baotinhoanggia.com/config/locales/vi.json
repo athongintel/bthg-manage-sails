@@ -116,5 +116,7 @@
 	"remove_": "Xoá",
 	"confirm_remove_product": "Nguy hiểm, xoá sản phẩm sẽ làm mất ràng buộc dữ liệu. Tiếp tục?",
 	"order_no": "order_no",
-	"select_customer": "select_customer"
+	"select_customer": "select_customer",
+	"select_stock": "select_stock",
+	"select_customer_contact": "select_customer_contact"
 }
