@@ -588,7 +588,7 @@ module.exports = {
             
             let inStock = new _app.model.InStock({
                 productID: product._id,
-                branchID: params.storeBranch,
+                branchID: params.branchID,
                 userID: principal.user._id,
                 quantity: initInStock,
                 price: initInPrice.toString(),
@@ -598,7 +598,7 @@ module.exports = {
             
             let outStock = new _app.model.OutStock({
                 productID: product._id,
-                branchID: params.storeBranch,
+                branchID: params.branchID,
                 userID: principal.user._id,
                 quantity: new BigNumber(0).toString(),
                 price: initOutPrice.toString(),

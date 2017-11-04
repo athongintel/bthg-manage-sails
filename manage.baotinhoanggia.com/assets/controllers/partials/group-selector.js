@@ -57,6 +57,7 @@ const GroupSelectorPartialController = function ($scope, $element, $http) {
         ctrl.groupSelector = $element.find('.partials_group-selector_selector');
         ctrl.groupSelector.on('select2:select', function (e) {
             $scope.$apply(function () {
+                ctrl.group = e.params.data;
                 ctrl.onGroupChanged({selectedGroup: e.params.data});
             });
         });
@@ -66,7 +67,7 @@ const GroupSelectorPartialController = function ($scope, $element, $http) {
     ctrl.$onChanges = function (objs) {
         if (ctrl.groupSelector){
             //-- reflect change in UI level, not to trigger value change
-            if(objs['selectedGroup']) {
+            if(objs['selectedGroup'] && objs['selectedGroup'].currentValue !== ctrl.group) {
                 initSelectorWithData(objs['selectedGroup'].currentValue);
             }
         }

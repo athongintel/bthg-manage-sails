@@ -9,13 +9,22 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
     ctrl.selectedBrand = {};
     ctrl.selectedSuppliers = {};
     
-    ctrl.changeSelectedType = function(){
+    ctrl.changeSelectedType = function(type){
+        ctrl.selectedType = type;
     };
     
-    ctrl.changeSelectedBrand = function(){
+    ctrl.changeSelectedBrand = function(brand){
+        ctrl.selectedBrand = brand;
     };
     
-    ctrl.changeSelectedSuppliers = function(){
+    ctrl.addSelectedSupplier = function(supplier){
+        ctrl.selectedSuppliers.push(supplier);
+    };
+    ctrl.removeSelectedSupplier = function(supplier){
+        let index = ctrl.selectedSuppliers.findIndex(function(supp){
+            return String(supplier.id) === supp._id;
+        });
+        if (index >= 0) ctrl.selectedSuppliers.splice(index, 1);
     };
     
     ctrl.loadProduct = function (productID) {
@@ -126,7 +135,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                                 value: ctrl.product.brandID._id
                             },
                             {
-                                attr: 'model',
+                                attr: attr,
                                 value: value
                             }
                         ]
@@ -153,6 +162,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
             ctrl.product.photos.forEach(function (p) {
                 if (p.localPhoto) addedPhotos.push(p);
             });
+            
             $http.post('/rpc', {
                 token: ctrl.global.user.token,
                 name: 'update_product',
@@ -169,6 +179,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                 function (response) {
                     //-- upload photos
                     let updateSuccessHook = function () {
+                        ctrl.product = response.data.result.product;
                         resolve(true);
                     };
                     //-- upload photos, match url and photos
@@ -314,10 +325,8 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
     };
     
     ctrl.startEditing = function () {
-        
         $scope.editProductForm.$show();
         ctrl.product.isBeingEdited = true;
-        
     };
 };
 

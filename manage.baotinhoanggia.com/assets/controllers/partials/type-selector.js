@@ -64,6 +64,7 @@ const TypeSelectorPartialController = function ($scope, $element, $http) {
         ctrl.typeSelector = $element.find('.partials_type-selector_selector');
         ctrl.typeSelector.on('select2:select', function (e) {
             $scope.$apply(function () {
+                ctrl.type = e.params.data;
                 ctrl.onTypeChanged({selectedType: e.params.data});
             });
         });
@@ -72,7 +73,7 @@ const TypeSelectorPartialController = function ($scope, $element, $http) {
     
     ctrl.$onChanges = function (objs) {
         if (ctrl.typeSelector){
-            if (objs['selectedType']){
+            if (objs['selectedType'] && objs['selectedType'].currentValue !== ctrl.type){
                 initSelectorWithData(objs['selectedType'].currentValue);
             }
         }

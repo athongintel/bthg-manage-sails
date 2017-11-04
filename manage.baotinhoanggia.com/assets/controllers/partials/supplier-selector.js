@@ -40,11 +40,6 @@ const SupplierSelectorPartialController = function ($scope, $element, $http) {
             data: data,
             ajax: supplierSelectorAjax
         });
-        ctrl.supplierSelector.one('select2:select', function (e) {
-            $scope.$apply(function () {
-                ctrl.onSupplierChanged({selectedSupplier: e.params.data});
-            });
-        });
         ctrl.supplierSelector.val(value).trigger('change');
     };
     
@@ -60,13 +55,19 @@ const SupplierSelectorPartialController = function ($scope, $element, $http) {
     
     ctrl.$onInit = function () {
         ctrl.supplierSelector = $element.find('.partials_supplier-selector_selector');
+        ctrl.supplierSelector.on('select2:select', function (e) {
+            $scope.$apply(function () {
+                ctrl.supplier = e.params.data;
+                ctrl.onSupplierChanged({selectedSupplier: e.params.data});
+            });
+        });
         initSelectorWithData(ctrl.selectedSupplier);
     };
     
     ctrl.$onChanges = function (objs) {
         if (ctrl.supplierSelector){
             //-- reflect change in UI level, not to trigger value change
-            if(objs['selectedSupplier']) {
+            if(objs['selectedSupplier'] && objs['selectedSupplier'].currentValue !== ctrl.supplier) {
                 initSelectorWithData(objs['selectedSupplier'].currentValue);
             }
         }

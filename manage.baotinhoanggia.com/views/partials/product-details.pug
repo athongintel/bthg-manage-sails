@@ -1,7 +1,7 @@
 div
     form(editable-form='' name='editProductForm' onbeforesave='$ctrl.updateProduct($data)')
         div.text-right.margin-bottom-15px
-            button.btn.btn-xs.btn-default(ng-hide='$ctrl.product.isBeingEdited' ng-click='$ctrl.startEditing()')
+            button.btn.btn-xs.btn-default(type='button' ng-hide='$ctrl.product.isBeingEdited' ng-click='$ctrl.startEditing()')
                 i.fa.fa-pencil
                 span &nbsp; #{__('edit_')}
             .buttons(ng-show='$ctrl.product.isBeingEdited')
@@ -48,7 +48,7 @@ div
                             label #{__('suppliers_')}
                         div.col-xs-9.text-right
                             div(ng-show='$ctrl.product.isBeingEdited')
-                                multi-suppliers-selector(global='$ctrl.global' selected-suppliers='$ctrl.selectedSuppliers' on-suppliers-changed='$ctrl.changeSelectedSuppliers(selectedSuppliers)')
+                                multi-suppliers-selector(global='$ctrl.global' selected-suppliers='$ctrl.selectedSuppliers' on-supplier-added='$ctrl.addSelectedSupplier(supplier)' on-supplier-removed='$ctrl.removeSelectedSupplier(supplier)')
                             div(ng-hide='$ctrl.product.isBeingEdited')
                                 span.no-data(ng-hide='$ctrl.product.supplierIDs && $ctrl.product.supplierIDs.length') #{__('no_data')}
                                 a.margin-left-15px(target='_blank' ng-repeat='supplier in $ctrl.product.supplierIDs' href='#/admin/supplier?supplierID={{supplier._id}}')
@@ -105,4 +105,5 @@ div
                             pre {{$ctrl.product.description}}
 
     include ../dialogs/change-value-dialog
+    include ../dialogs/view-photo
 

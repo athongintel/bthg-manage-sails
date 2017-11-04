@@ -16,7 +16,7 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
         let queries = $scope.global.utils.breakQueries(document.location.hash);
         if (queries && queries.productID) {
             //-- load product
-            ctrl.loadProduct(queries.productID);
+            ctrl.selectedProductId = queries.productID;
         }
     };
     

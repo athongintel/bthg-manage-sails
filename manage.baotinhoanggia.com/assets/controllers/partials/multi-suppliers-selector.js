@@ -61,10 +61,14 @@ const MultiSuppliersSelectorPartialController = function ($scope, $element, $htt
     
     ctrl.$onInit = function () {
         ctrl.multiSuppliersSelector = $element.find('.partials_multi-suppliers-selector_selector');
-        ctrl.multiSuppliersSelector.on('select2:change', function () {
+        ctrl.multiSuppliersSelector.on('select2:select', function (e) {
             $scope.$apply(function () {
-                console.log(ctrl.multiSuppliersSelector.val());
-                // ctrl.onSuppliersChanged({selectedSuppliers: e.params.data});
+                ctrl.onSupplierAdded({supplier: e.params.data});
+            });
+        });
+        ctrl.multiSuppliersSelector.on('select2:unselect', function (e) {
+            $scope.$apply(function () {
+                ctrl.onSupplierRemoved({supplier: e.params.data});
             });
         });
         initSelectorWithData(ctrl.selectedSuppliers);
@@ -86,6 +90,7 @@ app.component('multiSuppliersSelector', {
     bindings: {
         global: '<',
         selectedSuppliers: '<',
-        onSuppliersChanged: '&'
+        onSupplierAdded: '&',
+        onSupplierRemoved: '&'
     }
 });

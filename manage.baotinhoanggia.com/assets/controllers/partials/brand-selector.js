@@ -57,6 +57,7 @@ const BrandSelectorPartialController = function ($scope, $element, $http) {
         ctrl.brandSelector = $element.find('.partials_brand-selector_selector');
         ctrl.brandSelector.on('select2:select', function (e) {
             $scope.$apply(function () {
+                ctrl.brand = e.params.data;
                 ctrl.onBrandChanged({selectedBrand: e.params.data});
             });
         });
@@ -66,7 +67,7 @@ const BrandSelectorPartialController = function ($scope, $element, $http) {
     ctrl.$onChanges = function (objs) {
         if (ctrl.brandSelector){
             //-- reflect change in UI level, not to trigger value change
-            if(objs['selectedBrand']) {
+            if(objs['selectedBrand'] && objs['selectedBrand'].currentValue !== ctrl.brand) {
                 initSelectorWithData(objs['selectedBrand'].currentValue);
             }
         }

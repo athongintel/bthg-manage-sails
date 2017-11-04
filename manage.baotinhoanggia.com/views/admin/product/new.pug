@@ -24,9 +24,9 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                             label #{__('product_group')}
                                         div.col-xs-6.text-right
                                             label
-                                                input(type='checkbox' ng-model='ctrl.keepGroup')
+                                                input(type='checkbox' ng-model='ctrl.keepGroup' ng-checked='ctrl.keepGroup || ctrl.keepType')
                                                 span &nbsp; #{__('keep_')}
-                                    select#select_product_group.form-control(ng-disabled='ctrl.addingProduct')
+                                    group-selector(global='global' selected-group='ctrl.selectedGroup' on-group-changed='ctrl.changeGroup(selectedGroup)')
 
                                 div.margin-bottom-15px
                                     div.row
@@ -34,9 +34,9 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                             label #{__('product_type')}
                                         div.col-xs-6.text-right
                                             label
-                                                input(type='checkbox' ng-model='ctrl.keepType')
+                                                input(type='checkbox' ng-model='ctrl.keepType' ng-checked='ctrl.keepGroup && ctrl.keepType')
                                                 span &nbsp; #{__('keep_')}
-                                    select#select_product_type.form-control(ng-disabled='!ctrl.selectedProductGroup || ctrl.addingProduct')
+                                    type-selector(global='global' selected-type='ctrl.selectedType' selected-group='ctrl.selectedGroup' on-type-changed='ctrl.changeType(selectedType)')
 
                                 div.margin-bottom-15px
                                     div.row
@@ -46,7 +46,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                             label
                                                 input(type='checkbox' ng-model='ctrl.keepBrand')
                                                 span &nbsp; #{__('keep_')}
-                                    select#select_product_brand.form-control(ng-disabled='ctrl.addingProduct')
+                                    brand-selector(global='global' selected-brand='ctrl.selectedBrand' on-brand-changed='ctrl.changeBrand(selectedBrand)')
 
                                 div.margin-bottom-15px
                                     label #{__('model_')}
@@ -65,7 +65,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                             input.form-control(type='number' ng-model='ctrl.product.initInStock')
                                         div.col-xs-12.col-sm-6
                                             label #{__('store_branch')}
-                                            select#select_store_branch.form-control(ng-disabled='ctrl.addingProduct')
+                                            branch-selector(global='global' selected-branch='ctrl.selectedBranch' on-branch-changed='ctrl.changeBranch(selectedBranch)')
                                 div.row.margin-bottom-15px
                                     div.col-xs-12.col-sm-6
                                         label #{__('in_price_init')}
@@ -93,14 +93,15 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                                     input(style='display: none' type='file', ngf-select="ctrl.loadProductFiles($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'")
                                 div.margin-bottom-15px
                                     label #{__('suppliers_')}
-                                    select#select_product_suppliers.form-control(ng-disabled='ctrl.addingProduct')
+                                    multi-suppliers-selector(global='global' selected-suppliers='ctrl.selectedSuppliers' on-supplier-added='ctrl.addSupplier(supplier)' on-supplier-removed='ctrl.removeSupplier(supplier)')
+
                     div.row.flex
                         div.col-xs-6.vf-center
                             label
                                 input(type='checkbox' ng-model='ctrl.keepPage')
                                 span &nbsp; #{__('keep_page')}
                         div.col-xs-6.text-right.vf-center
-                            button.btn.btn-primary.action(type='submit' ng-disabled='!ctrl.selectedProductGroup || !ctrl.product.typeID || !ctrl.product.brandID')
+                            button.btn.btn-primary.action(type='submit' ng-disabled='false')
                                 span(ng-show='ctrl.addingProduct')
                                     i.fa.fa-spin.fa-spinner
                                     span &nbsp;
