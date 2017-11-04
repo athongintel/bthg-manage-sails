@@ -9,29 +9,27 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
     ctrl.selectedBrand = {};
     ctrl.selectedSuppliers = {};
     
-    ctrl.changeSelectedType = function(type){
+    ctrl.changeSelectedType = function (type) {
         ctrl.selectedType = type;
     };
     
-    ctrl.changeSelectedBrand = function(brand){
+    ctrl.changeSelectedBrand = function (brand) {
         ctrl.selectedBrand = brand;
     };
     
-    ctrl.addSelectedSupplier = function(supplier){
+    ctrl.addSelectedSupplier = function (supplier) {
         ctrl.selectedSuppliers.push(supplier);
     };
-    ctrl.removeSelectedSupplier = function(supplier){
-        let index = ctrl.selectedSuppliers.findIndex(function(supp){
+    ctrl.removeSelectedSupplier = function (supplier) {
+        let index = ctrl.selectedSuppliers.findIndex(function (supp) {
             return String(supplier.id) === supp._id;
         });
         if (index >= 0) ctrl.selectedSuppliers.splice(index, 1);
     };
     
     ctrl.loadProduct = function (productID) {
-        if (!productID){
-            ctrl.product = null;
-        }
-        else {
+        ctrl.product = null;
+        if (productID) {
             ctrl.loadingProduct = true;
             $http.post('/rpc', {
                 token: ctrl.global.user.token,
@@ -51,7 +49,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         ctrl.selectedSuppliers = ctrl.product.supplierIDs;
                     }
                     else {
-                        alert($scope.global.utils.errors[response.data.error.errorCode]);
+                        alert(ctrl.global.utils.errors[response.data.error.errorCode]);
                     }
                 },
                 function () {
@@ -63,13 +61,13 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
     };
     
     ctrl.$onInit = function () {
-        if (ctrl.selectedProductId){
+        if (ctrl.selectedProductId) {
             ctrl.loadProduct(ctrl.selectedProductId);
         }
     };
     
     ctrl.$onChanges = function (objs) {
-        if (objs['selectedProductId']){
+        if (objs['selectedProductId']) {
             ctrl.loadProduct(objs['selectedProductId'].currentValue);
         }
     };
@@ -100,19 +98,21 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
     };
     
     ctrl.viewPhoto = function (image) {
-        $uibModal.open({
-            templateUrl: 'viewPhotoDialog',
-            controller: 'ViewPhotoDialogController',
-            resolve: {
-                options: function () {
-                    return {photoUrl: image.url};
+        if (!ctrl.product.isBeingRemoved) {
+            $uibModal.open({
+                templateUrl: 'viewPhotoDialog',
+                controller: 'ViewPhotoDialogController',
+                resolve: {
+                    options: function () {
+                        return {photoUrl: image.url};
+                    }
                 }
-            }
-        }).result.then(function () {
-        }, function () {
-        });
+            }).result.then(function () {
+            }, function () {
+            });
+        }
     };
-
+    
     
     ctrl.checkProductAttribute = function (attr, value, oldValue) {
         if (oldValue && oldValue === value) {
@@ -152,6 +152,36 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
         }
     };
     
+    ctrl.removeProduct = function (i18n_confirm_remove_product) {
+        let ok = confirm(i18n_confirm_remove_product);
+        if (ok) {
+            ctrl.cancelEditing();
+            ctrl.product.isBeingEdited = false;
+            ctrl.product.isBeingRemoved = true;
+            $http.post('/rpc', {
+                token: ctrl.global.user.token,
+                name: 'remove_product',
+                params: {
+                    _id: ctrl.product._id,
+                }
+            }).then(
+                function (response) {
+                    ctrl.product.isBeingRemoved = false;
+                    if (response.data.success) {
+                        ctrl.product = null;
+                    }
+                    else {
+                        alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                    }
+                },
+                function () {
+                    ctrl.product.isBeingRemoved = false;
+                    alert('Network error');
+                }
+            );
+        }
+    };
+    
     ctrl.updateProduct = function (data) {
         return new Promise(function (resolve) {
             //-- temporary disable editting
@@ -172,7 +202,9 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     description: data.description,
                     typeID: ctrl.selectedType._id,
                     brandID: ctrl.selectedBrand._id,
-                    supplierIDs: ctrl.selectedSuppliers.map(function(suppiler){return suppiler._id}),
+                    supplierIDs: ctrl.selectedSuppliers.map(function (suppiler) {
+                        return suppiler._id
+                    }),
                     addedPhotos: addedPhotos.length,
                 }
             }).then(

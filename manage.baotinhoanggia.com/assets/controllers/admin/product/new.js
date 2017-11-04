@@ -33,10 +33,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                                 //-- reset fields
                                 if (ctrl.keepPage) {
                                     ctrl.product = {};
-                                    if (!ctrl.keepGroup){
-                                        ctrl.selectedGroup = null;
-                                        ctrl.selectedType = null;
-                                    }
+                                    if (!ctrl.keepGroup && !ctrl.keepType) ctrl.selectedGroup = null;
                                     if (!ctrl.keepType) ctrl.selectedType = null;
                                     if (!ctrl.keepBrand) ctrl.selectedBrand = null;
                                     ctrl.selectedSuppliers = [];

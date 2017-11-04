@@ -1,108 +1,122 @@
-div
+div.partials_product-details
     form(editable-form='' name='editProductForm' onbeforesave='$ctrl.updateProduct($data)')
-        div.text-right.margin-bottom-15px
-            button.btn.btn-xs.btn-default(type='button' ng-hide='$ctrl.product.isBeingEdited' ng-click='$ctrl.startEditing()')
-                i.fa.fa-pencil
-                span &nbsp; #{__('edit_')}
-            .buttons(ng-show='$ctrl.product.isBeingEdited')
-                button.btn.btn-default.btn-xs.margin-right-5px(type='button' ng-click='$ctrl.cancelEditing()')
-                    span
-                        i.fa.fa-ban
-                        span &nbsp;
-                    span #{__('cancel_')}
-                button.btn.btn-primary.btn-xs(type='submit' ng-disabled='editProductForm.$waiting')
-                    span(ng-show='editProductForm.$waiting')
-                        i.fa.fa-spinner.fa-spin
-                        span &nbsp;
-                    span
-                        i.fa.fa-save
-                        span &nbsp;
-                    span #{__('save_')}
         div
             div.text-center(ng-show='$ctrl.loadingProduct')
                 i.fa.fa-spinner.fa-spin
-            div(ng-show='$ctrl.product && !$ctrl.loadingProduct')
-                    div.row.margin-bottom-5px
-                        div.col-xs-4
-                            label #{__('product_')}
-                        div.col-xs-8.text-right
-                            span(ng-show='!$ctrl.product.isBeingEdited') {{$ctrl.product.typeID.name}}
-                            div(ng-show='$ctrl.product.isBeingEdited')
-                                type-selector(global='$ctrl.global' selected-group='$ctrl.selectedGroup' selected-type='$ctrl.selectedType' on-type-changed='$ctrl.changeSelectedType(selectedType)')
 
-                    div.row.margin-bottom-5px
-                        div.col-xs-6
-                            label #{__('model_')}
-                        div.col-xs-6.text-right
-                            div(editable-text="$ctrl.product.model" e-name="model" onbeforesave='$ctrl.checkProductAttribute("model", $data, $ctrl.product.model)' e-required) {{$ctrl.product.model}}
-                    div.row.margin-bottom-5px
-                        div.col-xs-6
-                            label #{__('product_brand')}
-                        div.col-xs-6.text-right
-                            span(ng-show='!$ctrl.product.isBeingEdited') {{$ctrl.product.brandID.name}} ({{$ctrl.global.utils.originNameFromCode($ctrl.product.brandID.origin)}})
-                            div(ng-show='$ctrl.product.isBeingEdited')
-                                brand-selector(global='$ctrl.global' selected-brand='$ctrl.selectedBrand' on-brand-changed='$ctrl.changeSelectedBrand(selectedBrand)')
+        div(ng-show='$ctrl.product && !$ctrl.loadingProduct')
+            div.button-controls
+                div.text-right.margin-bottom-15px(ng-hide='$ctrl.product.isBeingEdited || $ctrl.product.isBeingRemoved')
+                    button.btn.btn-xs.btn-default(type='button' ng-click='$ctrl.startEditing()')
+                        i.fa.fa-pencil
+                        span &nbsp; #{__('edit_')}
+                div.row(ng-show='$ctrl.product.isBeingEdited || $ctrl.product.isBeingRemoved').margin-bottom-5px
+                    div.col-xs-3
+                        button.btn.btn-danger.btn-xs(ng-disabled='$ctrl.product.isBeingRemoved' type='button' ng-click='$ctrl.removeProduct("'+__('confirm_remove_product')+'")')
+                            span(ng-show='$ctrl.product.isBeingRemoved')
+                                i.fa.fa-spinner.fa-spin
+                                span &nbsp;
+                            span(ng-hide='$ctrl.product.isBeingRemoved')
+                                i.fa.fa-trash
+                                span &nbsp;
+                            span #{__('remove_')}
+                    div.col-xs-9.text-right(ng-hide='$ctrl.product.isBeingRemoved')
+                        button.btn.btn-default.btn-xs.margin-right-5px(type='button' ng-click='$ctrl.cancelEditing()')
+                            span
+                                i.fa.fa-ban
+                                span &nbsp;
+                            span #{__('cancel_')}
+                        button.btn.btn-primary.btn-xs(type='submit' ng-disabled='editProductForm.$waiting')
+                            span(ng-show='editProductForm.$waiting')
+                                i.fa.fa-spinner.fa-spin
+                                span &nbsp;
+                            span(ng-hide='editProductForm.$waiting')
+                                i.fa.fa-save
+                                span &nbsp;
+                            span #{__('save_')}
 
-                    div.row.margin-bottom-5px
-                        div.col-xs-3
-                            label #{__('suppliers_')}
-                        div.col-xs-9.text-right
-                            div(ng-show='$ctrl.product.isBeingEdited')
-                                multi-suppliers-selector(global='$ctrl.global' selected-suppliers='$ctrl.selectedSuppliers' on-supplier-added='$ctrl.addSelectedSupplier(supplier)' on-supplier-removed='$ctrl.removeSelectedSupplier(supplier)')
-                            div(ng-hide='$ctrl.product.isBeingEdited')
-                                span.no-data(ng-hide='$ctrl.product.supplierIDs && $ctrl.product.supplierIDs.length') #{__('no_data')}
-                                a.margin-left-15px(target='_blank' ng-repeat='supplier in $ctrl.product.supplierIDs' href='#/admin/supplier?supplierID={{supplier._id}}')
-                                    span {{supplier.name}} &nbsp;
-                                    i.fa.fa-external-link-square
+            div.details.margin-top-15px
+                div.row.margin-bottom-5px
+                    div.col-xs-4
+                        label #{__('product_')}
+                    div.col-xs-8.text-right
+                        span(ng-show='!$ctrl.product.isBeingEdited') {{$ctrl.product.typeID.name}}
+                        div(ng-show='$ctrl.product.isBeingEdited')
+                            type-selector(global='$ctrl.global' selected-group='$ctrl.selectedGroup' selected-type='$ctrl.selectedType' on-type-changed='$ctrl.changeSelectedType(selectedType)')
 
-                    div.row.margin-bottom-5px
-                        div.col-xs-6
-                            label #{__('in_stock')}
-                            a.margin-left-15px(href='' ng-click='$ctrl.showAvailableInStocks()') (#{__('detail_')})
-                        div.col-xs-6
-                            div.text-right {{$ctrl.product.available}}/{{$ctrl.product.stockPeek}}
-                    div.row.margin-bottom-5px
-                        div.col-xs-6
-                            label #{__('average_import_price')}
-                            a.margin-left-15px(href='' ng-click='$ctrl.showImportPrice()') (#{__('detail_')})
-                        div.col-xs-6
-                            div.text-right {{$ctrl.product.lastInStocks? ($ctrl.calculateAveragePrice($ctrl.product.lastInStocks) | currency : '' : 0) : '#{__("not_available")}'}}
-                    div.row.margin-bottom-5px
-                        div.col-xs-6
-                            label #{__('last_export_price')}
-                            a.margin-left-15px(ng-hide='$ctrl.product.outPriceBeingChanged' href='' ng-click='$ctrl.changeExportPriceManually($ctrl.product,"' + __('change_product_price_dialog_header') + '")') (#{__('change_')})
-                        div.col-xs-6
-                            div.text-right
-                                span(ng-hide='$ctrl.product.outPriceBeingChanged') {{$ctrl.product.lastOutStock? ($ctrl.product.lastOutStock.price | currency : '' : 0) : '#{__("not_available")}'}}
-                                span(ng-show='$ctrl.product.outPriceBeingChanged')
-                                    i.fa.fa-spinner.fa-spin
-                                    span &nbsp; #{__('is_being_updated')}
+                div.row.margin-bottom-5px
+                    div.col-xs-6
+                        label #{__('model_')}
+                    div.col-xs-6.text-right
+                        div(editable-text="$ctrl.product.model" e-name="model" onbeforesave='$ctrl.checkProductAttribute("model", $data, $ctrl.product.model)' e-required) {{$ctrl.product.model}}
+                div.row.margin-bottom-5px
+                    div.col-xs-6
+                        label #{__('product_brand')}
+                    div.col-xs-6.text-right
+                        span(ng-show='!$ctrl.product.isBeingEdited') {{$ctrl.product.brandID.name}} ({{$ctrl.global.utils.originNameFromCode($ctrl.product.brandID.origin)}})
+                        div(ng-show='$ctrl.product.isBeingEdited')
+                            brand-selector(global='$ctrl.global' selected-brand='$ctrl.selectedBrand' on-brand-changed='$ctrl.changeSelectedBrand(selectedBrand)')
 
-                    div.margin-bottom-5px
-                        label #{__('product_images')}
-                        div.panel.panel-default
-                            div.panel-body(ngf-drop-disabled='!$ctrl.product.isBeingEdited' ngf-drop="$ctrl.addProductPhoto($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'")
-                                div.img-wrapper(ng-repeat='image in $ctrl.product.photos')
-                                    img(ng-click='$ctrl.viewPhoto(image)' ng-if='!image.localPhoto' ng-src='{{image.url+"?decache=" + Date.now()}}' image-on-load='image.loaded = true')
-                                    img(ng-if='image.localPhoto' ngf-thumbnail='image.file' image-on-load='image.loaded = true')
-                                    span.info-float.close-float.text-danger(ng-click='$ctrl.removeProductImage(image, "' + __('confirm_remove_product_photo') + '")' ng-hide='!$ctrl.product.isBeingEdited || !image.loaded || image.isBeingRemoved || image.isBeingUploaded || image.uploadProceeded')
-                                        i.fa.fa-minus-circle(ng-if='image.localPhoto')
-                                        i.fa.fa-times-circle(ng-if='!image.localPhoto')
-                                    span.info-float(ng-show='image.isBeingUploaded || !image.loaded || image.isBeingRemoved')
-                                        i.fa.fa-refresh.fa-spin
-                                    span.info-float.text-success(ng-show='image.uploadSucceeded === true')
-                                        i.fa.fa-check-circle
-                                    span.info-float.text-warning(ng-show='image.uploadSucceeded === false')
-                                        i.fa.fa-exclamation-circle
-                                div.img-upload-wrapper(ng-show='$ctrl.product.isBeingEdited && ($ctrl.product.photos && $ctrl.product.photos.length < 5)')
-                                    label
-                                        i.fa.fa-plus-circle
-                                        input(style='display: none' type='file', ngf-select="$ctrl.addProductPhoto($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'")
+                div.row.margin-bottom-5px
+                    div.col-xs-3
+                        label #{__('suppliers_')}
+                    div.col-xs-9.text-right
+                        div(ng-show='$ctrl.product.isBeingEdited')
+                            multi-suppliers-selector(global='$ctrl.global' selected-suppliers='$ctrl.selectedSuppliers' on-supplier-added='$ctrl.addSelectedSupplier(supplier)' on-supplier-removed='$ctrl.removeSelectedSupplier(supplier)')
+                        div(ng-hide='$ctrl.product.isBeingEdited')
+                            span.no-data(ng-hide='$ctrl.product.supplierIDs && $ctrl.product.supplierIDs.length') #{__('no_data')}
+                            a.margin-left-15px(target='_blank' ng-repeat='supplier in $ctrl.product.supplierIDs' href='#/admin/supplier?supplierID={{supplier._id}}')
+                                span {{supplier.name}} &nbsp;
+                                i.fa.fa-external-link-square
 
-                    div.margin-bottom-5px
-                        label #{__('description_')}
-                        div(editable-textarea='$ctrl.product.description' e-name='description')
-                            pre {{$ctrl.product.description}}
+                div.row.margin-bottom-5px
+                    div.col-xs-6
+                        label #{__('in_stock')}
+                        a.margin-left-15px(href='' ng-click='$ctrl.showAvailableInStocks()') (#{__('detail_')})
+                    div.col-xs-6
+                        div.text-right {{$ctrl.product.available}}/{{$ctrl.product.stockPeek}}
+                div.row.margin-bottom-5px
+                    div.col-xs-6
+                        label #{__('average_import_price')}
+                        a.margin-left-15px(href='' ng-click='$ctrl.showImportPrice()') (#{__('detail_')})
+                    div.col-xs-6
+                        div.text-right {{$ctrl.product.lastInStocks? ($ctrl.calculateAveragePrice($ctrl.product.lastInStocks) | currency : '' : 0) : '#{__("not_available")}'}}
+                div.row.margin-bottom-5px
+                    div.col-xs-6
+                        label #{__('last_export_price')}
+                        a.margin-left-15px(ng-hide='$ctrl.product.outPriceBeingChanged' href='' ng-click='$ctrl.changeExportPriceManually($ctrl.product,"' + __('change_product_price_dialog_header') + '")') (#{__('change_')})
+                    div.col-xs-6
+                        div.text-right
+                            span(ng-hide='$ctrl.product.outPriceBeingChanged') {{$ctrl.product.lastOutStock? ($ctrl.product.lastOutStock.price | currency : '' : 0) : '#{__("not_available")}'}}
+                            span(ng-show='$ctrl.product.outPriceBeingChanged')
+                                i.fa.fa-spinner.fa-spin
+                                span &nbsp; #{__('is_being_updated')}
+
+                div.margin-bottom-5px
+                    label #{__('product_images')}
+                    div.panel.panel-default
+                        div.panel-body(ngf-drop-disabled='!$ctrl.product.isBeingEdited' ngf-drop="$ctrl.addProductPhoto($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'")
+                            div.img-wrapper(ng-repeat='image in $ctrl.product.photos')
+                                img(ng-click='$ctrl.viewPhoto(image)' ng-if='!image.localPhoto' ng-src='{{image.url+"?decache=" + Date.now()}}' image-on-load='image.loaded = true')
+                                img(ng-if='image.localPhoto' ngf-thumbnail='image.file' image-on-load='image.loaded = true')
+                                span.info-float.close-float.text-danger(ng-click='$ctrl.removeProductImage(image, "' + __('confirm_remove_product_photo') + '")' ng-hide='!$ctrl.product.isBeingEdited || !image.loaded || image.isBeingRemoved || image.isBeingUploaded || image.uploadProceeded')
+                                    i.fa.fa-minus-circle(ng-if='image.localPhoto')
+                                    i.fa.fa-times-circle(ng-if='!image.localPhoto')
+                                span.info-float(ng-show='image.isBeingUploaded || !image.loaded || image.isBeingRemoved')
+                                    i.fa.fa-refresh.fa-spin
+                                span.info-float.text-success(ng-show='image.uploadSucceeded === true')
+                                    i.fa.fa-check-circle
+                                span.info-float.text-warning(ng-show='image.uploadSucceeded === false')
+                                    i.fa.fa-exclamation-circle
+                            div.img-upload-wrapper(ng-show='$ctrl.product.isBeingEdited && ($ctrl.product.photos && $ctrl.product.photos.length < 5)')
+                                label
+                                    i.fa.fa-plus-circle
+                                    input(style='display: none' type='file', ngf-select="$ctrl.addProductPhoto($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'")
+
+                div.margin-bottom-5px
+                    label #{__('description_')}
+                    div(editable-textarea='$ctrl.product.description' e-name='description')
+                        pre {{$ctrl.product.description}}
 
     include ../dialogs/change-value-dialog
     include ../dialogs/view-photo

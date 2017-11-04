@@ -6,32 +6,21 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
 
     div.panel.panel-default.main-panel
         div.panel-body
-            label #{__('outorder_info')}
-            div.panel.panel-default
-                div.panel-body
-                    form(name='newOutOrderForm' editable-form='')
-                        div.margin-bottom-5px.row
-                            div.col-xs-12.col-sm-3
-                                label #{__('outorder_code')}
-                            div.col-xs-12.col-sm-9.text-right
-                                span {{}}
-                        div.margin-bottom-5px
-                            label #{__('outorder_name')}
-                            input.form-control()
-                        div.row
-                            div.col-xs-12.col-sm-6.margin-bottom-5px
-                                include ../../partials/customer-search
-                            div.col-xs-12.col-sm-6
-                                include ../../partials/customer-contact-search
             div.row
-                div.col-xs-12.col-sm-6
-                    label #{__('product_search')}
+                div.col-xs-12.col-sm-8
+                    label #{__('find_product')}
                     div.panel.panel-default
                         div.panel-body
-                            include ../../partials/product-search
-                div.col-xs-12.col-sm-6
-                    label #{__('quotation_info')}
+                            product-search(global='global' on-product-selected='ctrl.selectProduct(selectedProduct)')
+                div.col-xs-12.col-sm-4
+                    label #{__('new_outorder')}
                     div.panel.panel-default
                         div.panel-body
-
+                            div
+                                div.row
+                                    div.col-xs-4
+                                        label #{__('order_no')}
+                                    div.col-xs-8
+                                        div.text-right
+                                            span {{ahihi}}
 

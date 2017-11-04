@@ -19,10 +19,6 @@ img.img-language{
     font-weight:bold;
 }
 
-.dropdown-menu .divider{
-    height: 2px;
-}
-
 .fixed-textarea{
     max-width:100%;
     min-width:100%;
@@ -67,7 +63,13 @@ textarea.editable-input.form-control{
 
 //- table
 .search-result-list{
-    background-color: white;
+    max-height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid lightgray;
+    padding: 2px;
+    border-radius: 4px;
+    background: white;
 
     .search-result-record{
         background-color: whitesmoke;
@@ -82,7 +84,7 @@ textarea.editable-input.form-control{
     .search-result-record:hover{
         background-color: lightgrey;
     }
-    .search-result-record:active{
+    .search-result-record.selected{
         background-color: seagreen;
         color: white;
     }

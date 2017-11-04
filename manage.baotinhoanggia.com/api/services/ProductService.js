@@ -547,6 +547,26 @@ module.exports = {
         }
     },
     
+    removeProduct: async function(principal, params){
+        "use strict";
+        /*
+            params: {
+                [required] _id: the product id
+            }
+         */
+        try{
+            let product = await _app.model.Product.findById(params._id);
+            if (!product)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            await product.remove();
+            return sysUtils.returnSuccess();
+        }
+        catch(err){
+            console.log('removeProduct:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     //----------- product -------------
     addProduct: async function (principal, params) {
         "use strict";

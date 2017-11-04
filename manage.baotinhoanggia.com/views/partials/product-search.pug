@@ -63,8 +63,8 @@ div.partials_product-search
             div.col-xs-3.text-right
                 label #{__('last_price')}
     div.search-result
-        div(ng-show='!$ctrl.queryingProduct && $ctrl.filteredProducts && $ctrl.filteredProducts.length')
-            div.product-record(ng-click='$ctrl.selectProduct(product)' ng-repeat='product in $ctrl.filteredProducts track by $index' ng-class='{even: $index%2, selected: product === $ctrl.selectedProduct}' )
+        div.search-result-list(style='max-height:300px' ng-show='!$ctrl.queryingProduct && $ctrl.filteredProducts && $ctrl.filteredProducts.length')
+            div.search-result-record(ng-click='$ctrl.selectProduct(product)' ng-repeat='product in $ctrl.filteredProducts track by $index' ng-class='{selected: product === $ctrl.selectedProduct}' )
                 div.row
                     div.col-xs-5
                         span {{product.typeID.name}}
