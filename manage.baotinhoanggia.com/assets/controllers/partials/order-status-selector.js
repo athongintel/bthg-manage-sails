@@ -1,20 +1,25 @@
-const OrderStatusSelectorController = function ($scope, $element, $http) {
+const OrderStatusSelectorController = function ($scope, $element, $timeout) {
     "use strict";
     
     const ctrl = this;
     
-    ctrl.init = function(){
-        console.log('init called');
+    ctrl.changeStatus = function () {
+        ctrl.onStatusChanged({selectedStatus: ctrl.selectedStatus.value});
     };
     
     ctrl.$onInit = function () {
         ctrl.options = [
             {value: '1', desc: 'ORDER_OPEN'},
-            {value: '2', desc: ''},
-            {value: '3', desc: ''},
-            {value: '4', desc: ''},
-            {value: '5', desc: ''},
-        ]
+            {value: '2', desc: 'ORDER_CONFIRMED'},
+            {value: '3', desc: 'ORDER_PAYMENT_RECEIVED'},
+            {value: '4', desc: 'ORDER_FINISHED'},
+            {value: '5', desc: 'ORDER_CANCELED'},
+        ];
+        $timeout(function () {
+            ctrl.selectedStatus = ctrl.options.find(function (opt) {
+                return String(opt.value) === String(ctrl.preSelectedStatus);
+            });
+        });
     };
     
     ctrl.$onChanges = function (objs) {
@@ -27,7 +32,7 @@ app.component('orderStatusSelector', {
     controller: OrderStatusSelectorController,
     bindings: {
         global: '<',
-        preSelectStatus: '<',
+        preSelectedStatus: '<',
         onStatusChanged: '&'
     }
 });

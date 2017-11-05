@@ -1,2 +1,2 @@
-div(ng-init='$ctrl.init()')
-    select(ng-options='option as options for option in $ctrl.options')
+div
+    select.form-control(ng-change='$ctrl.changeStatus()' ng-model='$ctrl.selectedStatus' ng-options='option as option.desc for option in $ctrl.options')

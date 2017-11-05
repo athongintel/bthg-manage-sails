@@ -21,7 +21,7 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                         div.row
                             div.col-xs-12.col-sm-6
                                 label #{__('order_status')}
-                                order-status-selector()
+                                order-status-selector(on-status-changed='ctrl.changeStatus(selectedStatus)')
                                 //customer-selector(global='global' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
 
                             div.col-xs-12.col-sm-6
@@ -31,11 +31,12 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                         div.row.margin-top-5px
                             div.col-xs-12.col-sm-6
                                 label #{__('product_type')}
-                                customer-selector(global='global' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
+                                type-selector(global='global' on-type-changed='ctrl.changeType(selectedType)')
 
                             div.col-xs-12.col-sm-6
-                                label #{__('select_customer')}
-                                customer-selector(global='global' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
+                                label #{__('select_date_range')}
+                                div
+                                    input#date-range-select.form-control
             div
                 label #{__('results_')}
                 div.panel.penl-default
