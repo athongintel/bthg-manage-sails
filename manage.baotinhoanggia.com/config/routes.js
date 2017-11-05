@@ -77,12 +77,21 @@ module.exports.routes = {
         view: 'partials/multi-suppliers-selector', locals: {layout: false}
     },
     
+    
+    'GET /partials/multi-branches-selector': {
+        view: 'partials/multi-branches-selector', locals: {layout: false}
+    },
+    
     'GET /partials/product-search': {
         view: 'partials/product-search', locals: {layout: false}
     },
     
     'GET /partials/product-details': {
         view: 'partials/product-details', locals: {layout: false}
+    },
+    
+    'GET /partials/order-status-selector': {
+        view: 'partials/order-status-selector', locals: {layout: false}
     },
     
 };

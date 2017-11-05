@@ -192,10 +192,11 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                             ctrl.removeContact(contact._id);
                         }
                         else {
-                            alert(respone.data.error.errorMessage);
+                            alert($scope.global.utils.errors[respone.data.error.errorCode]);
+                            console.log(response.data.error);
                         }
                     },
-                    function (err) {
+                    function () {
                         alert('Network error');
                     }
                 );

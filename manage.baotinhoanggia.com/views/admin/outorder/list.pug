@@ -3,13 +3,40 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
         div.row
             div.col-xs-12.col-sm-6
                 div.panel-header-title #{__('find_outorder')}
-            //div.col-xs-12.col-sm-6
-                div.text-right
-                    button.action.btn.btn-primary.margin-bottom-15px(ng-click='ctrl.addCustomer()')
-                        span
-                            i.fa.fa-plus
-                            span &nbsp;
-                        span #{__('add_customer')}
 
     div.panel.panel-default.main-panel
         div.panel-body
+            div
+                div.row
+                    div.col-xs-6
+                        label #{__('filter_')}
+                    div.col-xs-6.text-right
+                        button.btn.btn-xs.btn-primary
+                            span
+                                i.fa.fa-filter
+                                span &nbsp;
+                            span #{__('do_filter')}
+                div.panel.penl-default
+                    div.panel-body
+                        div.row
+                            div.col-xs-12.col-sm-6
+                                label #{__('order_status')}
+                                order-status-selector()
+                                //customer-selector(global='global' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
+
+                            div.col-xs-12.col-sm-6
+                                label #{__('select_customer')}
+                                customer-selector(global='global' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
+
+                        div.row.margin-top-5px
+                            div.col-xs-12.col-sm-6
+                                label #{__('product_type')}
+                                customer-selector(global='global' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
+
+                            div.col-xs-12.col-sm-6
+                                label #{__('select_customer')}
+                                customer-selector(global='global' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
+            div
+                label #{__('results_')}
+                div.panel.penl-default
+                    div.panel-body

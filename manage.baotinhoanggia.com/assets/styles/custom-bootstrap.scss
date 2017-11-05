@@ -1,50 +1,110 @@
-body{
+body {
     background-color: gray;
     color: midnightblue;
 }
 
-.panel.main-panel{
+//-- upload image
+
+.img-upload-drop-over {
+    background-color: gray;
+}
+
+.img-upload-wrapper {
+    display: inline-block;
+    background: whitesmoke;
+    width: 100px;
+    height: 100px;
+    border-radius: 4px;
+    position: relative;
+    &:hover {
+        background: lightgray;
+    }
+    & > label {
+        display: inline-flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+    & > label > .fa {
+        font-size: 30px;
+        color: #ddd;
+    }
+}
+
+.img-wrapper {
+    position: relative;
+    display: inline-flex;
+    vertical-align: top;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 100px;
+    height: 100px;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    padding: 5px;
+    img {
+        max-height: 100%;
+        max-width: 100%;
+    }
+    .info-float {
+        position: absolute;
+        top: 0px;
+        right: 4px;
+        font-size: 26px;
+    }
+    .close-float {
+        opacity: 0.5;
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+}
+
+.panel.main-panel {
     background-color: gainsboro;
 }
 
-img.img-language{
-    width:30px;
-    margin-right:15px;
+img.img-language {
+    width: 30px;
+    margin-right: 15px;
 }
 
-.huge-input{
-    height:50px;
+.huge-input {
+    height: 50px;
     font-size: 25px;
     line-height: 50px;
-    font-weight:bold;
+    font-weight: bold;
 }
 
-.fixed-textarea{
-    max-width:100%;
-    min-width:100%;
-    min-height:80px;
+.fixed-textarea {
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 80px;
 }
 
-textarea.editable-input.form-control{
-    max-width:100%;
-    min-width:100%;
-    min-height:350px;
+textarea.editable-input.form-control {
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 350px;
     font-family: monospace;
 }
 
-.no-data{
-    padding:6px;
+.no-data {
+    padding: 6px;
     text-align: center;
     font-style: italic;
     font-size: 14px;
 }
 
-.flex{
+.flex {
     display: flex;
     flex-wrap: wrap;
 }
 
-.vf-center{
+.vf-center {
     align-self: center;
 }
 
@@ -53,16 +113,16 @@ textarea.editable-input.form-control{
     width: 100% !important;
 }
 
-.select2-container .select2-selection--single, .select2-container--default .select2-selection--single .select2-selection__arrow, .select2-search__field{
-    height:34px;
+.select2-container .select2-selection--single, .select2-container--default .select2-selection--single .select2-selection__arrow, .select2-search__field {
+    height: 34px;
 }
 
-.select2-container--default .select2-selection--single .select2-selection__rendered{
-    line-height:34px;
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 34px;
 }
 
 //- table
-.search-result-list{
+.search-result-list {
     max-height: 500px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -71,20 +131,20 @@ textarea.editable-input.form-control{
     border-radius: 4px;
     background: white;
 
-    .search-result-record{
+    .search-result-record {
         background-color: whitesmoke;
-        padding:4px 6px;
-        font-size:15px;
+        padding: 4px 6px;
+        font-size: 15px;
     }
 
-    .search-result-record:nth-child(odd){
+    .search-result-record:nth-child(odd) {
         background-color: wheat;
     }
 
-    .search-result-record:hover{
+    .search-result-record:hover {
         background-color: lightgrey;
     }
-    .search-result-record.selected{
+    .search-result-record.selected {
         background-color: seagreen;
         color: white;
     }
@@ -132,12 +192,12 @@ textarea.editable-input.form-control{
 .row-table {
     padding: 10px;
     background: whitesmoke;
-    .row-table-cell{
-        padding:2px 0px;
-        .row-table-content{
+    .row-table-cell {
+        padding: 2px 0px;
+        .row-table-content {
             padding: 6px 0px;
         }
-        .row-table-header{
+        .row-table-header {
             padding: 6px 12px;
             font-weight: bold;
             background: cadetblue;
@@ -160,14 +220,14 @@ button.action {
 
 //-- angular editable
 
-.editable-wrap, .editable-controls.form-group, .editable-wrap .editable-controls>input, .editable-wrap .editable-controls>select, .editable-wrap .editable-controls>textarea{
-    width:100%;
+.editable-wrap, .editable-controls.form-group, .editable-wrap .editable-controls > input, .editable-wrap .editable-controls > select, .editable-wrap .editable-controls > textarea {
+    width: 100%;
 }
 
 //-- this helps the dialog vertically middle
 .modal {
     text-align: center;
-    padding: 0!important;
+    padding: 0 !important;
 }
 
 .modal::before {

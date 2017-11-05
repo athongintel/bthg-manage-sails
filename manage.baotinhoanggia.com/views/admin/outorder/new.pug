@@ -6,17 +6,15 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
 
     div.panel.panel-default.main-panel
         div.panel-body
-            div.row
-                div.col-xs-12.col-sm-8
-                    label #{__('find_product')}
-                    div.panel.panel-default
-                        div.panel-body
-                            product-search(global='global' on-product-selected='ctrl.selectProduct(selectedProduct)')
-                div.col-xs-12.col-sm-4
+            fieldset(ng-disabled='ctrl.creatingOrder')
+                div
                     label #{__('new_outorder')}
                     div.panel.panel-default
                         div.panel-body
                             div
+                                div.margin-bottom-5px
+                                    label #{__('order_name')}
+                                    input.form-control(ng-model='ctrl.orderName')
                                 div.margin-bottom-5px
                                     label #{__('select_stock')}
                                     branch-selector(global='global' select-disabled='!global.utils.isSuperAdmin()' selected-branch='ctrl.selectedBranch')
@@ -25,11 +23,59 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                     customer-selector(global='global' selected-customer='ctrl.selectedCustomer' on-customer-changed='ctrl.selectCustomer(selectedCustomer)')
                                 div.margin-bottom-5px
                                     label #{__('select_customer_contact')}
-                                    customer-contact-selector(global='global' select-disabled='ctrl.customerContactDisabled' selected-customer='ctrl.selectedCustomer' selected-customer-contact='ctrl.selectedCustomerContact')
+                                    customer-contact-selector(global='global' select-disabled='ctrl.customerContactDisabled' selected-customer='ctrl.selectedCustomer' on-customer-contact-changed='ctrl.selectCustomerContact(selectedCustomerContact)')
+
+                div
+                    label #{__('find_product')}
+                    div.panel.panel-default
+                        div.panel-body
+                            product-search(global='global' on-product-selected='ctrl.selectProduct(selectedProduct, "'+__('sell_product')+'", "'+__('stock_sum')+'", "'+__('desired_amount')+'", "'+__('product_already_selected')+'")')
+                div
                     label #{__('quotation_')}
                     div.panel.panel-default
                         div.panel-body
+                            div.table-responsive
+                                table.table.table-striped.table-hover
+                                    thead
+                                        tr
+                                            th
+                                            th #{__('type_')}
+                                            th #{__('model_')}
+                                            th.text-right #{__('amount_')}
+                                            th.text-right #{__('old_price')}
+                                            th.text-right #{__('selling_price')}
+                                            th.text-right #{__('subtotal_')}
+                                    tbody
+                                        tr(ng-repeat='selection in ctrl.selectedProducts')
+                                            td
+                                                div.text-right(style='white-space: pre')
+                                                    button.btn.btn-danger.btn-xs(ng-hide='ctrl.creatingOrder' ng-click='ctrl.removeProductSelection(selection)')
+                                                        i.fa.fa-trash
+                                            td
+                                                div {{selection.product.typeID.name}}
+                                            td
+                                                div {{selection.product.model}}
+                                            td
+                                                input.text-right.form-control(cleave='global.utils.cleaveOptions.currency' ng-model='selection.amount')
+                                            td
+                                                div.text-right {{(selection.product.lastOutStock? selection.product.lastOutStock.price : 0) | currency : '' : ''}}
+                                            td
+                                                input.text-right.form-control(cleave='global.utils.cleaveOptions.currency' ng-model='selection.sellingPrice')
+                                            td
+                                                div.text-right {{selection.sellingPrice * selection.amount | currency : '' : ''}}
+                                        tr(ng-if='ctrl.selectedProducts.length' style='font-size: 20px')
+                                            td(colspan='6')
+                                                div.text-right #{__('total_order_value')}
+                                            td
+                                                div.text-right(style='font-weight: bold')
+                                                    span {{ctrl.calculateTotalOrderValue() | currency : '' : ''}}
 
-
-
-
+                div.text-right
+                    button.btn.btn-primary(ng-click='ctrl.createOrder("'+__('create_order_success')+'")' ng-disabled='!ctrl.selectedProducts.length || !ctrl.selectedCustomer || !ctrl.selectedCustomerContact')
+                        span(ng-show='ctrl.orderIsBeingCreated')
+                            i.fa.fa-spinner.fa-spin
+                            span &nbsp;
+                        span(ng-hide='ctrl.orderIsBeingCreated')
+                            i.fa.fa-save
+                            span &nbsp;
+                        span #{__('create_order_and_save_quotation')}

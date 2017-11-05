@@ -21,7 +21,7 @@ let createSuperAdminAccount = async function () {
     let user = new _app.model.User({
         username: sails.config.SUPER_ADMIN_USERNAME,
         branchID: headerQuarter._id,
-        userClass: [_app.model.User.constants.NORMAL_USER, _app.model.User.constants.SUPER_ADMIN],
+        userClass: [_app.model.User.constants.NORMAL_USER, _app.model.User.constants.NORMAL_ADMIN, _app.model.User.constants.SUPER_ADMIN],
     });
     
     user = await user.save();

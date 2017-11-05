@@ -5,14 +5,14 @@ div.partials_product-details
                 i.fa.fa-spinner.fa-spin
 
         div(ng-show='$ctrl.product && !$ctrl.loadingProduct')
-            div.button-controls
+            div.button-controls(ng-show='$ctrl.global.utils.isSuperAdmin()')
                 div.text-right.margin-bottom-15px(ng-hide='$ctrl.product.isBeingEdited || $ctrl.product.isBeingRemoved')
                     button.btn.btn-xs.btn-default(type='button' ng-click='$ctrl.startEditing()')
                         i.fa.fa-pencil
                         span &nbsp; #{__('edit_')}
                 div.row(ng-show='$ctrl.product.isBeingEdited || $ctrl.product.isBeingRemoved').margin-bottom-5px
                     div.col-xs-3
-                        button.btn.btn-danger.btn-xs(ng-disabled='$ctrl.product.isBeingRemoved' type='button' ng-click='$ctrl.removeProduct("'+__('confirm_remove_product')+'")')
+                        button.btn.btn-danger.btn-xs(ng-disabled='$ctrl.product.isBeingRemoved' type='button' ng-click='$ctrl.removeProduct("' + __('confirm_remove_product') + '")')
                             span(ng-show='$ctrl.product.isBeingRemoved')
                                 i.fa.fa-spinner.fa-spin
                                 span &nbsp;
@@ -57,24 +57,35 @@ div.partials_product-details
                         div(ng-show='$ctrl.product.isBeingEdited')
                             brand-selector(global='$ctrl.global' selected-brand='$ctrl.selectedBrand' on-brand-changed='$ctrl.changeSelectedBrand(selectedBrand)')
 
-                div.row.margin-bottom-5px
-                    div.col-xs-3
-                        label #{__('suppliers_')}
-                    div.col-xs-9.text-right
-                        div(ng-show='$ctrl.product.isBeingEdited')
-                            multi-suppliers-selector(global='$ctrl.global' selected-suppliers='$ctrl.selectedSuppliers' on-supplier-added='$ctrl.addSelectedSupplier(supplier)' on-supplier-removed='$ctrl.removeSelectedSupplier(supplier)')
-                        div(ng-hide='$ctrl.product.isBeingEdited')
-                            span.no-data(ng-hide='$ctrl.product.supplierIDs && $ctrl.product.supplierIDs.length') #{__('no_data')}
-                            a.margin-left-15px(target='_blank' ng-repeat='supplier in $ctrl.product.supplierIDs' href='#/admin/supplier?supplierID={{supplier._id}}')
-                                span {{supplier.name}} &nbsp;
-                                i.fa.fa-external-link-square
+                div.margin-bottom-5px
+                    label #{__('suppliers_')}
+                    div(ng-show='$ctrl.product.isBeingEdited')
+                        multi-suppliers-selector(global='$ctrl.global' selected-suppliers='$ctrl.selectedSuppliers' on-supplier-added='$ctrl.addSelectedSupplier(supplier)' on-supplier-removed='$ctrl.removeSelectedSupplier(supplier)')
+                    div(ng-hide='$ctrl.product.isBeingEdited')
+                        .panel.panel-default
+                            .panel-body
+                                div.text-center.no-data(ng-hide='$ctrl.product.supplierIDs && $ctrl.product.supplierIDs.length') #{__('no_data')}
+                                a.margin-right-15px(target='_blank' ng-repeat='supplier in $ctrl.product.supplierIDs' href='#/admin/supplier?supplierID={{supplier._id}}')
+                                    span {{supplier.name}} &nbsp;
+                                    i.fa.fa-external-link-square
+
+                div.margin-bottom-5px(ng-show='$ctrl.global.utils.isSuperAdmin()')
+                    label #{__('allowed_branches')}
+                    div(ng-show='$ctrl.product.isBeingEdited')
+                        multi-branches-selector(global='$ctrl.global' pre-selected-branch-ids='$ctrl.preSelectedBranchIDs' on-branches-changed='$ctrl.changeBranches(selectedBranches)')
+                    div(ng-hide='$ctrl.product.isBeingEdited')
+                        .panel.panel-default
+                            .panel-body
+                                div.text-center.no-data(ng-hide='$ctrl.product.stockIDs && $ctrl.product.stockIDs.length') #{__('no_data')}
+                                a.margin-right-15px(href='' ng-repeat='branch in $ctrl.product.stockIDs')
+                                    span {{branch.name}}
 
                 div.row.margin-bottom-5px
                     div.col-xs-6
                         label #{__('in_stock')}
                         a.margin-left-15px(href='' ng-click='$ctrl.showAvailableInStocks()') (#{__('detail_')})
                     div.col-xs-6
-                        div.text-right {{$ctrl.product.stockSum.localAvailable}}/{{$ctrl.product.stockSum.available}}
+                        div.text-right {{$ctrl.calculateStockSumDisplay($ctrl.global.user.branchID, $ctrl.product)}}
                 div.row.margin-bottom-5px
                     div.col-xs-6
                         label #{__('average_import_price')}
@@ -84,7 +95,7 @@ div.partials_product-details
                 div.row.margin-bottom-5px
                     div.col-xs-6
                         label #{__('last_export_price')}
-                        a.margin-left-15px(ng-hide='$ctrl.product.outPriceBeingChanged' href='' ng-click='$ctrl.changeExportPriceManually($ctrl.product,"' + __('change_product_price_dialog_header') + '")') (#{__('change_')})
+                        a.margin-left-15px(ng-hide='$ctrl.product.outPriceBeingChanged' href='' ng-click='$ctrl.changeExportPriceManually($ctrl.product,"' + __('change_product_price_dialog_header') + '", "'+__('old_price')+'", "'+__('new_price')+'")') (#{__('change_')})
                     div.col-xs-6
                         div.text-right
                             span(ng-hide='$ctrl.product.outPriceBeingChanged') {{$ctrl.product.lastOutStock? ($ctrl.product.lastOutStock.price | currency : '' : 0) : '#{__("not_available")}'}}
@@ -117,7 +128,4 @@ div.partials_product-details
                     label #{__('description_')}
                     div(editable-textarea='$ctrl.product.description' e-name='description')
                         pre {{$ctrl.product.description}}
-
-    include ../dialogs/change-value-dialog
-    include ../dialogs/view-photo
 

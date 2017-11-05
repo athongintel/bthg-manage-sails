@@ -3,13 +3,11 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
         div.row
             div.col-xs-12.col-sm-6
                 div.panel-header-title #{__('add_new_product')}
-            //div.col-xs-12.col-sm-6
+            div.col-xs-12.col-sm-6
                 div.text-right
-                    button.action.btn.btn-primary.margin-bottom-15px(ng-click='ctrl.addCustomer()')
-                        span
-                            i.fa.fa-plus
-                            span &nbsp;
-                        span #{__('add_customer')}
+                    a.btn.btn-default(href='#/admin/product/list')
+                        span #{__('back_to_product_list')}
+
 
     div.panel.panel-default.main-panel
         div.panel-body
@@ -53,6 +51,10 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                     div(editable-text="ctrl.product.model" e-name="model" e-form='addProductForm' onbeforesave='ctrl.checkProductAttribute("model", $data)' e-required)
 
                                 div.margin-bottom-15px
+                                    label #{__('allowed_branches')}
+                                    multi-branches-selector(global='global' pre-selected-branch-ids='ctrl.preSelectedBranchIDs' on-branches-changed='ctrl.changeBranches(selectedBranches)')
+
+                                div.margin-bottom-15px
                                     label #{__('suppliers_')}
                                     multi-suppliers-selector(global='global' selected-suppliers='ctrl.selectedSuppliers' on-supplier-added='ctrl.addSupplier(supplier)' on-supplier-removed='ctrl.removeSupplier(supplier)')
 
@@ -75,7 +77,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                         input.form-control(cleave="global.utils.cleaveOptions.currency" type='text' ng-model='ctrl.product.initOutPrice' )
                                 div.margin-bottom-15px
                                     label #{__('product_images')}
-                                    div.panel.panel-default(style='min-height: 194px')
+                                    div.panel.panel-default(style='min-height: 268px')
                                         div.panel-body(ngf-drop-disabled='ctrl.addingProduct' ngf-drop="ctrl.loadProductFiles($files)" ngf-drag-over-class="'img-upload-drop-over'" ngf-max-files='5' ngf-multiple='true' ngf-pattern="'image/*'")
                                             div.img-wrapper(ng-repeat='image in ctrl.productImages')
                                                 img(ngf-thumbnail="image" image-on-load='image.loaded = true')
@@ -102,7 +104,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                 input(type='checkbox' ng-model='ctrl.keepPage')
                                 span &nbsp; #{__('keep_page')}
                         div.col-xs-6.text-right.vf-center
-                            button.btn.btn-primary.action(type='submit' ng-disabled='false')
+                            button.btn.btn-primary.action(type='submit' ng-disabled='!ctrl.selectedType || !ctrl.selectedBrand')
                                 span(ng-show='ctrl.addingProduct')
                                     i.fa.fa-spin.fa-spinner
                                     span &nbsp;

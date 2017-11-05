@@ -197,10 +197,11 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                             ctrl.removeContact(contact._id);
                         }
                         else {
-                            alert(respone.data.error.errorMessage);
+                            alert($scope.global.utils.errors[respone.data.error.errorCode]);
+                            console.log(respone.data.error)
                         }
                     },
-                    function (err) {
+                    function () {
                         alert('Network error');
                     }
                 );
@@ -256,6 +257,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                 ctrl.initializing = false;
                 if (response.data.success){
                     ctrl.allCustomers = response.data.result;
+                    // console.log(ctrl.allCustomers);
                     ctrl.filterCustomer();
                 }
                 else{

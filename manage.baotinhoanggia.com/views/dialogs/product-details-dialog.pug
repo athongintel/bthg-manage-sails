@@ -1,0 +1,6 @@
+script(type="text/ng-template" id="productDetailsDialog")
+    div(ng-init='init()')
+        .modal-header
+            button.close(type='button', ng-click='close()') x
+        .modal-body
+            product-details(global='options.global' selected-product-id='options.productID')

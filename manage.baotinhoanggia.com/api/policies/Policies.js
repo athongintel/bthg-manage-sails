@@ -10,8 +10,14 @@ module.exports = {
     
     isAdmin: async function(principal, params){
         "use strict";
+        return (principal.user.userClass.indexOf(_app.model.User.constants.NORMAL_ADMIN) >= 0)?
+            sysUtils.returnSuccess() : sysUtils.returnError(_app.errors.NOT_AUTHORIZED_ERROR);
+    },
+    
+    isSuperAdmin: async function(principal, params){
+        "use strict";
         return (principal.user.userClass.indexOf(_app.model.User.constants.SUPER_ADMIN) >= 0)?
-            sysUtils.returnSuccess() : sysUtils.returnError(_app.errors.NOT_SUPER_ADMIN_ERROR);
+            sysUtils.returnSuccess() : sysUtils.returnError(_app.errors.NOT_AUTHORIZED_ERROR);
     },
     
 };

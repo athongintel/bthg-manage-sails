@@ -1,15 +1,36 @@
-const ProductSearchPartialController = function ($scope, $http) {
+const ProductSearchPartialController = function ($scope, $http, $uibModal) {
     "use strict";
     
     const ctrl = this;
     
     ctrl.$onInit = function () {
+        ctrl.selectedBranch = ctrl.global.user.branchID;
         ctrl.selectedGroup = {};
         ctrl.selectedType = {};
         ctrl.selectedBrand = {};
         ctrl.selectedSupplier = {};
         
         ctrl.refreshProducts();
+    };
+    
+    ctrl.changeBranch = function(branch){
+        ctrl.selectedBranch = branch;
+    };
+    
+    ctrl.calculateStockSumDisplay = function(branch, product){
+        let calculateAllStocksSum = function(product){
+            let sum = 0;
+            if (product && product.stockSum){
+                Object.keys(product.stockSum).forEach(function(key){
+                    sum += product.stockSum[key].sum;
+                });
+            }
+            return sum;
+        };
+        let display = product.stockSum && product.stockSum[branch._id]? product.stockSum[branch._id].sum : '0';
+        if (ctrl.global.utils.isSuperAdmin())
+            display += '/' + calculateAllStocksSum(product);
+        return display;
     };
     
     ctrl.changeSelectedType = function(type){
@@ -29,6 +50,7 @@ const ProductSearchPartialController = function ($scope, $http) {
                     }
                     else{
                         alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                        console.log(repsonse.data.error);
                     }
                 },
                 function(){
@@ -88,7 +110,24 @@ const ProductSearchPartialController = function ($scope, $http) {
                 }) >= 0;
             });
         }
+    };
     
+    ctrl.showProductDetails = function(product){
+        $uibModal.open({
+            templateUrl:'productDetailsDialog',
+            controller:'ProductDetailsDialogController',
+            resolve: {
+                options: function(){
+                    return {
+                        global: ctrl.global,
+                        productID: product._id
+                    };
+                }
+            },
+        }).result.then(
+            function(){},
+            function(){}
+        );
     };
     
     ctrl.refreshProducts = function () {
@@ -101,12 +140,15 @@ const ProductSearchPartialController = function ($scope, $http) {
         $http.post('/rpc', {
             token: ctrl.global.user.token,
             name: 'get_all_products_with_details',
-            params: {}
+            params: {
+                stock_info: true
+            }
         }).then(
             function (response) {
                 ctrl.queryingProduct = false;
                 if (response.data.success) {
                     ctrl.allProducts = response.data.result;
+                    // console.log(ctrl.allProducts);
                     ctrl.filterProduct();
                 }
                 else {

@@ -25,7 +25,7 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
 
                     div.search-result.margin-top-15px(style='max-height:500px; overflow-y: auto')
                         div.no-data(ng-show='!ctrl.filteredCustomers || !ctrl.filteredCustomers.length') #{__('no_result_found')}
-                        div.search-result-list
+                        div.search-result-list(ng-show='ctrl.filteredCustomers && ctrl.filteredCustomers.length')
                             div.search-result-record(ng-repeat='customer in ctrl.filteredCustomers' ng-class='{selected: customer == ctrl.selectedCustomer}' ng-click='ctrl.selectCustomer(customer)')
                                 div {{customer.name}}
 
@@ -142,6 +142,3 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                                                         i.fa.fa-pencil
                                                     button.btn.btn-sm.btn-danger(type='button', ng-click='ctrl.removeCustomerContact(contact, "' + __('remove_customer_contact_prompt') + '")')
                                                         i.fa.fa-trash
-
-
-    include ../dialogs/admin-customer-add

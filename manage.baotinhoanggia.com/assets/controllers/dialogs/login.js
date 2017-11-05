@@ -14,12 +14,12 @@ app.controller('LoginDialogController', ['$uibModalInstance', '$scope', '$http',
                 }
                 else{
                     alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    console.log(response.data.error);
                 }
             },
-            function(err){
+            function(){
                 "use strict";
                 $scope.processing = false;
-                console.log(err);
                 alert('Network error.');
             }
         );

@@ -9,6 +9,7 @@ const productSchema = new mongoose.Schema({
     brandID: {type: mongoose.Schema.ObjectId, ref: 'ProductBrand', required: true},
     model: {type: String, required: true},
     supplierIDs: [{type: mongoose.Schema.ObjectId, ref: 'Supplier'}],
+    stockIDs: [{type: mongoose.Schema.ObjectId, ref: 'Branch'}],
     photos: [{type: mongoose.Schema.Types.Mixed}],
     description: {type: String},
 

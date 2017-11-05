@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const constants = {
     STOCK_INIT_STOCK: 'STOCK_INIT_STOCK',
+    STOCK_MOVE_STOCK: 'STOCK_MOVE_STOCK',
 };
 
 const inStockSchema = new mongoose.Schema({

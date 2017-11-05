@@ -15,6 +15,7 @@ _app.model = {
     OutStock: require('../api/models/outStock.model'),
     Branch: require('../api/models/branch.model'),
     Quotation: require('../api/models/quotation.model'),
+    QuotationDetails: require('../api/models/quotationDetails.model'),
     OutStockOrder: require('../api/models/outStockOrder.model'),
 };
 
@@ -30,4 +31,5 @@ _app.errors = {
     DUPLICATED_ERROR: {errorCode: 9},
     RESOURCE_DIRTY_ERROR: {errorCode: 10},
     TOKEN_INVALID_ERROR: {errorCode: 11},
+    NOT_AUTHORIZED_ERROR: {errorCode: 12},
 };

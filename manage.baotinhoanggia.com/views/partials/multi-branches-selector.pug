@@ -1,0 +1,3 @@
+div.partials_multi-branches-selector
+    select.selectpicker.partials_multi-branches-selector_selector.form-control(multiple='' data-live-search='true' title=''+__('select_allowed_branches'))
+        option(ng-repeat='branch in $ctrl.allBranches' value='{{branch._id}}') {{branch.name}}

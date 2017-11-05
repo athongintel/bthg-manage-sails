@@ -6,13 +6,14 @@ html(ng-app='app')
 
         // STYLES
         link(rel="stylesheet", href="/lib/angular-xeditable-0.8.0/css/xeditable.min.css")
+        link(rel="stylesheet", href="/lib/bootstrap-select/bootstrap-select.min.css")
         link(rel="stylesheet", href="/lib/bootstrap-toggle/bootstrap-toggle.min.css")
         link(rel="stylesheet", href="/lib/bootstrap/css/bootstrap-theme.min.css")
         link(rel="stylesheet", href="/lib/bootstrap/css/bootstrap.min.css")
         link(rel="stylesheet", href="/lib/font-awesome/css/font-awesome.min.css")
         link(rel="stylesheet", href="/lib/font-awesome/css/mixins.css")
         link(rel="stylesheet", href="/lib/font-awesome/css/variables.css")
-        link(rel="stylesheet", href="/lib/selectize/select2.min.css")
+        link(rel="stylesheet", href="/lib/select2/select2.min.css")
         link(rel="stylesheet", href="/styles/importer.css")
         // STYLES END
 
@@ -32,11 +33,12 @@ html(ng-app='app')
         script(src="/lib/angular/ng-file-upload.min.js")
         script(src="/lib/angular/ngStorage.min.js")
         script(src="/lib/bignumber/bignumber.min.js")
+        script(src="/lib/bootstrap-select/bootstrap-select.min.js")
         script(src="/lib/bootstrap-toggle/bootstrap-toggle.min.js")
         script(src="/lib/bootstrap/js/bootstrap.min.js")
         script(src="/lib/cleave/cleave-angular.min.js")
         script(src="/lib/jscookie/js.cookie.js")
-        script(src="/lib/selectize/select2.min.js")
+        script(src="/lib/select2/select2.min.js")
         script(src="/lib/ui-bootstrap/ui-bootstrap.min.js")
         script(src="/controllers/app.js")
         script(src="/controllers/admin/customer.js")
@@ -52,14 +54,17 @@ html(ng-app='app')
         script(src="/controllers/dialogs/admin-supplier-add.js")
         script(src="/controllers/dialogs/change-value-dialog.js")
         script(src="/controllers/dialogs/login.js")
+        script(src="/controllers/dialogs/product-details-dialog.js")
         script(src="/controllers/dialogs/view-photo.js")
         script(src="/controllers/partials/branch-selector.js")
         script(src="/controllers/partials/brand-selector.js")
         script(src="/controllers/partials/customer-contact-selector.js")
         script(src="/controllers/partials/customer-selector.js")
         script(src="/controllers/partials/group-selector.js")
+        script(src="/controllers/partials/multi-branches-selector.js")
         script(src="/controllers/partials/multi-suppliers-selector.js")
         script(src="/controllers/partials/navbar.js")
+        script(src="/controllers/partials/order-status-selector.js")
         script(src="/controllers/partials/product-details.js")
         script(src="/controllers/partials/product-search.js")
         script(src="/controllers/partials/supplier-selector.js")
@@ -85,4 +90,12 @@ html(ng-app='app')
             include ./partials/navbar
             div(ng-view='')
 
+            //- include all types of dialog here
+            include ./dialogs/product-details-dialog
+            include ./dialogs/admin-supplier-add
+            include ./dialogs/admin-customer-add
+            include ./dialogs/product-details-dialog
             include ./dialogs/login
+            include ./dialogs/change-value-dialog
+            include ./dialogs/view-photo
+

@@ -27,6 +27,29 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
         if (index >= 0) ctrl.selectedSuppliers.splice(index, 1);
     };
     
+    ctrl.calculateStockSumDisplay = function(branch, product){
+        let calculateAllStocksSum = function(product){
+            let sum = 0;
+            if (product && product.stockSum){
+                Object.keys(product.stockSum).forEach(function(key){
+                    sum += product.stockSum[key].sum;
+                });
+            }
+            return sum;
+        };
+        let display = '-';
+        if (branch && product) {
+            display = product.stockSum && product.stockSum[branch._id] ? product.stockSum[branch._id].sum : '0';
+            if (ctrl.global.utils.isSuperAdmin())
+                display += '/' + calculateAllStocksSum(product);
+        }
+        return display;
+    };
+    
+    ctrl.changeBranches = function(branches){
+        ctrl.selectedStocks = branches;
+    };
+    
     ctrl.loadProduct = function (productID) {
         ctrl.product = null;
         if (productID) {
@@ -36,20 +59,26 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                 name: 'get_product',
                 params: {
                     _id: productID,
-                    full_info: true
+                    full_info: true,
+                    stock_info: true,
                 }
             }).then(
                 function (response) {
                     ctrl.loadingProduct = false;
                     if (response.data.success) {
                         ctrl.product = response.data.result;
+                        // console.log(ctrl.product);
                         ctrl.selectedGroup = ctrl.product.typeID.groupID;
                         ctrl.selectedBrand = ctrl.product.brandID;
                         ctrl.selectedType = ctrl.product.typeID;
                         ctrl.selectedSuppliers = ctrl.product.supplierIDs;
+                        
+                        ctrl.preSelectedBranchIDs = ctrl.product.stockIDs.map(function(stock){ return stock._id; });
+                        ctrl.selectedStocks = ctrl.product.stockIDs.map(function(stock){ return stock._id; });
                     }
                     else {
                         alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                        console.log(response.data.error);
                     }
                 },
                 function () {
@@ -61,9 +90,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
     };
     
     ctrl.$onInit = function () {
-        if (ctrl.selectedProductId) {
-            ctrl.loadProduct(ctrl.selectedProductId);
-        }
+        console.log(ctrl.global);
     };
     
     ctrl.$onChanges = function (objs) {
@@ -172,6 +199,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     }
                     else {
                         alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                        console.log(response.data.error);
                     }
                 },
                 function () {
@@ -202,6 +230,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     description: data.description,
                     typeID: ctrl.selectedType._id,
                     brandID: ctrl.selectedBrand._id,
+                    stockIDs: ctrl.selectedStocks,
                     supplierIDs: ctrl.selectedSuppliers.map(function (suppiler) {
                         return suppiler._id
                     }),
@@ -210,47 +239,53 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
             }).then(
                 function (response) {
                     //-- upload photos
-                    let updateSuccessHook = function () {
-                        ctrl.product = response.data.result.product;
-                        resolve(true);
-                    };
-                    //-- upload photos, match url and photos
-                    if (addedPhotos.length) {
-                        ctrl.uploadedCount = 0;
-                        ctrl.uploadingPhotos = true;
-                        for (let i = 0; i < addedPhotos.length; i++) {
-                            addedPhotos[i].isBeingUploaded = true;
-                            $http.put(response.data.result.uploadUrls[i], addedPhotos[i].file, {
-                                headers: {
-                                    "Content-Type": 'image/*'
-                                }
-                            }).then(
-                                function () {
-                                    "use strict";
-                                    addedPhotos[i].isBeingUploaded = false;
-                                    addedPhotos[i].uploadSucceeded = true;
-                                    addedPhotos[i].uploadProceeded = true;
-                                    ctrl.uploadedCount++;
-                                    if (ctrl.uploadedCount === addedPhotos.length) {
-                                        ctrl.uploadingPhotos = false;
-                                        updateSuccessHook();
+                    if (response.data.success) {
+                        let updateSuccessHook = function () {
+                            ctrl.product = response.data.result.product;
+                            resolve(true);
+                        };
+                        //-- upload photos, match url and photos
+                        if (addedPhotos.length) {
+                            ctrl.uploadedCount = 0;
+                            ctrl.uploadingPhotos = true;
+                            for (let i = 0; i < addedPhotos.length; i++) {
+                                addedPhotos[i].isBeingUploaded = true;
+                                $http.put(response.data.result.uploadUrls[i], addedPhotos[i].file, {
+                                    headers: {
+                                        "Content-Type": 'image/*'
                                     }
-                                },
-                                function () {
-                                    addedPhotos[i].isBeingUploaded = false;
-                                    addedPhotos[i].uploadSucceeded = false;
-                                    addedPhotos[i].uploadProceeded = true;
-                                    ctrl.uploadedCount++;
-                                    if (ctrl.uploadedCount === addedPhotos.length) {
-                                        ctrl.uploadingPhotos = false;
-                                        updateSuccessHook();
+                                }).then(
+                                    function () {
+                                        "use strict";
+                                        addedPhotos[i].isBeingUploaded = false;
+                                        addedPhotos[i].uploadSucceeded = true;
+                                        addedPhotos[i].uploadProceeded = true;
+                                        ctrl.uploadedCount++;
+                                        if (ctrl.uploadedCount === addedPhotos.length) {
+                                            ctrl.uploadingPhotos = false;
+                                            updateSuccessHook();
+                                        }
+                                    },
+                                    function () {
+                                        addedPhotos[i].isBeingUploaded = false;
+                                        addedPhotos[i].uploadSucceeded = false;
+                                        addedPhotos[i].uploadProceeded = true;
+                                        ctrl.uploadedCount++;
+                                        if (ctrl.uploadedCount === addedPhotos.length) {
+                                            ctrl.uploadingPhotos = false;
+                                            updateSuccessHook();
+                                        }
                                     }
-                                }
-                            );
+                                );
+                            }
+                        }
+                        else{
+                            updateSuccessHook();
                         }
                     }
                     else {
-                        updateSuccessHook();
+                        alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                        resolve(ctrl.global.utils.errors[response.data.error.errorCode]);
                     }
                 },
                 function () {
@@ -268,7 +303,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
         
         if (image.localPhoto) {
             if (index >= 0)
-                $scope.product.photos.splice(index, 1);
+                ctrl.product.photos.splice(index, 1);
         }
         else {
             let okRemove = confirm(i18n_remove_confirm);
@@ -291,6 +326,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         }
                         else {
                             alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                            console.log(response.data.error);
                         }
                     },
                     function () {
@@ -302,7 +338,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
         }
     };
     
-    ctrl.changeExportPriceManually = function (product, i18n_change_product_price_dialog_header) {
+    ctrl.changeExportPriceManually = function (product, i18n_change_product_price_dialog_header, i18n_old_price, i18n_new_price) {
         $uibModal.open({
             templateUrl: 'changeValueDialog',
             controller: 'ChangeValueDialogController',
@@ -311,7 +347,9 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     return {
                         global: ctrl.global,
                         oldValue: product.lastOutStock ? product.lastOutStock.price : "",
-                        dialogHeader: i18n_change_product_price_dialog_header
+                        dialogHeader: i18n_change_product_price_dialog_header,
+                        oldValueHeader: i18n_old_price,
+                        newValueHeader: i18n_new_price,
                     };
                 },
             },
@@ -334,6 +372,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         }
                         else {
                             alert($scope.global.utils.errors[response.data.error.errorCode]);
+                            console.log(response.data.error);
                         }
                     },
                     function () {

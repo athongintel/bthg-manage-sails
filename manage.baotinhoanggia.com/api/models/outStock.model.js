@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 
 const constants = {
     STOCK_INIT_STOCK: 'STOCK_INIT_STOCK',
-    STOCK_MANUAL_CHANGE: 'STOCK_MANUAL_CHANGE'
+    STOCK_MANUAL_CHANGE: 'STOCK_MANUAL_CHANGE',
+    STOCK_MOVE_STOCK: 'STOCK_MOVE_STOCK'
 };
 
 const outStockSchema = new mongoose.Schema({

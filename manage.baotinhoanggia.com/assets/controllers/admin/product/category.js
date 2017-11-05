@@ -81,6 +81,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                 }
                 else {
                     alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    console.log(response.data.error);
                 }
             },
             function () {
@@ -178,6 +179,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                 }
                 else {
                     alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    console.log(response.data.error);
                 }
             },
             function () {

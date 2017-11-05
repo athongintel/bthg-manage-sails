@@ -39,18 +39,22 @@ div.partials_product-search
                             i.fa.fa-window-close.text-danger
                 supplier-selector(global='$ctrl.global' selected-supplier='$ctrl.selectedSupplier' on-supplier-changed='$ctrl.changeSelectedSupplier(selectedSupplier)')
 
-    div
-        div.row
-            div.col-xs-6
-                label #{__('model_filter')}
-            div.col-xs-6.text-right
-                button.btn.btn-xs.btn-default(ng-click='$ctrl.refreshProducts()')
-                    i.fa.fa-refresh
-                    span &nbsp; #{__('refresh_')}
-        div.input-group.margin-bottom-15px
-            span.input-group-addon
-                span.glyphicon.glyphicon-search
-            input.form-control(ng-model='$ctrl.productFilter' ng-change='$ctrl.filterProduct()' ng-disabled='$ctrl.queryingProduct')
+    div.row
+        div.col-xs-12.col-sm-6
+            div.row
+                div.col-xs-9
+                    label #{__('model_filter')}
+                div.col-xs-3.text-right
+                    button.btn.btn-xs.btn-default(ng-click='$ctrl.refreshProducts()')
+                        i.fa.fa-refresh
+                        //span &nbsp; #{__('refresh_')}
+            div.input-group.margin-bottom-15px
+                span.input-group-addon
+                    span.glyphicon.glyphicon-search
+                input.form-control(ng-model='$ctrl.productFilter' ng-change='$ctrl.filterProduct()' ng-disabled='$ctrl.queryingProduct')
+        div.col-xs-12.col-sm-6
+            label #{__('stock_filter')}
+            branch-selector(global='$ctrl.global' select-disabled='!$ctrl.global.utils.isSuperAdmin()' selected-branch='$ctrl.selectedBranch' on-branch-changed='$ctrl.changeBranch(selectedBranch)')
 
     div.margin-bottom-5px.margin-left-5px.margin-right-5px
         div.row(style='white-space: pre')
@@ -67,11 +71,13 @@ div.partials_product-search
             div.search-result-record(ng-click='$ctrl.selectProduct(product)' ng-repeat='product in $ctrl.filteredProducts track by $index' ng-class='{selected: product === $ctrl.selectedProduct}' )
                 div.row
                     div.col-xs-5
+                        button.btn.btn-xs.btn-default.margin-right-5px(ng-click='$ctrl.showProductDetails(product); $event.stopPropagation();')
+                            i.fa.fa-question-circle
                         span {{product.typeID.name}}
                     div.col-xs-3
                         span {{product.model}}
                     div.col-xs-1.text-right
-                        span {{product.stockSum.localAvailable}}/{{product.stockSum.available}}
+                        span(style='white-space: pre') {{$ctrl.calculateStockSumDisplay($ctrl.selectedBranch, product)}}
                     div.col-xs-3.text-right
                         span {{product.lastOutStock? (product.lastOutStock.price | currency : '' : '') : '-'}}
         div.text-center.no-data(ng-show='(!$ctrl.filteredProducts || !$ctrl.filteredProducts.length) && !$ctrl.queryingProduct && !$ctrl.queryFailed')

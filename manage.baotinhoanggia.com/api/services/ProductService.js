@@ -2,22 +2,33 @@ const BigNumber = require('bignumber.js');
 const mongoose = require('mongoose');
 const sysUtils = require('../../utils/system');
 
-const calculateProductAvailable = async function (currentStockID, productID) {
+const calculateProductAvailable = async function (principal, productID) {
     "use strict";
-    let inStocks = await _app.model.InStock.find({productID: productID});
-    let outStocks = await _app.model.OutStock.find({productID: productID});
+    
+    let inStocks = _app.model.InStock.find({productID: productID});
+    let outStocks = _app.model.OutStock.find({productID: productID});
+    
+    if (!sysUtils.isSuperAdmin(principal)) {
+        inStocks = inStocks.where('branchID', principal.user.branchID._id);
+        outStocks = outStocks.where('branchID', principal.user.branchID._id);
+    }
+    
+    inStocks = await inStocks.exec();
+    outStocks = await outStocks.exec();
+    
     //-- sum
-    let stockSum = 0;
-    let sum = 0;
+    let stocks = {};
+    
     inStocks.forEach(stock => {
-        sum += stock.quantity;
-        if (String(stock.branchID) === String(currentStockID)) stockSum += stock.quantity;
+        if (!stocks[stock.branchID]) stocks[stock.branchID] = {_id: stock.branchID, sum: 0};
+        stocks[stock.branchID].sum += stock.quantity;
     });
     outStocks.forEach(stock => {
-        sum -= stock.quantity;
-        if (String(stock.branchID) === String(currentStockID)) stockSum -= stock.quantity;
+        if (!stocks[stock.branchID]) stocks[stock.branchID] = {_id: stock.branchID, sum: 0};
+        stocks[stock.branchID].sum -= stock.quantity;
     });
-    return {localAvailable: stockSum, available: sum};
+    return stocks;
+    // return Object.keys(stocks).map(function(key){ return stocks[key]; });
 };
 
 module.exports = {
@@ -562,7 +573,11 @@ module.exports = {
             if (!product)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             //-- remove s3 photos
-            ProductService.removeProductPhotos(principal, {_id: product._id, fileNames: product.photos.map(photo=>{return photo.fileName})});
+            ProductService.removeProductPhotos(principal, {
+                _id: product._id, fileNames: product.photos.map(photo => {
+                    return photo.fileName
+                })
+            });
             await product.remove();
             
             return sysUtils.returnSuccess();
@@ -581,6 +596,7 @@ module.exports = {
                 [required] typeID: ID of the product type,
                 [required] brandID: ID of the brand,
                 [required, unique] model,
+                stockIDs: IDs of selected branches
                 supplierIDs: ID of suppliers
                 description,
                 
@@ -595,15 +611,20 @@ module.exports = {
             if (!type || !brand)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             
+            let product = await _app.model.Product.findOne({typeID: type._id, brandID: brand._id, model: params.model});
+            if (product)
+                return sysUtils.returnError(_app.errors.DUPLICATED_ERROR);
+            
             let productData = {
                 typeID: type._id,
                 brandID: brand._id,
                 model: params.model,
+                stockIDs: params.stockIDs,
                 supplierIDs: params.supplierIDs,
                 description: params.description,
             };
             
-            let product = new _app.model.Product(productData);
+            product = new _app.model.Product(productData);
             product = await product.save();
             
             let initInStock = Number(params.initInStock || "0");
@@ -690,6 +711,7 @@ module.exports = {
                 description,
                 [required] typeID,
                 [required] brandID,
+                stockIDs,
                 supplierIDs,
                 addedPhotos,
             }
@@ -703,6 +725,7 @@ module.exports = {
             product.description = params.description;
             product.typeID = params.typeID;
             product.brandID = params.brandID;
+            product.stockIDs = params.stockIDs;
             product.supplierIDs = params.supplierIDs;
             
             let returnObject = {};
@@ -766,6 +789,7 @@ module.exports = {
             params: {
                 [required] _id: product id
                 full_info: boolean: whether to get full product info
+                stock_info: boolean: whether to get stock info
             }
          */
         try {
@@ -775,13 +799,22 @@ module.exports = {
                 product = await _app.model.Product.findById(params._id).populate({
                     path: 'typeID',
                     populate: {path: 'groupID'}
-                }).populate('brandID').populate('supplierIDs').lean().exec();
+                }).populate('brandID').populate('supplierIDs').populate('stockIDs').lean().exec();
+                
                 if (!product)
                     return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
                 
-                //-- query for available
+                if (!sysUtils.isSuperAdmin(principal) && product.stockIDs.findIndex(stock => {
+                        return String(stock._id) === String(principal.user.branchID._id);
+                    }) < 0)
+                    return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
                 
-                product.stockSum = await calculateProductAvailable(principal.user.branchID._id, product._id);
+                if (!sysUtils.isSuperAdmin(principal))
+                    delete product.stockIDs;
+                
+                //-- query for available
+                if (params.stock_info)
+                    product.stockSum = await calculateProductAvailable(principal, product._id);
                 
                 //-- get latest outPrice && latest average inPrice for each supplier
                 let lastOutStock = await _app.model.OutStock.findOne({productID: product._id}).sort({createdAt: '-1'});
@@ -834,6 +867,7 @@ module.exports = {
         "use strict";
         /*
             params: {
+                stock_info: query stock info
             }
          */
         try {
@@ -842,15 +876,19 @@ module.exports = {
                 params.filter.forEach(pair => {
                     productsPromise = productsPromise.where(pair.attr, pair.value);
                 });
-    
+            
+            if (!sysUtils.isSuperAdmin(principal))
+                productsPromise = productsPromise.where('stockIDs', principal.user.branchID._id);
             productsPromise = productsPromise.lean().exec();
             
             let products = await productsPromise;
             
             //-- query for last stock
             for (let i = 0; i < products.length; i++) {
+                if (!sysUtils.isSuperAdmin())
+                    delete products[i].stockIDs;
                 products[i].lastOutStock = await _app.model.OutStock.findOne({productID: products[i]._id}).sort({createdAt: '-1'});
-                products[i].stockSum = await calculateProductAvailable(principal.user.branchID._id, products[i]._id);
+                if (params.stock_info) products[i].stockSum = await calculateProductAvailable(principal, products[i]._id);
             }
             
             return sysUtils.returnSuccess(products);
@@ -879,9 +917,11 @@ module.exports = {
                 Quiet: false,
             };
             let fileNames = [];
-            if (params.fileNames.length){
-                params.fileNames.forEach(file=>{
-                    if (product.photos.findIndex(photo=>{return photo.fileName === file;}) >= 0) {
+            if (params.fileNames.length) {
+                params.fileNames.forEach(file => {
+                    if (product.photos.findIndex(photo => {
+                            return photo.fileName === file;
+                        }) >= 0) {
                         deleteFiles.Objects.push({Key: sails.config.PRODUCT_PHOTO_BUCKET_PREFIX + '/' + file});
                         fileNames.push(file);
                     }
@@ -899,8 +939,10 @@ module.exports = {
             await _app.S3.deleteObjects(s3Params).promise();
             
             //-- update database
-            fileNames.forEach(file=>{
-                let index = product.photos.findIndex(photo=>{return photo.fileName === file;});
+            fileNames.forEach(file => {
+                let index = product.photos.findIndex(photo => {
+                    return photo.fileName === file;
+                });
                 if (index >= 0)
                     product.photos.splice(index, 1);
             });

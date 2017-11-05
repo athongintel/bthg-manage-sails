@@ -5,6 +5,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
     
     ctrl.addingProduct = false;
     ctrl.selectedProductGroup = null;
+    ctrl.allBranches = [];
     
     ctrl.product = {};
     
@@ -17,12 +18,15 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                 params: ctrl.product,
             };
             
+            postData.params.stockIDs = ctrl.selectedBranches;
             postData.params.typeID = ctrl.selectedType._id;
             postData.params.brandID = ctrl.selectedBrand._id;
             postData.params.branchID = ctrl.selectedBranch._id;
             postData.params.model = data.model;
             postData.params.photosNumber = ctrl.productImages ? ctrl.productImages.length : 0;
-            postData.params.supplierIDs = ctrl.selectedSuppliers.map(function(supp){ return supp._id;});
+            postData.params.supplierIDs = ctrl.selectedSuppliers.map(function (supp) {
+                return supp._id;
+            });
             
             $http.post('/rpc', postData).then(
                 function (response) {
@@ -93,6 +97,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                     else {
                         ctrl.addingProduct = false;
                         alert($scope.global.utils.errors[response.data.error.errorCode]);
+                        console.log(response.data.error);
                         resolve($scope.global.utils.errors[response.data.error.errorCode]);
                     }
                 },
@@ -102,7 +107,6 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                     resolve('Network error')
                 }
             );
-            
         });
     };
     
@@ -114,8 +118,8 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                 params: {
                     collection: 'Product',
                     pairs: [
-                        {attr: 'typeID', value: ctrl.product.typeID},
-                        {attr: 'brandID', value: ctrl.product.brandID},
+                        {attr: 'typeID', value: ctrl.selectedType._id},
+                        {attr: 'brandID', value: ctrl.selectedBrand._id},
                         {attr: attr, value: value}
                     ],
                 }
@@ -146,27 +150,27 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
             ctrl.productImages.splice(index, 1);
     };
     
-    ctrl.addSupplier = function(supplier){
+    ctrl.addSupplier = function (supplier) {
         ctrl.selectedSuppliers.push(supplier);
     };
     
-    ctrl.removeSupplier = function(supplier){
-        let index = ctrl.selectedSuppliers.findIndex(function(supp){
+    ctrl.removeSupplier = function (supplier) {
+        let index = ctrl.selectedSuppliers.findIndex(function (supp) {
             return String(supp._id) === supplier.id;
         });
-        if (index >= 0){
+        if (index >= 0) {
             ctrl.selectedSuppliers.splice(index, 1);
         }
     };
     
-    ctrl.changeGroup = function(group){
+    ctrl.changeGroup = function (group) {
         ctrl.selectedGroup = group;
         ctrl.selectedType = null;
     };
     
-    ctrl.changeType = function(type){
+    ctrl.changeType = function (type) {
         ctrl.selectedType = type;
-        if (ctrl.selectedType && (!ctrl.selectedGroup || ctrl.selectedGroup._id !== ctrl.selectedType.groupID)){
+        if (ctrl.selectedType && (!ctrl.selectedGroup || ctrl.selectedGroup._id !== ctrl.selectedType.groupID)) {
             //-- load the corresponding group
             $http.post('/rpc', {
                 token: $scope.global.user.token,
@@ -175,26 +179,35 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                     _id: ctrl.selectedType.groupID,
                 }
             }).then(
-                function(response){
-                    if (response.data.success){
+                function (response) {
+                    if (response.data.success) {
                         ctrl.selectedGroup = response.data.result;
                     }
-                    else{
+                    else {
                         alert($scope.global.utils.errors[response.data.error.errorCode]);
+                        console.log(response.data.error);
                     }
                 },
-                function(){
+                function () {
                     alert('Network error');
                 }
             )
         }
     };
     
-    ctrl.changeBrand = function(brand){
+    ctrl.changeBrand = function (brand) {
         ctrl.selectedBrand = brand;
     };
     
+    ctrl.changeBranches = function (branches) {
+        ctrl.selectedBranches = branches;
+    };
+    
     ctrl.init = function () {
+        
+        ctrl.preSelectedBranchIDs = [$scope.global.user.branchID._id];
+        ctrl.selectedBranches = [$scope.global.user.branchID._id];
+    
         ctrl.selectedBranch = $scope.global.user.branchID;
         ctrl.selectedGroup = null;
         ctrl.selectedType = null;

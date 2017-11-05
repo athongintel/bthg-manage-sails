@@ -64,6 +64,7 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
                 }
                 else {
                     alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    console.log(response.data.error);
                 }
             },
             function (err) {
