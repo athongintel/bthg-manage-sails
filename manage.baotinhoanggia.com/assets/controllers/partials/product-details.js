@@ -90,7 +90,6 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
     };
     
     ctrl.$onInit = function () {
-        console.log(ctrl.global);
     };
     
     ctrl.$onChanges = function (objs) {
