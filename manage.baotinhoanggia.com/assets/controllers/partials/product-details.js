@@ -73,8 +73,8 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         ctrl.selectedType = ctrl.product.typeID;
                         ctrl.selectedSuppliers = ctrl.product.supplierIDs;
                         
-                        ctrl.preSelectedBranchIDs = ctrl.product.stockIDs.map(function(stock){ return stock._id; });
-                        ctrl.selectedStocks = ctrl.product.stockIDs.map(function(stock){ return stock._id; });
+                        ctrl.preSelectedBranchIDs = ctrl.product.stockIDs? ctrl.product.stockIDs.map(function(stock){ return stock._id; }) : [];
+                        ctrl.selectedStocks = ctrl.product.stockIDs? ctrl.product.stockIDs.map(function(stock){ return stock._id; }) : [];
                     }
                     else {
                         alert(ctrl.global.utils.errors[response.data.error.errorCode]);
