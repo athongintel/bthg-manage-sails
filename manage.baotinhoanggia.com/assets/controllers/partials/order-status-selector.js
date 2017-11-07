@@ -15,15 +15,16 @@ const OrderStatusSelectorController = function ($scope, $element, $timeout) {
             {value: '4', desc: 'ORDER_FINISHED'},
             {value: '5', desc: 'ORDER_CANCELED'},
         ];
-        $timeout(function () {
-            ctrl.selectedStatus = ctrl.options.find(function (opt) {
-                return String(opt.value) === String(ctrl.preSelectedStatus);
-            });
-        });
     };
     
     ctrl.$onChanges = function (objs) {
-    
+        if (objs['preSelectedStatus']){
+            $timeout(function () {
+                ctrl.selectedStatus = ctrl.options.find(function (opt) {
+                    return String(opt.value) === String(objs['preSelectedStatus'].currentValue);
+                });
+            });
+        }
     };
 };
 

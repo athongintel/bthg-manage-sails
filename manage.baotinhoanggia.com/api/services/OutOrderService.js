@@ -28,6 +28,38 @@ module.exports = {
         }
     },
     
+    getAllOutOrders: async function (principal, params) {
+        "use strict";
+        /*
+            params:{
+                status: order status,
+                customerID: if of customer,
+                productTypeID: type of product presented in the quotation of order
+                dateRange: date range when the order had been created.
+            }
+         */
+        try {
+            let outOrders = await _app.model.OutOrder.aggregate([
+                {
+                
+                },
+                {
+                
+                },
+                {
+                
+                },
+            ]).exec();
+            
+            
+            return sysUtils.returnSuccess(outOrders);
+        }
+        catch (err) {
+            console.log('getAllOutOrders:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     createQuotation: async function (principal, params) {
         "use strict";
         /*

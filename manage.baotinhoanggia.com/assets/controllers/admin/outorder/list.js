@@ -1,33 +1,58 @@
-app.controller('AdminOutOrderListController', [function () {
+app.controller('AdminOutOrderListController', ['$scope', '$http', function ($scope, $http) {
     "use strict";
     
     const ctrl = this;
     
     ctrl.changeStatus = function (status) {
-        console.log(status);
+        ctrl.selectedStatus = status;
     };
     
     ctrl.changeCustomer = function (customer) {
-        console.log(customer);
+        ctrl.selectedCustomer = customer;
     };
     
     ctrl.changeType = function (type) {
-        console.log(type);
+        ctrl.selectedType = type;
+    };
+    
+    ctrl.changeDateRange = function(dateRange){
+        console.log('change dateRange to: ', dateRange);
+        ctrl.selectedDateRange = dateRange;
+    };
+    
+    ctrl.filterOrder = function(){
+        //-- check for params
+        let postData = {
+            token: $scope.global.user.token,
+            name: 'get_all_out_orders',
+            params: {
+                status: ctrl.selectedStatus,
+                customerID: ctrl.selectedCustomer._id,
+                productTypeID: ctrl.selectedType._id,
+                dateRange: ctrl.selectedDateRange.start && ctrl.selectedDateRange.end ? ctrl.selectedDateRange : null
+            }
+        };
+        
+        $http.post('/rpc', postData).then(
+            function(response){
+                if (response.data.success){
+                
+                }
+                else{
+                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                }
+            },
+            function(){
+                alert('Network error');
+            }
+        );
     };
     
     ctrl.init = function () {
-        
-        $('#date-range-select').daterangepicker(
-            {
-                locale: {
-                    format: 'YYYY-MM-DD'
-                },
-                startDate: '2013-01-01',
-                endDate: '2013-12-31'
-            },
-            function (start, end, label) {
-                alert("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-            });
+        ctrl.selectedStatus = null;
+        ctrl.selectedCustomer = null;
+        ctrl.selectedType = null;
+        ctrl.selectedDateRange = null;
     };
     
 }]);

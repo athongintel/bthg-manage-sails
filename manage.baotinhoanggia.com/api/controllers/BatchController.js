@@ -61,6 +61,7 @@ const actions = {
     'get_all_branches': {policies: [PO.isAuthenticated, PO.isAdmin], action: BranchService.getAllBranches, validation: {required: []}},
     
     'create_out_order': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.createOrder, validation: {required: ['name', 'customerID', 'branchID']}},
+    'get_all_out_orders': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.getAllOutOrders, validation: {required: []}},
     'create_quotation': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.createQuotation, validation: {required: ['outStockOrderID', 'customerContactID', 'details']}},
 };
 
