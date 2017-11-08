@@ -5,7 +5,11 @@ const DateRangePickerController = function ($scope, $element) {
     
     
     ctrl.$onInit = function () {
-        ctrl.picker = $element.find('.date-range-select').dateRangePicker({});
+        ctrl.picker = $element.find('.date-range-select').dateRangePicker({
+            time: {
+                enabled: true
+            }
+        });
         ctrl.picker.bind('datepicker-apply',function(event, obj){
             ctrl.onDateChanged({selectedDateRange: obj});
         });

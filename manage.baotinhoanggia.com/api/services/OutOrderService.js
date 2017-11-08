@@ -1,4 +1,5 @@
 const sysUtils = require('../../utils/system');
+const mongoose = require('mongoose');
 
 module.exports = {
     
@@ -28,6 +29,126 @@ module.exports = {
         }
     },
     
+    getOutOrderDetails: async function (principal, params) {
+        "use strict";
+        /*
+            params:{
+                [required] _id: id of the out order
+            }
+         */
+        try {
+            let outStockOrder = await _app.model.OutStockOrder.aggregate(
+                [
+                    {
+                        $match: {
+                            _id: mongoose.Types.ObjectId(params._id)
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'user',
+                            localField: 'userID',
+                            foreignField: '_id',
+                            as: 'userID'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$userID",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'customer',
+                            localField: 'customerID',
+                            foreignField: '_id',
+                            as: 'customerID'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$customerID",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'quotation',
+                            localField: '_id',
+                            foreignField: 'outStockOrderID',
+                            as: 'quotations'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$quotations",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'user',
+                            localField: 'quotations.userID',
+                            foreignField: '_id',
+                            as: 'quotations.userID'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$quotations.userID",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    // {
+                    //     $lookup: {
+                    //         from: 'customer',
+                    //         localField: 'customerID',
+                    //         foreignField: '_id',
+                    //         as: 'customerID'
+                    //     }
+                    // },
+                    // {
+                    //     $unwind: {
+                    //         path: "$customerID",
+                    //         preserveNullAndEmptyArrays: true
+                    //     }
+                    // },
+                    {
+                        $lookup: {
+                            from: 'quotationDetails',
+                            localField: 'quotations._id',
+                            foreignField: 'quotationID',
+                            as: 'quotationDetails'
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$_id",
+                            name: {$first: "$name"},
+                            customerID: {$first: "$customerID"},
+                            branchID: {$first: "$branchID"},
+                            userID: {$first: "$userID"},
+                            status: {$first: "$status"},
+                            metaInfo: {$first: "$metaInfo"},
+                            createdAt: {$first: "$createdAt"},
+                            quots: {$addToSet: "$quotations"}
+                        }
+                    },
+                ]
+            );
+            
+            if (!outStockOrder || !outStockOrder.length)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            return sysUtils.returnSuccess(outStockOrder[0]);
+        }
+        catch (err) {
+            console.log('getOutOrderDetails:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     getAllOutOrders: async function (principal, params) {
         "use strict";
         /*
@@ -39,18 +160,107 @@ module.exports = {
             }
          */
         try {
-            let outOrders = await _app.model.OutOrder.aggregate([
-                {
-                
-                },
-                {
-                
-                },
-                {
-                
-                },
-            ]).exec();
+            let pipelines = [{
+                $project: {
+                    name: "$name",
+                    customerID: "$customerID",
+                    branchID: "$branchID",
+                    userID: "$userID",
+                    status: "$status",
+                    metaInfo: "$metaInfo",
+                    createdAt: "$createdAt",
+                }
+            }];
+            if (params.status !== null) {
+                pipelines.push({
+                    $match: {
+                        status: Number(params.status)
+                    }
+                });
+            }
+            if (params.customerID !== null) {
+                pipelines.push({
+                    $match: {
+                        customerID: mongoose.Types.ObjectId(params.customerID)
+                    }
+                });
+            }
             
+            if (params.productTypeID !== null) {
+                pipelines = pipelines.concat([
+                    {
+                        $lookup: {
+                            from: 'quotation',
+                            localField: '_id',
+                            foreignField: 'outStockOrderID',
+                            as: 'quotations'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$quotations",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'quotationDetails',
+                            localField: 'quotations._id',
+                            foreignField: 'quotationID',
+                            as: 'quotationDetails'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$quotationDetails",
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'product',
+                            localField: 'quotationDetails.productID',
+                            foreignField: '_id',
+                            as: 'products'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$products",
+                        }
+                    },
+                    {
+                        $match: {
+                            'products.typeID': mongoose.Types.ObjectId(params.productTypeID)
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$_id",
+                            name: {$first: "$name"},
+                            customerID: {$first: "$customerID"},
+                            branchID: {$first: "$branchID"},
+                            userID: {$first: "$userID"},
+                            status: {$first: "$status"},
+                            metaInfo: {$first: "$metaInfo"},
+                            createdAt: {$first: "$createdAt"},
+                            quots: {$addToSet: "$quotations"}
+                        }
+                    },
+                ]);
+            }
+            
+            if (params.dateRange !== null) {
+                pipelines.push({
+                    $match: {
+                        createdAt: {
+                            $gte: new Date(params.dateRange.date1),
+                            $lte: new Date(params.dateRange.date2)
+                        }
+                    }
+                });
+            }
+            
+            let outOrders = await _app.model.OutStockOrder.aggregate(pipelines).exec();
             
             return sysUtils.returnSuccess(outOrders);
         }

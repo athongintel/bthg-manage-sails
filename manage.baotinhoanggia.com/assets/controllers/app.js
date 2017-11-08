@@ -52,6 +52,8 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
         
         $scope.global.utils = {
             
+            moment: moment,
+            
             errors: initData.errors,
             
             isPath: function (path) {

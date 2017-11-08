@@ -6,59 +6,135 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
 
     div.panel.panel-default.main-panel
         div.panel-body
-            div
-                div.row
-                    div.col-xs-6
-                        label #{__('filter_')}
+            div(ng-show='ctrl.selectedOrder')
+                div.margin-bottom-15px
+                    button.btn.btn-default(ng-click='ctrl.selectedOrder = null')
+                        span #{__('go_back')}
 
-                    div.col-xs-6.text-right
-                        button.btn.btn-xs.btn-primary(ng-click='ctrl.filterOrder()')
-                            span
-                                i.fa.fa-filter
-                                span &nbsp;
-                            span #{__('do_filter')}
-                div.panel.penl-default
+                label #{__('order_details')}
+                div.panel.panel-default.margin-bottom-15px
                     div.panel-body
-                        div.row
-                            div.col-xs-12.col-sm-6.margin-bottom-5px
-                                div.row
-                                    div.col-xs-9
-                                        label #{__('order_status')}
-                                    div.col-xs-3.text-right
-                                        button.btn.btn-xs.btn-default(ng-click='ctrl.changeStatus(null)')
-                                            i.fa.fa-remove.text-danger
-                                order-status-selector(pre-selected-status='ctrl.selectedStatus' on-status-changed='ctrl.changeStatus(selectedStatus)')
-                                //customer-selector(global='global' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
+                        div.text-center(ng-show='ctrl.loadingOrderDetails')
+                            i.fa.fa-spinner.fa-spin
+                        div(ng-show='!ctrl.loadingOrderDetails && ctrl.orderDetails')
+                            div.row
+                                div.col-xs-6
+                                    label #{__('order_name')}
+                                div.col-xs-6.text-right
+                                    span {{ctrl.orderDetails.name}}
+                            div.row
+                                div.col-xs-6
+                                    label #{__('order_status')}
+                                div.col-xs-6.text-right
+                                    span {{ctrl.status[ctrl.orderDetails.status]}}
+                            div.row
+                                div.col-xs-6
+                                    label #{__('customer_')}
+                                div.col-xs-6.text-right
+                                    span {{ctrl.orderDetails.customerID.name}}
+                            div.row
+                                div.col-xs-6
+                                    label #{__('created_by')}
+                                div.col-xs-6.text-right
+                                    span {{ctrl.orderDetails.userID.username}}
+                            div.row
+                                div.col-xs-6
+                                    label #{__('created_at')}
+                                div.col-xs-6.text-right
+                                    span {{global.utils.moment(ctrl.orderDetails.createdAt).format(ctrl.DATETIME_FORMAT)}}
 
-                            div.col-xs-12.col-sm-6.margin-bottom-5px
-                                div.row
-                                    div.col-xs-9
-                                        label #{__('select_customer')}
-                                    div.col-xs-3.text-right
-                                        button.btn.btn-xs.btn-default(ng-click='ctrl.changeCustomer(null)')
-                                            i.fa.fa-remove.text-danger
-                                customer-selector(global='global' selected-customer='ctrl.selectedCustomer' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
 
-                        div.row
-                            div.col-xs-12.col-sm-6.margin-bottom-5px
-                                div.row
-                                    div.col-xs-9
-                                        label #{__('product_type')}
-                                    div.col-xs-3.text-right
-                                        button.btn.btn-xs.btn-default(ng-click='ctrl.changeType(null)')
-                                            i.fa.fa-remove.text-danger
-                                type-selector(global='global' selected-type='ctrl.selectedType' on-type-changed='ctrl.changeType(selectedType)')
+                div(ng-show='!ctrl.loadingOrderDetails && ctrl.orderDetails')
+                    label #{__('quotations_')}
+                    div.table-responsive
+                        table.table.table-striped.table-hover(style='background: silver')
+                            thead
+                                tr
+                                    th #{__('created_at')}
+                                    th.text-right #{__('created_by')}
+                            tbody
+                                tr(ng-repeat='quotation in ctrl.orderDetails.quots')
+                                    td
+                                        button.btn.btn-xs.btn-default.margin-right-15px(ng-click='ctrl.showQuotationDetails(quotation)')
+                                            i.fa.fa-question-circle
+                                        span {{global.utils.moment(quotation.createdAt).format(ctrl.DATETIME_FORMAT)}}
+                                    td.text-right
+                                        span {{quotation.userID.username}}
 
-                            div.col-xs-12.col-sm-6.margin-bottom-5px
-                                div.row
-                                    div.col-xs-9
-                                        label #{__('select_date_range')}
-                                    div.col-xs-3.text-right
-                                        button.btn.btn-xs.btn-default(ng-click='ctrl.changeDateRange({})')
-                                            i.fa.fa-remove.text-danger
-                                div
-                                    date-range-picker(selected-date-range='ctrl.selectedDateRange' on-date-changed='ctrl.changeDateRange(selectedDateRange)')
-            div
-                label #{__('results_')}
-                div.panel.penl-default
-                    div.panel-body
+
+            div(ng-show='!ctrl.selectedOrder')
+                div
+                    div.row
+                        div.col-xs-6
+                            label #{__('filter_')}
+
+                        div.col-xs-6.text-right
+                            button.btn.btn-xs.btn-primary(ng-click='ctrl.filterOrder()' ng-disabled='ctrl.filtering')
+                                span(ng-show='ctrl.filtering')
+                                    i.fa.fa-spinner.fa-spin
+                                    span &nbsp;
+                                span(ng-hide='ctrl.filtering')
+                                    i.fa.fa-filter
+                                    span &nbsp;
+                                span #{__('do_filter')}
+                    div.panel.penl-default
+                        div.panel-body
+                            div.row
+                                div.col-xs-12.col-sm-6.margin-bottom-5px
+                                    div.row
+                                        div.col-xs-9
+                                            label #{__('order_status')}
+                                        div.col-xs-3.text-right
+                                            button.btn.btn-xs.btn-default(ng-click='ctrl.changeStatus(null)')
+                                                i.fa.fa-remove.text-danger
+                                    order-status-selector(pre-selected-status='ctrl.selectedStatus' on-status-changed='ctrl.changeStatus(selectedStatus)')
+                                    //customer-selector(global='global' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
+
+                                div.col-xs-12.col-sm-6.margin-bottom-5px
+                                    div.row
+                                        div.col-xs-9
+                                            label #{__('select_customer')}
+                                        div.col-xs-3.text-right
+                                            button.btn.btn-xs.btn-default(ng-click='ctrl.changeCustomer(null)')
+                                                i.fa.fa-remove.text-danger
+                                    customer-selector(global='global' selected-customer='ctrl.selectedCustomer' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
+
+                            div.row
+                                div.col-xs-12.col-sm-6.margin-bottom-5px
+                                    div.row
+                                        div.col-xs-9
+                                            label #{__('product_type')}
+                                        div.col-xs-3.text-right
+                                            button.btn.btn-xs.btn-default(ng-click='ctrl.changeType(null)')
+                                                i.fa.fa-remove.text-danger
+                                    type-selector(global='global' selected-type='ctrl.selectedType' on-type-changed='ctrl.changeType(selectedType)')
+
+                                div.col-xs-12.col-sm-6.margin-bottom-5px
+                                    div.row
+                                        div.col-xs-9
+                                            label #{__('select_date_range')}
+                                        div.col-xs-3.text-right
+                                            button.btn.btn-xs.btn-default(ng-click='ctrl.changeDateRange({})')
+                                                i.fa.fa-remove.text-danger
+                                    div
+                                        date-range-picker(selected-date-range='ctrl.selectedDateRange' on-date-changed='ctrl.changeDateRange(selectedDateRange)')
+                div
+                    label #{__('results_')}
+                    div.panel.penl-default
+                        div.panel-body
+                            div.text-center(ng-show='ctrl.filtering')
+                                i.fa.fa-spinner.fa-spin
+                            div(ng-hide='ctrl.filtering')
+                                div.text-center.no-results(ng-show='ctrl.filteredResults && !ctrl.filteredResults.length')
+                                    span #{__('no_result_found')}
+                                div.search-result-list(ng-show='ctrl.filteredResults && ctrl.filteredResults.length')
+                                    div.search-result-record(ng-repeat='outOrder in ctrl.filteredResults' ng-click='ctrl.showOrderDetails(outOrder._id)')
+                                        div.row
+                                            div.col-xs-4
+                                                span {{outOrder.name}}
+                                            div.col-xs-2.text-right
+                                                span {{ctrl.status[outOrder.status]}}
+                                            div.col-xs-6.text-right
+                                                span {{global.utils.moment(outOrder.createdAt).format(ctrl.DATETIME_FORMAT)}}
+
+

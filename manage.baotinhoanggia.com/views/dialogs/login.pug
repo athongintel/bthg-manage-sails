@@ -12,12 +12,12 @@ script(type="text/ng-template" id="loginDialog")
                 label #{__('password_')}
                 div.form-group.has-feedback
                     input.form-control(type='password' ng-model="password")
-
-            div.text-right
-                button.btn.btn-primary(ng-disabled='!username || !password' ng-click='login()')
-                    span(ng-show='processing')
-                        i.fa.fa-spinner.fa-spin
-                        span &nbsp;
-                    span #{__('login_')}
+    .modal-footer
+        div.text-right
+            button.btn.btn-primary(ng-disabled='!username || !password || processing' ng-click='login()')
+                span(ng-show='processing')
+                    i.fa.fa-spinner.fa-spin
+                    span &nbsp;
+                span #{__('login_')}
 
 

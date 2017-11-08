@@ -1,0 +1,19 @@
+script(type="text/ng-template" id="quotationDetailsDialog")
+    .modal-header
+        button.close(type='button', ng-click='close()') x
+        div.header #{__('quotation_details')}
+    .modal-body
+
+    .modal-footer
+        div.row
+            div.col-xs-6.text-left
+                button.btn.btn-success
+                    i.fa.fa-download
+                    span &nbsp; #{__('export_excel')}
+            div.col-xs-6.text-right
+                button.btn.btn-default.margin-right-5px
+                    span #{__('fork_order')}
+                button.btn.btn-primary
+                    span #{__('reversion_')}
+
+

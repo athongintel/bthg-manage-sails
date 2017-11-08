@@ -144,5 +144,14 @@
 	"order_status": "Trạng thái đơn hàng",
 	"results_": "Kết quả tìm kiếm",
 	"do_filter": "Lọc kết quả",
-	"select_date_range": "Chọn khoảng thời gian"
+	"select_date_range": "Chọn khoảng thời gian",
+	"created_by": "Người tạo",
+	"customer_": "Khách hàng",
+	"created_at": "Ngày tạo",
+	"order_details": "Chi tiết đơn hàng",
+	"quotations_": "Danh sách báo giá",
+	"quotation_details": "Chi tiết báo giá",
+	"fork_order": "Tạo bản sao đơn hàng",
+	"reversion_": "Thay đổi",
+	"export_excel": "Xuất file Excel"
 }
