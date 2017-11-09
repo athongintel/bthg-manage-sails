@@ -26,7 +26,7 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
         $modal.open({
             templateUrl: 'quotationDetailsDialog',
             controller: 'QuotationDetailsDialogController',
-            size: 'lg',
+            // size: 'lg',
             backdrop: 'static',
             resolve: {
                 options: function(){

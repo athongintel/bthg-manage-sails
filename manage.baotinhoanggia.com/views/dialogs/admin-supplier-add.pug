@@ -1,9 +1,9 @@
 script(type="text/ng-template" id="adminSupplierAddDialog")
-    .modal-header
-        button.close(type='button', ng-click='close()') x
-        div.header #{__('add_supplier')}
-    .modal-body(ng-init='init()')
-        form(editable-form='', name="addSupplierForm" onaftersave="addSupplier()" shown="true")
+    form(editable-form='', name="addSupplierForm" onaftersave="addSupplier()" shown="true")
+        .modal-header
+            button.close(type='button', ng-click='close()') x
+            div.header #{__('add_supplier')}
+        .modal-body(ng-init='init()')
             fieldset(ng-disabled='processing')
                 div.margin-bottom-15px
                     label #{__('name_')} *
@@ -36,13 +36,11 @@ script(type="text/ng-template" id="adminSupplierAddDialog")
                 div.margin-bottom-15px
                     label #{__('bank_address')}
                     div(editable-text="bankAddress" e-name="bankAddress") {{ bankAddress || '#{__("not_set")}'}}
-
-
-
-    .modal-footer
-        div.text-right
-            button.action.btn.btn-primary(type='submit')
-                span(ng-show='processing')
-                    i.fa.fa-spinner.fa-spin
-                    span &nbsp;
-                span #{__('add_')}
+                        
+        .modal-footer
+            div.text-right
+                button.action.btn.btn-primary(type='submit')
+                    span(ng-show='processing')
+                        i.fa.fa-spinner.fa-spin
+                        span &nbsp;
+                    span #{__('add_')}

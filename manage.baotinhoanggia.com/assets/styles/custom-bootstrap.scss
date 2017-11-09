@@ -249,6 +249,10 @@ button.action {
     font-size: 18px;
 }
 
+.modal-body{
+    overflow-x: auto;
+}
+
 table.custom-table{
     width:100%;
     thead tr{

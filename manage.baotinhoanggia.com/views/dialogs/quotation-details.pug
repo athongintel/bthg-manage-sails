@@ -6,7 +6,7 @@ script(type="text/ng-template" id="quotationDetailsDialog")
         div.text-center(ng-show='loadingQuotation')
             i.fa.fa-spinner.fa-spin
         div(ng-hide='loadingQuotation')
-            div.table-responsive
+            div
                 table.table.table-striped.table-hover
                     thead
                         tr
@@ -33,20 +33,23 @@ script(type="text/ng-template" id="quotationDetailsDialog")
                             td
                                 div.text-right(style='font-weight: bold')
                                     span {{calculateTotalOrderValue() | currency : '' : ''}}
+            div
+                label #{__('terms_')}
+                pre {{quotation.terms}}
     .modal-footer
         div.row
             fieldset(ng-disabled='loadingQuotation')
                 div.col-xs-6.text-left
-                    button.btn.btn-success.margin-right-5px
+                    button.btn-sm.btn.btn-success.margin-right-5px.margin-bottom-5px
                         i.fa.fa-download
                         span &nbsp; #{__('export_excel')}
-                    button.btn.btn-default
+                    button.btn-sm.btn.btn-default(style='margin-left:0px; margin-bottom: 5px')
                         i.fa.fa-download
                         span &nbsp; #{__('export_pdf')}
                 div.col-xs-6.text-right
-                    button.btn.btn-default.margin-right-5px
+                    button.btn-sm.btn.btn-default.margin-bottom-5px
                         span #{__('fork_order')}
-                    button.btn.btn-primary
+                    button.btn-sm.btn.btn-primary(style='margin-left:5px; margin-bottom: 5px; margin-right: 0px')
                         span #{__('reversion_')}
 
 

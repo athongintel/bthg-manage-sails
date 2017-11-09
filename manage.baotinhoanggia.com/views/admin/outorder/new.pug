@@ -67,6 +67,10 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                 div.text-right(style='font-weight: bold')
                                                     span {{ctrl.calculateTotalOrderValue() | currency : '' : ''}}
 
+                div.margin-bottom-15px
+                    label #{__('terms_')}
+                    textarea.fixed-textarea.form-control(ng-model='ctrl.orderTerms' style='height: 250px')
+
                 div.text-right
                     button.btn.btn-primary(ng-click='ctrl.createOrder("'+__('create_order_success')+'")' ng-disabled='!ctrl.selectedProducts.length || !ctrl.selectedCustomer || !ctrl.selectedCustomerContact')
                         span(ng-show='ctrl.orderIsBeingCreated')

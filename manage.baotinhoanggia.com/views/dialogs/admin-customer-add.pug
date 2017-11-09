@@ -1,49 +1,48 @@
 script(type="text/ng-template" id="adminCustomerAddDialog")
-    .modal-header
-        button.close(type='button', ng-click='close()') x
-        div.header #{__('add_customer')}
-    .modal-body(ng-init='init()')
-        form(editable-form='', name="addCustomerForm" onaftersave="addCustomer()" shown="true")
-            fieldset(ng-disabled='processing')
-                div.margin-bottom-15px
-                    label #{__('name_')} *
-                    div(editable-text="name" e-name="name" onbeforesave='checkCustomerAttribute("name", $data)' e-required) {{ name || '#{__("not_set")}'}}
+    form(editable-form='', name="addCustomerForm" onaftersave="addCustomer()" shown="true")
+        .modal-header
+            button.close(type='button', ng-click='close()') x
+            div.header #{__('add_customer')}
+        .modal-body(ng-init='init()')
+                fieldset(ng-disabled='processing')
+                    div.margin-bottom-15px
+                        label #{__('name_')} *
+                        div(editable-text="name" e-name="name" onbeforesave='checkCustomerAttribute("name", $data)' e-required) {{ name || '#{__("not_set")}'}}
 
-                div.margin-bottom-15px
-                    label #{__('code_')} *
-                    div(editable-text="code" e-name="code" onbeforesave='checkCustomerAttribute("code", $data)' e-required) {{ code || '#{__("not_set")}'}}
-                div.row
-                    div.margin-bottom-15px.col-xs-12.col-sm-6
-                        label #{__('phone_number')}
-                        input.form-control(name='phoneNumber' ng-model='phoneNumber')
+                    div.margin-bottom-15px
+                        label #{__('code_')} *
+                        div(editable-text="code" e-name="code" onbeforesave='checkCustomerAttribute("code", $data)' e-required) {{ code || '#{__("not_set")}'}}
+                    div.row
+                        div.margin-bottom-15px.col-xs-12.col-sm-6
+                            label #{__('phone_number')}
+                            input.form-control(name='phoneNumber' ng-model='phoneNumber')
 
-                    div.margin-bottom-15px.col-xs-12.col-sm-6
-                        label #{__('fax_number')}
-                        input.form-control(name='faxNumber' ng-model='faxNumber')
+                        div.margin-bottom-15px.col-xs-12.col-sm-6
+                            label #{__('fax_number')}
+                            input.form-control(name='faxNumber' ng-model='faxNumber')
 
-                div.margin-bottom-15px
-                    label #{__('address_')}
-                    input.form-control(name='address' ng-model='address')
+                    div.margin-bottom-15px
+                        label #{__('address_')}
+                        input.form-control(name='address' ng-model='address')
 
-                div.margin-bottom-15px
-                    label #{__('company_info')}
-                    div.panel.panel-default
-                        div.panel-body
-                            div.row
-                                div.col-xs-12.col-sm-6
-                                    label #{__('company_name')}
-                                    input.form-control(name='address' ng-model='companyInfo.name')
-                                div.col-xs-12.col-sm-6
-                                    label #{__('tax_number')}
-                                    input.form-control(name='address' ng-model='companyInfo.taxNumber')
-                            div.margin-top-15px
-                                label #{__('address_')}
-                                input.form-control(name='address' ng-model='companyInfo.address')
-                            //textarea.fixed-textarea.form-control(name='companyInfo' ng-model='companyInfo')
-    .modal-footer
-        div.text-right
-            button.action.btn.btn-primary(type='submit')
-                span(ng-show='processing')
-                    i.fa.fa-spinner.fa-spin
-                    span &nbsp;
-                span #{__('add_')}
+                    div.margin-bottom-15px
+                        label #{__('company_info')}
+                        div.panel.panel-default
+                            div.panel-body
+                                div.row
+                                    div.col-xs-12.col-sm-6
+                                        label #{__('company_name')}
+                                        input.form-control(name='address' ng-model='companyInfo.name')
+                                    div.col-xs-12.col-sm-6
+                                        label #{__('tax_number')}
+                                        input.form-control(name='address' ng-model='companyInfo.taxNumber')
+                                div.margin-top-15px
+                                    label #{__('address_')}
+                                    input.form-control(name='address' ng-model='companyInfo.address')
+        .modal-footer
+            div.text-right
+                button.action.btn.btn-primary(type='submit')
+                    span(ng-show='processing')
+                        i.fa.fa-spinner.fa-spin
+                        span &nbsp;
+                    span #{__('add_')}

@@ -3,6 +3,35 @@ app.controller('AdminCustomerAddDialogController', ['$uibModalInstance', '$scope
         $modalInstance.dismiss();
     };
     
+    $scope.checkCustomerAttribute = function (attr, value, oldValue) {
+        "use strict";
+        if (oldValue && oldValue === value) {
+            return true;
+        }
+        else {
+            return new Promise(function (resolve) {
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'check_attribute',
+                    params: {
+                        collection: 'Customer',
+                        pairs: [{
+                            attr: attr,
+                            value: value
+                        }]
+                    }
+                }).then(
+                    function (response) {
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
+                    },
+                    function (err) {
+                        resolve(err)
+                    }
+                );
+            });
+        }
+    };
+    
     $scope.addCustomer = function () {
         $scope.processing = true;
         $http.post('/rpc', {
@@ -36,6 +65,8 @@ app.controller('AdminCustomerAddDialogController', ['$uibModalInstance', '$scope
         );
     };
     
-    $scope.init = function(){};
+    $scope.init = function () {
+        "use strict";
+    };
     
 }]);

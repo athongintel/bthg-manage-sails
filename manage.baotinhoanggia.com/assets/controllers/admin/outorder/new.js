@@ -84,6 +84,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                         params: {
                             outStockOrderID: order._id,
                             customerContactID: ctrl.selectedCustomerContact._id,
+                            terms: ctrl.orderTerms,
                             details: ctrl.selectedProducts.map(function(selection){
                                 return {
                                     productID: selection.product._id,

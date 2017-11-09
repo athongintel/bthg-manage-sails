@@ -281,6 +281,7 @@ module.exports = {
                     amount: amount,
                     price: price
                 }]
+                terms: terms
             }
          */
         try {
@@ -295,6 +296,7 @@ module.exports = {
                 outStockOrderID: params.outStockOrderID,
                 userID: principal.user._id,
                 customerContactID: params.customerContactID,
+                terms: params.terms
             });
             
             quotation = await quotation.save();
@@ -373,6 +375,7 @@ module.exports = {
                         customerContactID: {$first: "$customerContactID"},
                         outStockOrderID: {$first: "$outStockOrderID"},
                         userID: {$first: "$userID"},
+                        terms: {$first: "$terms"},
                         selections: {
                             $addToSet: "$selection"
                         },
