@@ -56,29 +56,25 @@ div.partials_product-search
             label #{__('stock_filter')}
             branch-selector(global='$ctrl.global' select-disabled='!$ctrl.global.utils.isSuperAdmin()' selected-branch='$ctrl.selectedBranch' on-branch-changed='$ctrl.changeBranch(selectedBranch)')
 
-    div.margin-bottom-5px.margin-left-5px.margin-right-5px
-        div.row(style='white-space: pre')
-            div.col-xs-5
-                label #{__('type_')}
-            div.col-xs-3
-                label #{__('model_')}
-            div.col-xs-1.text-right
-                label #{__('available_')}
-            div.col-xs-3.text-right
-                label #{__('last_price')}
-    div.search-result
-        div.search-result-list(style='max-height:300px' ng-show='!$ctrl.queryingProduct && $ctrl.filteredProducts && $ctrl.filteredProducts.length')
-            div.search-result-record(ng-click='$ctrl.selectProduct(product)' ng-repeat='product in $ctrl.filteredProducts track by $index' ng-class='{selected: product === $ctrl.selectedProduct}' )
-                div.row
-                    div.col-xs-5
+    div.table-responsive.margin-bottom-5px
+        table.table.table-striped.table-hover.custom-table(style='max-height:300px' ng-show='!$ctrl.queryingProduct && $ctrl.filteredProducts && $ctrl.filteredProducts.length')
+            thead
+                tr
+                    th #{__('type_')}
+                    th #{__('model_')}
+                    th #{__('available_')}
+                    th #{__('last_price')}
+            tbody
+                tr(ng-click='$ctrl.selectProduct(product)' ng-repeat='product in $ctrl.filteredProducts track by $index' ng-class='{selected: product === $ctrl.selectedProduct}' )
+                    td
                         button.btn.btn-xs.btn-default.margin-right-5px(ng-click='$ctrl.showProductDetails(product); $event.stopPropagation();')
                             i.fa.fa-question-circle
                         span {{product.typeID.name}}
-                    div.col-xs-3
+                    td
                         span {{product.model}}
-                    div.col-xs-1.text-right
+                    td
                         span(style='white-space: pre') {{$ctrl.calculateStockSumDisplay($ctrl.selectedBranch, product)}}
-                    div.col-xs-3.text-right
+                    td.text-right
                         span {{product.lastOutStock? (product.lastOutStock.price | currency : '' : '') : '-'}}
         div.text-center.no-data(ng-show='(!$ctrl.filteredProducts || !$ctrl.filteredProducts.length) && !$ctrl.queryingProduct && !$ctrl.queryFailed')
             span #{__('no_result')}

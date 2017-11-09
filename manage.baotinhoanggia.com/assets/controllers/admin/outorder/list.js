@@ -27,7 +27,13 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
             templateUrl: 'quotationDetailsDialog',
             controller: 'QuotationDetailsDialogController',
             size: 'lg',
-            backdrop: 'static'
+            backdrop: 'static',
+            resolve: {
+                options: function(){
+                    return {quotationId: quotation._id};
+                }
+            },
+            scope: $scope,
         }).result.then(
             function(){}, function(){}
         );
@@ -101,6 +107,11 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
         ctrl.selectedCustomer = null;
         ctrl.selectedType = null;
         ctrl.selectedDateRange = null;
+        
+        let queries = $scope.global.utils.breakQueries(document.location.hash);
+        if (queries['outOrderID']){
+            ctrl.showOrderDetails(queries['outOrderID']);
+        }
     };
     
 }]);

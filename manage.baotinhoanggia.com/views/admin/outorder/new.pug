@@ -38,7 +38,6 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                 table.table.table-striped.table-hover
                                     thead
                                         tr
-                                            th
                                             th #{__('type_')}
                                             th #{__('model_')}
                                             th.text-right #{__('amount_')}
@@ -48,11 +47,9 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                     tbody
                                         tr(ng-repeat='selection in ctrl.selectedProducts')
                                             td
-                                                div.text-right(style='white-space: pre')
-                                                    button.btn.btn-danger.btn-xs(ng-hide='ctrl.creatingOrder' ng-click='ctrl.removeProductSelection(selection)')
-                                                        i.fa.fa-trash
-                                            td
-                                                div {{selection.product.typeID.name}}
+                                                button.btn.btn-danger.btn-xs.margin-right-15px(ng-hide='ctrl.creatingOrder' ng-click='ctrl.removeProductSelection(selection)')
+                                                    i.fa.fa-trash
+                                                span {{selection.product.typeID.name}}
                                             td
                                                 div {{selection.product.model}}
                                             td
@@ -64,7 +61,7 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                             td
                                                 div.text-right {{selection.sellingPrice * selection.amount | currency : '' : ''}}
                                         tr(ng-if='ctrl.selectedProducts.length' style='font-size: 20px')
-                                            td(colspan='6')
+                                            td(colspan='5')
                                                 div.text-right #{__('total_order_value')}
                                             td
                                                 div.text-right(style='font-weight: bold')

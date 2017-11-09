@@ -1,19 +1,52 @@
 script(type="text/ng-template" id="quotationDetailsDialog")
-    .modal-header
+    .modal-header(ng-init='init()')
         button.close(type='button', ng-click='close()') x
         div.header #{__('quotation_details')}
     .modal-body
-
+        div.text-center(ng-show='loadingQuotation')
+            i.fa.fa-spinner.fa-spin
+        div(ng-hide='loadingQuotation')
+            div.table-responsive
+                table.table.table-striped.table-hover
+                    thead
+                        tr
+                            th #{__('type_')}
+                            th #{__('model_')}
+                            th.text-right #{__('amount_')}
+                            th.text-right #{__('price_')}
+                            th.text-right #{__('subtotal_')}
+                    tbody
+                        tr(ng-repeat='selection in quotation.selections')
+                            td
+                                div {{selection.productID.typeID.name}}
+                            td
+                                div {{selection.productID.model}}
+                            td
+                                div.text-right {{selection.amount | currency : "" : ""}}
+                            td
+                                div.text-right {{selection.price | currency : "" : ""}}
+                            td
+                                div.text-right {{selection.price * selection.amount | currency : '' : ''}}
+                        tr(ng-if='quotation.selections.length' style='font-size: 20px')
+                            td(colspan='4s')
+                                div.text-right #{__('total_order_value')}
+                            td
+                                div.text-right(style='font-weight: bold')
+                                    span {{calculateTotalOrderValue() | currency : '' : ''}}
     .modal-footer
         div.row
-            div.col-xs-6.text-left
-                button.btn.btn-success
-                    i.fa.fa-download
-                    span &nbsp; #{__('export_excel')}
-            div.col-xs-6.text-right
-                button.btn.btn-default.margin-right-5px
-                    span #{__('fork_order')}
-                button.btn.btn-primary
-                    span #{__('reversion_')}
+            fieldset(ng-disabled='loadingQuotation')
+                div.col-xs-6.text-left
+                    button.btn.btn-success.margin-right-5px
+                        i.fa.fa-download
+                        span &nbsp; #{__('export_excel')}
+                    button.btn.btn-default
+                        i.fa.fa-download
+                        span &nbsp; #{__('export_pdf')}
+                div.col-xs-6.text-right
+                    button.btn.btn-default.margin-right-5px
+                        span #{__('fork_order')}
+                    button.btn.btn-primary
+                        span #{__('reversion_')}
 
 

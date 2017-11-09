@@ -88,7 +88,6 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                                             button.btn.btn-xs.btn-default(ng-click='ctrl.changeStatus(null)')
                                                 i.fa.fa-remove.text-danger
                                     order-status-selector(pre-selected-status='ctrl.selectedStatus' on-status-changed='ctrl.changeStatus(selectedStatus)')
-                                    //customer-selector(global='global' on-customer-changed='ctrl.changeCustomer(selectedCustomer)')
 
                                 div.col-xs-12.col-sm-6.margin-bottom-5px
                                     div.row
@@ -127,14 +126,15 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                             div(ng-hide='ctrl.filtering')
                                 div.text-center.no-results(ng-show='ctrl.filteredResults && !ctrl.filteredResults.length')
                                     span #{__('no_result_found')}
-                                div.search-result-list(ng-show='ctrl.filteredResults && ctrl.filteredResults.length')
-                                    div.search-result-record(ng-repeat='outOrder in ctrl.filteredResults' ng-click='ctrl.showOrderDetails(outOrder._id)')
-                                        div.row
-                                            div.col-xs-4
-                                                span {{outOrder.name}}
-                                            div.col-xs-2.text-right
-                                                span {{ctrl.status[outOrder.status]}}
-                                            div.col-xs-6.text-right
-                                                span {{global.utils.moment(outOrder.createdAt).format(ctrl.DATETIME_FORMAT)}}
+                                div.table-responsive
+                                    table.table.custom-table.table-hover.table-striped(ng-show='ctrl.filteredResults && ctrl.filteredResults.length')
+                                        tbody
+                                            tr(ng-repeat='outOrder in ctrl.filteredResults' ng-click='ctrl.showOrderDetails(outOrder._id)')
+                                                td
+                                                    span {{outOrder.name}}
+                                                td.text-right
+                                                    span {{ctrl.status[outOrder.status]}}
+                                                td.text-right
+                                                    span {{global.utils.moment(outOrder.createdAt).format(ctrl.DATETIME_FORMAT)}}
 
 

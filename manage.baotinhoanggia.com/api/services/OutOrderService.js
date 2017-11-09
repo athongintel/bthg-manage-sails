@@ -317,6 +317,78 @@ module.exports = {
             console.log('createQuotation:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
+    },
+    
+    getQuotationDetails: async function (principal, params) {
+        "use strict";
+        /*
+            params:{
+                [required] _id: id of the out order
+            }
+         */
+        try {
+            let quotation = await _app.model.Quotation.aggregate([
+                {
+                    $match:{
+                        _id: mongoose.Types.ObjectId(params._id)
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'quotationDetails',
+                        localField: '_id',
+                        foreignField: 'quotationID',
+                        as: 'selection'
+                    }
+                },
+                {
+                    $unwind: '$selection',
+                },
+                {
+                    $lookup: {
+                        from: 'product',
+                        localField: 'selection.productID',
+                        foreignField: '_id',
+                        as: 'selection.productID'
+                    }
+                },
+                {
+                    $unwind: '$selection.productID',
+                },
+                {
+                    $lookup: {
+                        from: 'productType',
+                        localField: 'selection.productID.typeID',
+                        foreignField: '_id',
+                        as: 'selection.productID.typeID'
+                    }
+                },
+                {
+                    $unwind: '$selection.productID.typeID',
+                },
+                {
+                    $group:{
+                        _id: "$_id",
+                        createdAt: {$first: "$createdAt"},
+                        customerContactID: {$first: "$customerContactID"},
+                        outStockOrderID: {$first: "$outStockOrderID"},
+                        userID: {$first: "$userID"},
+                        selections: {
+                            $addToSet: "$selection"
+                        },
+                    }
+                }
+            ]);
+            
+            if (!quotation || !quotation.length)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            return sysUtils.returnSuccess(quotation[0]);
+        }
+        catch (err) {
+            console.log('getQuotationDetails:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
     }
     
 };

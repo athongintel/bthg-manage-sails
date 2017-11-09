@@ -153,5 +153,7 @@
 	"quotation_details": "Chi tiết báo giá",
 	"fork_order": "Tạo bản sao đơn hàng",
 	"reversion_": "Thay đổi",
-	"export_excel": "Xuất file Excel"
+	"export_excel": "Xuất file Excel",
+	"price_": "Giá bán",
+	"export_pdf": "Xuất file PDF"
 }
