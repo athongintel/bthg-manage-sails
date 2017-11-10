@@ -121,6 +121,9 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
     };
     
     ctrl.init = function(){
+        
+        ctrl.initializing = true;
+        
         ctrl.selectedBranch = $scope.global.user.branchID;
         ctrl.disableBranch = true;
         ctrl.customerContactDisabled = true;
@@ -128,6 +131,29 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
         ctrl.selectedCustomer = null;
         ctrl.selectedCustomerContact = null;
         ctrl.selectedProducts = [];
+        
+        $http.post('/rpc',
+            {
+                token: $scope.global.user.token,
+                name: 'get_default_terms',
+                params: {}
+            }
+        ).then(
+            function(response){
+                ctrl.initializing = false;
+                if (response.data.success){
+                    ctrl.orderTerms = response.data.result;
+                }
+                else {
+                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                }
+            },
+            function(){
+                ctrl.initializing = false;
+                alert('Network error');
+            }
+        )
+        
     };
     
 }]);

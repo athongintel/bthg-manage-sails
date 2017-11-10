@@ -55,7 +55,6 @@ const runBackup = async function () {
         });
     });
 };
-
 const runBackupWithCronJob = async function () {
     try {
         console.log('- set db backup life cycle');
@@ -92,6 +91,23 @@ const runBackupWithCronJob = async function () {
         return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
     }
 };
+const setSystemDefaultVariables = async function () {
+    "use strict";
+    let systemReset = await _app.model.SystemVariable.findOne({name: 'SYSTEM_RESET'});
+    if (!systemReset)
+        systemReset = await new _app.model.SystemVariable({name: 'SYSTEM_RESET', value: '1'}).save();
+
+    if (systemReset.value === '1') {
+        systemReset.value = '0';
+        await systemReset.save();
+    
+        let promises = [];
+        promises.push(new _app.model.SystemVariable({name: 'DEFAULT_TERMS', value: ''}).save());
+        await Promise.all(promises);
+    }
+    
+    return sysUtils.returnSuccess();
+};
 
 module.exports = {
     
@@ -110,6 +126,7 @@ module.exports = {
         _app.S3 = new aws.S3();
         
         await runBackupWithCronJob();
+        await setSystemDefaultVariables();
         
         return sysUtils.returnSuccess();
     },

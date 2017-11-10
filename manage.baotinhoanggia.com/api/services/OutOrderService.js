@@ -321,6 +321,20 @@ module.exports = {
         }
     },
     
+    getDefaultTerms: async function(principal, params){
+        "use strict";
+        try{
+            let variable = await _app.model.SystemVariable.findOne({name: 'DEFAULT_TERMS'});
+            if (!variable)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            return sysUtils.returnSuccess();
+        }
+        catch(err){
+            console.log('getDefaultTerms:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     getQuotationDetails: async function (principal, params) {
         "use strict";
         /*

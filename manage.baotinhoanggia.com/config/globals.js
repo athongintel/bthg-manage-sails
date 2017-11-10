@@ -17,6 +17,7 @@ _app.model = {
     Quotation: require('../api/models/quotation.model'),
     QuotationDetails: require('../api/models/quotationDetails.model'),
     OutStockOrder: require('../api/models/outStockOrder.model'),
+    SystemVariable: require('../api/models/systemVariable.model'),
 };
 
 _app.errors = {
