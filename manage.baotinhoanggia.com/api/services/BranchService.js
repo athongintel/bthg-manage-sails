@@ -47,6 +47,24 @@ module.exports = {
             console.log('getAllBranches:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
+    },
+    
+    getBranch: async function(principal, params){
+        "use strict";
+        /*
+            params: {
+                _id: the id of branch
+            }
+         */
+        try{
+            let branch = await _app.model.Branch.findById(params._id);
+            return sysUtils.returnSuccess(branch);
+        }
+        catch(err){
+            console.log('getBranch:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
     }
+    
     
 };

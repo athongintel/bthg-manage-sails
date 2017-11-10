@@ -19,6 +19,7 @@ const actions = {
     'get_all_customers': {policies: [PO.isAuthenticated, PO.isAdmin], action: CustomerService.getAllCustomers, validation: {}},
     'get_all_customer_contacts': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: CustomerService.getAllCustomerContacts, validation: {required: ['customerID']}},
     'add_customer_contact': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: CustomerService.addCustomerContact, validation: {required: ['customerID', 'name']}},
+    'get_customer_contact': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: CustomerService.getCustomerContact, validation: {required: ['_id']}},
     'update_customer_contact': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: CustomerService.updateCustomerContact, validation: {required: ['_id', 'name']}},
     'remove_customer_contact': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: CustomerService.removeCustomerContact, validation: {required: ['_id']}},
     
@@ -59,6 +60,7 @@ const actions = {
     'change_product_price_manually': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: ProductService.changeProductPrice, validation: {required: ['_id', 'price']}},
     
     'get_all_branches': {policies: [PO.isAuthenticated, PO.isAdmin], action: BranchService.getAllBranches, validation: {required: []}},
+    'get_branch': {policies: [PO.isAuthenticated, PO.isAdmin], action: BranchService.getBranch, validation: {required: ['_id']}},
     
     'create_out_order': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.createOrder, validation: {required: ['name', 'customerID', 'branchID']}},
     'get_out_order_details': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.getOutOrderDetails, validation: {required: ['_id']}},
@@ -66,6 +68,7 @@ const actions = {
     'create_quotation': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.createQuotation, validation: {required: ['outStockOrderID', 'customerContactID', 'details']}},
     'get_quotation_details': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.getQuotationDetails, validation: {required: ['_id']}},
     'get_default_terms': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.getDefaultTerms, validation: {required: []}},
+    'override_default_terms': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.overrideDefaultTerms, validation: {required: ['terms']}},
 };
 
 /*

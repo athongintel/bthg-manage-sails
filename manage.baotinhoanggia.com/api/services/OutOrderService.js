@@ -327,10 +327,31 @@ module.exports = {
             let variable = await _app.model.SystemVariable.findOne({name: 'DEFAULT_TERMS'});
             if (!variable)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
-            return sysUtils.returnSuccess();
+            return sysUtils.returnSuccess(variable);
         }
         catch(err){
             console.log('getDefaultTerms:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    overrideDefaultTerms: async function(principal, params){
+        "use strict";
+        /*
+            params: {
+                terms: string of quotation terms
+            }
+         */
+        try{
+            let variable = await _app.model.SystemVariable.findOne({name: 'DEFAULT_TERMS'});
+            if (!variable)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            variable.value = params.terms;
+            await variable.save();
+            return sysUtils.returnSuccess();
+        }
+        catch(err){
+            console.log('overrideDefaultTerms:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     },
@@ -396,7 +417,6 @@ module.exports = {
                     }
                 }
             ]);
-            
             if (!quotation || !quotation.length)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             

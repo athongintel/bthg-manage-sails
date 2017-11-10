@@ -51,11 +51,27 @@ const BranchSelectorPartialController = function ($scope, $element, $http) {
     const initSelectorWithData = function(selectedBranch){
         let data = [];
         let ids = [];
-        if (selectedBranch && selectedBranch._id){
-            data.push({id: selectedBranch._id, text: selectedBranch.name});
-            ids.push(selectedBranch._id);
+        if (selectedBranch){
+            $http.post('/rpc', {
+                token: ctrl.global.user.token,
+                name: 'get_branch',
+                params: {_id: selectedBranch}
+            }).then(
+                function (response) {
+                    if (response.data.success) {
+                        data.push({id: response.data.result._id, text: response.data.result.name});
+                        ids.push(response.data.result._id);
+                    }
+                    initSelector(data, ids);
+                },
+                function () {
+                    initSelector(data, ids);
+                }
+            );
         }
-        initSelector(data, ids);
+        else {
+            initSelector(data, ids);
+        }
     };
     
     ctrl.$onInit = function () {

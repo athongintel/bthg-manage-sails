@@ -18,7 +18,7 @@ const CustomerSelectorPartialController = function ($scope, $element, $http) {
                         failure();
                     }
                 },
-                function (err) {
+                function () {
                     failure();
                 }
             );
@@ -41,16 +41,33 @@ const CustomerSelectorPartialController = function ($scope, $element, $http) {
             ajax: customerSelectorAjax
         });
         ctrl.customerSelector.val(value).trigger('change');
+        ctrl.customerSelector.prop("disabled", ctrl.selectDisabled);
     };
     
     const initSelectorWithData = function(selectedCustomer){
         let data = [];
         let ids = [];
-        if (selectedCustomer && selectedCustomer._id){
-            data.push({id: selectedCustomer._id, text: selectedCustomer.name});
-            ids.push(selectedCustomer._id);
+        if (selectedCustomer){
+            $http.post('/rpc', {
+                token: ctrl.global.user.token,
+                name: 'get_customer_info',
+                params: {_id: selectedCustomer}
+            }).then(
+                function (response) {
+                    if (response.data.success) {
+                        data.push({id: response.data.result._id, text: response.data.result.name});
+                        ids.push(response.data.result._id);
+                    }
+                    initSelector(data, ids);
+                },
+                function () {
+                    initSelector(data, ids);
+                }
+            );
         }
-        initSelector(data, ids);
+        else {
+            initSelector(data, ids);
+        }
     };
     
     ctrl.$onInit = function () {

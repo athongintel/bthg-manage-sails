@@ -27,7 +27,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$uibModalInstance
                 $scope.loadingQuotation = false;
                 if (response.data.success){
                     $scope.quotation = response.data.result;
-                    console.log($scope.quotation);
+                    //console.log($scope.quotation);
                 }
                 else{
                     alert($scope.global.utils.errors[response.data.error.errorCode]);

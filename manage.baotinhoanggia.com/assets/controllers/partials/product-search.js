@@ -4,7 +4,7 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
     const ctrl = this;
     
     ctrl.$onInit = function () {
-        ctrl.selectedBranch = ctrl.global.user.branchID;
+        ctrl.selectedBranch = ctrl.global.user.branchID._id;
         ctrl.selectedGroup = {};
         ctrl.selectedType = {};
         ctrl.selectedBrand = {};

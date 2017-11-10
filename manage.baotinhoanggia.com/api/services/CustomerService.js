@@ -182,6 +182,23 @@ module.exports = {
         }
     },
     
+    getCustomerContact: async function (principal, params) {
+        "use strict";
+        /*
+            params:{
+                [required] _id: contact id
+            }
+         */
+        try {
+            let contact = await _app.model.CustomerContact.findById(params._id);
+            return sysUtils.returnSuccess(contact);
+        }
+        catch (err) {
+            console.log('getCustomerContact:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     updateCustomerContact: async function (principal, params) {
         "use strict";
         /*

@@ -35,7 +35,7 @@ script(type="text/ng-template" id="quotationDetailsDialog")
                                     span {{calculateTotalOrderValue() | currency : '' : ''}}
             div
                 label #{__('terms_')}
-                pre {{quotation.terms}}
+                pre(style='min-height: 200px') {{quotation.terms}}
     .modal-footer
         div.row
             fieldset(ng-disabled='loadingQuotation')
@@ -47,9 +47,9 @@ script(type="text/ng-template" id="quotationDetailsDialog")
                         i.fa.fa-download
                         span &nbsp; #{__('export_pdf')}
                 div.col-xs-6.text-right
-                    button.btn-sm.btn.btn-default.margin-bottom-5px
+                    a.btn-sm.btn.btn-default.margin-bottom-5px(href='#/admin/outorder/new?mode=clone&orderID={{quotation.outStockOrderID}}&quotationID={{quotation._id}}')
                         span #{__('fork_order')}
-                    button.btn-sm.btn.btn-primary(style='margin-left:5px; margin-bottom: 5px; margin-right: 0px')
+                    a.btn-sm.btn.btn-primary(href='#/admin/outorder/new?mode=edit&orderID={{quotation.outStockOrderID}}&quotationID={{quotation._id}}' style='margin-left:5px; margin-bottom: 5px; margin-right: 0px')
                         span #{__('reversion_')}
 
 

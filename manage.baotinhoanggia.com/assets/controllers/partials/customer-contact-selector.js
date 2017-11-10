@@ -9,7 +9,7 @@ const CustomerContactSelectorPartialController = function ($scope, $element, $ht
                 token: ctrl.global.user.token,
                 name: 'get_all_customer_contacts',
                 params: {
-                    customerID: ctrl.selectedCustomer._id,
+                    customerID: ctrl.selectedCustomer,
                     query: params.data.term
                 }
             }).then(
@@ -54,11 +54,27 @@ const CustomerContactSelectorPartialController = function ($scope, $element, $ht
     const initSelectorWithData = function(selectedCustomerContact){
         let data = [];
         let ids = [];
-        if (selectedCustomerContact && selectedCustomerContact._id){
-            data.push({id: selectedCustomerContact._id, text: selectedCustomerContact.name});
-            ids.push(selectedCustomerContact._id);
+        if (selectedCustomerContact){
+            $http.post('/rpc', {
+                token: ctrl.global.user.token,
+                name: 'get_customer_contact',
+                params: {_id: selectedCustomerContact}
+            }).then(
+                function (response) {
+                    if (response.data.success) {
+                        data.push({id: response.data.result._id, text: response.data.result.name});
+                        ids.push(response.data.result._id);
+                    }
+                    initSelector(data, ids);
+                },
+                function () {
+                    initSelector(data, ids);
+                }
+            );
         }
-        initSelector(data, ids);
+        else{
+            initSelector(data, ids);
+        }
     };
     
     ctrl.$onInit = function () {

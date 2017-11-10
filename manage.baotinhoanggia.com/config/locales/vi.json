@@ -156,5 +156,7 @@
 	"export_excel": "Xuất file Excel",
 	"price_": "Giá bán",
 	"export_pdf": "Xuất file PDF",
-	"terms_": "Điều khoản"
+	"terms_": "Điều khoản",
+	"override_default": "override_default",
+	"create_new_quotation_version": "create_new_quotation_version"
 }

@@ -208,7 +208,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
         ctrl.preSelectedBranchIDs = [$scope.global.user.branchID._id];
         ctrl.selectedBranches = [$scope.global.user.branchID._id];
     
-        ctrl.selectedBranch = $scope.global.user.branchID;
+        ctrl.selectedBranch = $scope.global.user.branchID._id;
         ctrl.selectedGroup = null;
         ctrl.selectedType = null;
         ctrl.selectedBrand = null;

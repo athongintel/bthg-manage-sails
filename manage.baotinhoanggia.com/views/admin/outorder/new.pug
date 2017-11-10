@@ -17,16 +17,16 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                 div
                                     div.margin-bottom-5px
                                         label #{__('order_name')}
-                                        input.form-control(ng-model='ctrl.orderName')
+                                        input.form-control(ng-disabled='ctrl.mode==="edit"' ng-model='ctrl.orderName')
                                     div.margin-bottom-5px
                                         label #{__('select_stock')}
-                                        branch-selector(global='global' select-disabled='!global.utils.isSuperAdmin()' selected-branch='ctrl.selectedBranch')
+                                        branch-selector(global='global' select-disabled='!global.utils.isSuperAdmin() || ctrl.mode==="edit"' selected-branch='ctrl.selectedBranch')
                                     div.margin-bottom-5px
                                         label #{__('select_customer')}
-                                        customer-selector(global='global' selected-customer='ctrl.selectedCustomer' on-customer-changed='ctrl.selectCustomer(selectedCustomer)')
+                                        customer-selector(global='global' select-disabled='ctrl.mode==="edit"' selected-customer='ctrl.selectedCustomer' on-customer-changed='ctrl.selectCustomer(selectedCustomer)')
                                     div.margin-bottom-5px
                                         label #{__('select_customer_contact')}
-                                        customer-contact-selector(global='global' select-disabled='ctrl.customerContactDisabled' selected-customer='ctrl.selectedCustomer' on-customer-contact-changed='ctrl.selectCustomerContact(selectedCustomerContact)')
+                                        customer-contact-selector(global='global' select-disabled='ctrl.customerContactDisabled' selected-customer='ctrl.selectedCustomer' selected-customer-contact='ctrl.selectedCustomerContact' on-customer-contact-changed='ctrl.selectCustomerContact(selectedCustomerContact)')
 
                     div
                         label #{__('find_product')}
@@ -44,7 +44,7 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                 th #{__('type_')}
                                                 th #{__('model_')}
                                                 th.text-right #{__('amount_')}
-                                                th.text-right #{__('old_price')}
+                                                //th.text-right #{__('old_price')}
                                                 th.text-right #{__('selling_price')}
                                                 th.text-right #{__('subtotal_')}
                                         tbody
@@ -52,26 +52,38 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                 td
                                                     button.btn.btn-danger.btn-xs.margin-right-15px(ng-hide='ctrl.creatingOrder' ng-click='ctrl.removeProductSelection(selection)')
                                                         i.fa.fa-trash
-                                                    span {{selection.product.typeID.name}}
+                                                    span {{selection.productID.typeID.name}}
                                                 td
-                                                    div {{selection.product.model}}
+                                                    div {{selection.productID.model}}
                                                 td
                                                     input.text-right.form-control(cleave='global.utils.cleaveOptions.currency' ng-model='selection.amount')
+                                                //td
+                                                    div.text-right {{(selection.productID.lastOutStock? selection.productID.lastOutStock.price : 0) | currency : '' : ''}}
                                                 td
-                                                    div.text-right {{(selection.product.lastOutStock? selection.product.lastOutStock.price : 0) | currency : '' : ''}}
+                                                    input.text-right.form-control(cleave='global.utils.cleaveOptions.currency' ng-model='selection.price')
                                                 td
-                                                    input.text-right.form-control(cleave='global.utils.cleaveOptions.currency' ng-model='selection.sellingPrice')
-                                                td
-                                                    div.text-right {{selection.sellingPrice * selection.amount | currency : '' : ''}}
+                                                    div.text-right {{selection.price * selection.amount | currency : '' : ''}}
                                             tr(ng-if='ctrl.selectedProducts.length' style='font-size: 20px')
-                                                td(colspan='5')
+                                                td(colspan='4')
                                                     div.text-right #{__('total_order_value')}
                                                 td
                                                     div.text-right(style='font-weight: bold')
                                                         span {{ctrl.calculateTotalOrderValue() | currency : '' : ''}}
 
                     div.margin-bottom-15px
-                        label #{__('terms_')}
+                        div.row
+                            div.col-xs-6
+                                label #{__('terms_')}
+                            div.col-xs-6.text-right
+                                button.btn.btn-xs.btn-warning(ng-disabled='ctrl.overridingTerms' ng-click='ctrl.overrideDefaultTerms()')
+                                    span(ng-show='ctrl.overridingTerms')
+                                        i.fa.fa-spinner.fa-spin
+                                        span &nbsp;
+                                    span(ng-hide='ctrl.overridingTerms')
+                                        i.fa.fa-save
+                                        span &nbsp;
+                                    span #{__('override_default')}
+
                         textarea.fixed-textarea.form-control(ng-model='ctrl.orderTerms' style='height: 250px')
 
                     div.text-right
@@ -82,4 +94,5 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                             span(ng-hide='ctrl.orderIsBeingCreated')
                                 i.fa.fa-save
                                 span &nbsp;
-                            span #{__('create_order_and_save_quotation')}
+                            span(ng-if='!ctrl.mode || ctrl.mode==="clone"') #{__('create_order_and_save_quotation')}
+                            span(ng-if='ctrl.mode==="edit"') #{__('create_new_quotation_version')}
