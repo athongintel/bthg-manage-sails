@@ -190,6 +190,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                 fontSize: 9
                             },
                             {
+                                fontSize: 9,
                                 table: {
                                     widths: ['auto', '*', '*', 100, 'auto', 'auto', 'auto', 'auto'],
                                     headerRows: 2,
