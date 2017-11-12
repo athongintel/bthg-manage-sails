@@ -103,8 +103,15 @@ const setSystemDefaultVariables = async function () {
     
         console.log('- init system variables');
         let promises = [];
-        promises.push(new _app.model.SystemVariable({name: 'DEFAULT_TERMS', value: ''}).save());
-        promises.push(new _app.model.SystemVariable({name: 'COMPANY_INFO', value: JSON.stringify({name: '', business: '', contactInfo: '', address : ''})}).save());
+        
+        let DEFAULT_TERMS = await _app.model.SystemVariable.findOne({name: 'DEFAULT_TERMS'});
+        if (!DEFAULT_TERMS)
+            promises.push(new _app.model.SystemVariable({name: 'DEFAULT_TERMS', value: ''}).save());
+    
+        let COMPANY_INFO = await _app.model.SystemVariable.findOne({name: 'COMPANY_INFO'});
+        if (!COMPANY_INFO)
+            promises.push(new _app.model.SystemVariable({name: 'COMPANY_INFO', value: JSON.stringify({name: '', business: '', contactInfo: '', address : ''})}).save());
+        
         await Promise.all(promises);
     }
     
