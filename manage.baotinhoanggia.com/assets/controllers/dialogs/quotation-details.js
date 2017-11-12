@@ -230,7 +230,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                         ],
                                     ]
                                 },
-                                
+
                             },
                             {
                                 text: 'Terms & Conditions',
@@ -238,7 +238,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                 bold: true,
                             },
                             {
-                                text: q.terms,
+                                text: q.terms || '',
                                 margin: [0, 0, 0, 20],
                                 style: 'terms',
                             },
@@ -389,7 +389,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                 $scope.loadingQuotation = false;
                 if (response.data.success) {
                     $scope.quotation = response.data.result;
-                    // console.log($scope.quotation);
+                    console.log($scope.quotation);
                 }
                 else {
                     alert($scope.global.utils.errors[response.data.error.errorCode]);

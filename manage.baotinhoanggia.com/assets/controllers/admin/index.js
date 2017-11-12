@@ -46,7 +46,6 @@ app.controller('AdminIndexController', ['$scope', '$http', function ($scope, $ht
                 if (response.data.success) {
                     if (response.data.result[0].success) {
                         ctrl.companyInfo = JSON.parse(response.data.result[0].result.value);
-                        console.log(ctrl.companyInfo);
                     }
                 }
                 else {
