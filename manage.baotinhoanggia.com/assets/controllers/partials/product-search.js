@@ -50,11 +50,11 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
                     }
                     else{
                         alert(ctrl.global.utils.errors[response.data.error.errorCode]);
-                        console.log(repsonse.data.error);
+                        // console.log(repsonse.data.error);
                     }
                 },
                 function(){
-                    alert('Network error');
+                    alert($scope.global.utils.errors[-1]);
                 }
             )
         }

@@ -78,12 +78,12 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     }
                     else {
                         alert(ctrl.global.utils.errors[response.data.error.errorCode]);
-                        console.log(response.data.error);
+                        // console.log(response.data.error);
                     }
                 },
                 function () {
                     ctrl.loadingProduct = false;
-                    alert('Network error');
+                    alert($scope.global.utils.errors[-1]);
                 }
             );
         }
@@ -203,7 +203,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                 },
                 function () {
                     ctrl.product.isBeingRemoved = false;
-                    alert('Network error');
+                    alert($scope.global.utils.errors[-1]);
                 }
             );
         }
@@ -288,7 +288,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     }
                 },
                 function () {
-                    alert('Network error');
+                    alert($scope.global.utils.errors[-1]);
                     resolve('Network error');
                 }
             );
@@ -330,7 +330,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     },
                     function () {
                         image.isBeingRemoved = false;
-                        alert('Network error');
+                        alert($scope.global.utils.errors[-1]);
                     }
                 );
             }
@@ -367,7 +367,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         product.outPriceBeingChanged = false;
                         if (response.data.success) {
                             product.lastOutStock = response.data.result;
-                            alert('Success');
+                            alert($scope.global.utils.errors[0]);
                         }
                         else {
                             alert($scope.global.utils.errors[response.data.error.errorCode]);
@@ -376,7 +376,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     },
                     function () {
                         product.outPriceBeingChanged = false;
-                        alert('Network error');
+                        alert($scope.global.utils.errors[-1]);
                     }
                 );
             },

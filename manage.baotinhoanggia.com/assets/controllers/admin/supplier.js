@@ -197,7 +197,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                         }
                     },
                     function () {
-                        alert('Network error');
+                        alert($scope.global.utils.errors[-1]);
                     }
                 );
             }

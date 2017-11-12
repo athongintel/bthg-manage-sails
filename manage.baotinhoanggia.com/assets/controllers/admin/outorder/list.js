@@ -3,7 +3,7 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
     
     const ctrl = this;
     
-    ctrl.DATETIME_FORMAT = 'YYYY-MM-DD ~ HH:mm';
+    ctrl.DATETIME_FORMAT = 'YYYY-MM-DD ~ HH:mm:ss';
     ctrl.status = ['', 'ORDER_OPEN', 'ORDER_CONFIRMED', 'ORDER_PAYMENT_RECEIVED', 'ORDER_FINISHED', 'ORDER_CANCELED'];
     
     ctrl.changeStatus = function (status) {
@@ -55,6 +55,10 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
                 if (response.data.success){
                     ctrl.loadingOrderDetails = false;
                     // console.log(response.data.result);
+                    if (response.data.result.quots)
+                        response.data.result.quots.sort(function(a, b){
+                            return new Date(b.createdAt) - new Date(a.createdAt);
+                        });
                     ctrl.orderDetails = response.data.result;
                 }
                 else{
@@ -63,7 +67,7 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
             },
             function(){
                 ctrl.loadingOrderDetails = false;
-                alert('Network error');
+                alert($scope.global.utils.errors[-1]);
             }
         );
         
@@ -96,7 +100,7 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
             },
             function(){
                 ctrl.filtering = false;
-                alert('Network error');
+                alert($scope.global.utils.errors[-1]);
             }
         );
     };

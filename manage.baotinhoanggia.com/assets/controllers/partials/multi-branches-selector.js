@@ -37,11 +37,11 @@ const MultiBranchesSelectorPartialController = function ($scope, $element, $http
                 }
                 else {
                     alert($scope.global.utils.errors[response.data.error.errorCode]);
-                    console.log(response.data.error);
+                    // console.log(response.data.error);
                 }
             },
             function () {
-                alert('Network error');
+                alert($scope.global.utils.errors[-1]);
             }
         );
     };

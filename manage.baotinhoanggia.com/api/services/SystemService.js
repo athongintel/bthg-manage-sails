@@ -101,8 +101,10 @@ const setSystemDefaultVariables = async function () {
         systemReset.value = '0';
         await systemReset.save();
     
+        console.log('- init system variables');
         let promises = [];
         promises.push(new _app.model.SystemVariable({name: 'DEFAULT_TERMS', value: ''}).save());
+        promises.push(new _app.model.SystemVariable({name: 'COMPANY_INFO', value: JSON.stringify({name: '', business: '', contactInfo: '', address : ''})}).save());
         await Promise.all(promises);
     }
     
@@ -157,6 +159,47 @@ module.exports = {
         }
         catch (err) {
             console.log('checkAttribute:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    getSystemVariable: async function(principal, params){
+        "use strict";
+        /*
+            params: {
+                name: name of the variable
+            }
+         */
+        try{
+            let systemVariable = await _app.model.SystemVariable.findOne({name: params.name});
+            if (!systemVariable) return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            return sysUtils.returnSuccess(systemVariable);
+        }
+        catch(err){
+            console.log('getSystemVariable:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
+    setSystemVariable: async function(principal, params){
+        "use strict";
+        /*
+            params:{
+                name: variable name,
+                value: variable value
+            }
+         */
+        try{
+            let systemVariable = await _app.model.SystemVariable.findOne({name: params.name});
+            if (!systemVariable) return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            systemVariable.value = params.value;
+            await systemVariable.save();
+            return sysUtils.returnSuccess();
+        }
+        catch(err){
+            console.log('setSystemVariable:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     },

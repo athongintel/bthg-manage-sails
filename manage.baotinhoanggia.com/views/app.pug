@@ -78,6 +78,8 @@ html(ng-app='app')
     body
         div.container(ng-controller='GlobalController' ng-init='init({' +
             'errors : {' +
+                '"-1" : "' + __('NETWORK_ERROR')+ '",' +
+                '"0" : "' + __('SUCCESS')+ '",' +
                 '"1" : "' + __('SYSTEM_ERROR')+ '",' +
                 '"2" : "' + __('INPUT_ERROR')+ '",' +
                 '"3" : "' + __('MALFORMED_REQUEST_ERROR')+ '",' +

@@ -83,13 +83,16 @@ img.img-language {
     max-width: 100%;
     min-width: 100%;
     min-height: 80px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 textarea.editable-input.form-control {
     max-width: 100%;
     min-width: 100%;
-    min-height: 350px;
+    min-height: 150px;
     font-family: monospace;
+    overflow: hidden;
 }
 
 .no-data {

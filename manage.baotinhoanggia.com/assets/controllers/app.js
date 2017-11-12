@@ -48,7 +48,13 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
         if (!$sessionStorage.global) $sessionStorage.global = {};
         $scope.global = $sessionStorage.global;
         $scope.global.data = $scope.global.data || {};
-        $scope.global.locale = (Cookies.get('lang') || window.navigator.language || 'en');
+        if (!Cookies.get('lang')){
+            Cookies.set('lang', 'vi');
+            document.location.reload();
+        }
+        $scope.global.locale = Cookies.get('lang');
+        if (!$scope.global.user)
+            document.location.href='#/admin?action=login';
         
         $scope.global.utils = {
             

@@ -33,6 +33,13 @@ app.controller('NavbarController', ['$scope', '$uibModal', function ($scope, $mo
         delete $scope.global.user;
         //-- redirect to main view
         document.location.href='/#';
-    }
+    };
+    
+    ctrl.init = function(){
+        let queries = $scope.global.utils.breakQueries(document.location.hash);
+        if (queries['action'] === 'login'){
+            ctrl.login();
+        }
+    };
     
 }]);

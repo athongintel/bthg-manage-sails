@@ -35,7 +35,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$uibModalInstance
             },
             function () {
                 $scope.loadingQuotation = false;
-                alert('Network error');
+                alert($scope.global.utils.errors[-1]);
             }
         );
     }

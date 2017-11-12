@@ -69,7 +69,7 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
             },
             function (err) {
                 brand.isBeingRemoved = false;
-                alert('Network error');
+                alert($scope.global.utils.errors[-1]);
             });
     };
     

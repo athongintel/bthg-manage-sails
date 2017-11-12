@@ -1,5 +1,6 @@
 const sysUtils = require('../../utils/system');
 const mongoose = require('mongoose');
+const PDFDocument = require('pdfkit');
 
 module.exports = {
     
@@ -134,7 +135,7 @@ module.exports = {
                             createdAt: {$first: "$createdAt"},
                             quots: {$addToSet: "$quotations"}
                         }
-                    },
+                    }
                 ]
             );
             
@@ -321,37 +322,23 @@ module.exports = {
         }
     },
     
-    getDefaultTerms: async function(principal, params){
-        "use strict";
-        try{
-            let variable = await _app.model.SystemVariable.findOne({name: 'DEFAULT_TERMS'});
-            if (!variable)
-                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
-            return sysUtils.returnSuccess(variable);
-        }
-        catch(err){
-            console.log('getDefaultTerms:', err);
-            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
-        }
-    },
-    
-    overrideDefaultTerms: async function(principal, params){
+    exportPDF: async function(principal, params){
         "use strict";
         /*
             params: {
-                terms: string of quotation terms
+                quotationID: id of the quotation
             }
          */
         try{
-            let variable = await _app.model.SystemVariable.findOne({name: 'DEFAULT_TERMS'});
-            if (!variable)
-                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
-            variable.value = params.terms;
-            await variable.save();
-            return sysUtils.returnSuccess();
+            //-- first get the quotation details
+            let quotationDetails = await OutOrderService.getQuotationDetails(principal, {_id: params.quotationID});
+            if (!quotationDetails.success)
+                return quotationDetails;
+            
+            
         }
         catch(err){
-            console.log('overrideDefaultTerms:', err);
+            console.log('exportPDF:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     },

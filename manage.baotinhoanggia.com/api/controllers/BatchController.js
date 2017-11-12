@@ -12,6 +12,8 @@ const actions = {
     'login': {policies: [], action: UserService.login, validation: {required: ['username', 'authMethod', 'authData']}},
     'check_attribute': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.checkAttribute, validation: {required: ['collection', 'pairs']}},
     'filter_collection': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.filterCollection, validation: {required: ['collection', 'filter']}},
+    'get_system_variable': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.getSystemVariable, validation: {required: ['name']}},
+    'set_system_variable': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: SystemService.setSystemVariable, validation: {required: ['name', 'value']}},
     
     'add_customer': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: CustomerService.addCustomer, validation: {required: ['name', 'code']}},
     'update_customer_info': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: CustomerService.updateCustomerInfo, validation: {required: ['_id', 'name', 'code']}},
@@ -67,8 +69,7 @@ const actions = {
     'get_all_out_orders': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.getAllOutOrders, validation: {required: []}},
     'create_quotation': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.createQuotation, validation: {required: ['outStockOrderID', 'customerContactID', 'details']}},
     'get_quotation_details': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.getQuotationDetails, validation: {required: ['_id']}},
-    'get_default_terms': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.getDefaultTerms, validation: {required: []}},
-    'override_default_terms': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.overrideDefaultTerms, validation: {required: ['terms']}},
+    'export_pdf': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.exportPDF, validation: {required: ['quotationID']}},
 };
 
 /*
@@ -107,10 +108,11 @@ let policiesCheck = async function (policies, principal, params) {
 
 let runOneCommand = async function (principal, commandName, params) {
     "use strict";
-    
     //-- check command & command params
-    if (!commandName || !params || !actions[commandName] || !actions[commandName].action)
+    if (!commandName || !params || !actions[commandName] || !actions[commandName].action) {
+        // console.log('error here', commandName, params, actions[commandName], actions[commandName].action);
         return sysUtils.returnError(_app.errors.MALFORMED_REQUEST_ERROR);
+    }
     
     //-- validation check
     if (actions[commandName].validation){

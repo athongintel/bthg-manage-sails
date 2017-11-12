@@ -23,7 +23,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
     ctrl.calculateTotalOrderValue = function () {
         let sum = new BigNumber(0);
         ctrl.selectedProducts.forEach(function (selection) {
-            sum = sum.add(new BigNumber(selection.price).mul(selection.amount));
+            sum = sum.add(new BigNumber(selection.price || "0").mul(selection.amount || "0"));
         });
         return sum.toString();
     };
@@ -32,10 +32,13 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
         //-- check if this product is already selected
         if (!ctrl.creatingOrder) {
             if (ctrl.selectedProducts.findIndex(function (selected) {
-                    return selected.product._id === product._id;
-                }) >= 0)
+                    // console.log(selected, product);
+                    return selected.productID._id === product._id;
+                }) >= 0) {
                 alert(i18n_product_selected);
-            else
+            }
+            else {
+                console.log(ctrl.selectedBranch, product.stockSum[ctrl.selectedBranch]);
                 $modal.open({
                     templateUrl: 'changeValueDialog',
                     controller: 'ChangeValueDialogController',
@@ -57,13 +60,44 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                             amount: data.newValue,
                             price: product.lastOutStock ? product.lastOutStock.price : 0
                         });
-                        console.log(ctrl.selectedProducts);
+                        // console.log(ctrl.selectedProducts);
                     },
                     function () {
                         //-- modal dismiss, do nothing
                     }
                 );
+            }
         }
+    };
+    
+    ctrl.createNewQuotation = function () {
+        console.log('new quotation');
+        ctrl.orderIsBeingCreated = true;
+        $http.post('/rpc', {
+            token: $scope.global.user.token,
+            name: 'create_quotation',
+            params: {
+                outStockOrderID: ctrl.orderID,
+                details: ctrl.selectedProducts,
+                customerContactID: ctrl.selectedCustomerContact,
+                terms: ctrl.orderTerms
+            }
+        }).then(
+            function (response) {
+                ctrl.orderIsBeingCreated = false;
+                if (response.data.success) {
+                    alert($scope.global.utils.errors[0]);
+                    document.location.href = '#/admin/outorder/list?outOrderID=' + ctrl.orderID;
+                }
+                else {
+                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                }
+            },
+            function () {
+                ctrl.orderIsBeingCreated = false;
+                alert($scope.global.utils.errors[-1]);
+            }
+        );
     };
     
     ctrl.createOrder = function (i18n_create_order_success) {
@@ -90,9 +124,9 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                             terms: ctrl.orderTerms,
                             details: ctrl.selectedProducts.map(function (selection) {
                                 return {
-                                    productID: selection.product._id,
+                                    productID: selection.productID._id,
                                     amount: selection.amount,
-                                    price: selection.sellingPrice
+                                    price: selection.price
                                 }
                             })
                         }
@@ -109,7 +143,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                         },
                         function () {
                             ctrl.creatingOrder = false;
-                            alert('Network error');
+                            alert($scope.global.utils.errors[-1]);
                         }
                     );
                 }
@@ -118,7 +152,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                 }
             },
             function () {
-                alert('Network error');
+                alert($scope.global.utils.errors[-1]);
             }
         )
     };
@@ -127,15 +161,16 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
         ctrl.overridingTerms = true;
         $http.post('/rpc', {
             token: $scope.global.user.token,
-            name: 'override_default_terms',
+            name: 'set_system_variable',
             params: {
-                terms: ctrl.orderTerms
+                name: 'DEFAULT_TERMS',
+                value: ctrl.orderTerms
             }
         }).then(
             function (response) {
                 ctrl.overridingTerms = false;
                 if (response.data.success) {
-                    alert('Success');
+                    alert($scope.global.utils.errors[0]);
                 }
                 else {
                     alert($scope.global.utils.errors[response.data.error.errorCode]);
@@ -143,7 +178,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
             },
             function () {
                 ctrl.overridingTerms = false;
-                alert('Network error');
+                alert($scope.global.utils.errors[-1]);
             }
         );
     };
@@ -180,16 +215,17 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                         ctrl.initializing = false;
                         if (response.data.success) {
                             //ctrl.orderTerms = response.data.result.value;
-                            if (!response.data.result[0].success){
+                            if (!response.data.result[0].success) {
                                 alert($scope.global.utils.errors[response.data.result[0].error.errorCode])
                             }
                             else if (!response.data.result[1].success) {
                                 alert($scope.global.utils.errors[response.data.result[1].error.errorCode])
                             }
-                            else{
+                            else {
                                 console.log(response.data.result);
                                 switch (ctrl.mode) {
                                     case 'edit':
+                                        ctrl.orderID = response.data.result[0].result._id;
                                         ctrl.orderName = response.data.result[0].result.name;
                                         ctrl.selectedBranch = $scope.global.user.branchID._id;
                                         ctrl.selectedCustomer = response.data.result[0].result.customerID._id;
@@ -197,12 +233,13 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                                         ctrl.selectedProducts = response.data.result[1].result.selections;
                                         ctrl.orderTerms = response.data.result[1].result.terms;
                                         break;
-        
+                                    
                                     case 'clone':
                                         ctrl.selectedProducts = response.data.result[1].result.selections;
                                         ctrl.orderTerms = response.data.result[1].result.terms;
+                                        ctrl.selectedBranch = $scope.global.user.branchID._id;
                                         break;
-        
+                                    
                                     default:
                                         break;
                                 }
@@ -214,7 +251,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                     },
                     function () {
                         ctrl.initializing = false;
-                        alert('Network error');
+                        alert($scope.global.utils.errors[-1]);
                     }
                 );
             }
@@ -230,13 +267,13 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
             ctrl.selectedCustomerContact = null;
             ctrl.selectedProducts = [];
             
-            $http.post('/rpc',
-                {
-                    token: $scope.global.user.token,
-                    name: 'get_default_terms',
-                    params: {}
+            $http.post('/rpc', {
+                token: $scope.global.user.token,
+                name: 'get_system_variable',
+                params: {
+                    name: 'DEFAULT_TERMS',
                 }
-            ).then(
+            }).then(
                 function (response) {
                     ctrl.initializing = false;
                     if (response.data.success) {
@@ -248,7 +285,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                 },
                 function () {
                     ctrl.initializing = false;
-                    alert('Network error');
+                    alert($scope.global.utils.errors[-1]);
                 }
             );
         }

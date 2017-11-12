@@ -7,3 +7,40 @@ div(ng-controller='AdminIndexController as ctrl' ng-init='ctrl.init()')
 
     div.panel.panel-default.main-panel
         div.panel-body
+            div.row
+                div.col-xs-12.col-sm-6
+                    form(editable-form='', name='companyInfoForm' onbeforesave='ctrl.saveCompanyInfo($data)')
+                        div.row
+                            div.col-xs-6
+                                label #{__('company_info')}
+                            div.col-xs-6.text-right
+                                button.btn.btn-xs.btn-default(ng-show='global.utils.isSuperAdmin()' type='button' ng-click='companyInfoForm.$show()' ng-hide='companyInfoForm.$visible')
+                                    span
+                                        i.fa.fa-pencil
+                                        span &nbsp;
+                                    span #{__('edit_')}
+                                div.edit-buttons(ng-show='companyInfoForm.$visible')
+                                    button.btn.btn-xs.btn-default.margin-right-5px(type='button' ng-click='companyInfoForm.$cancel()')
+                                        span
+                                            i.fa.fa-ban
+                                            span &nbsp;
+                                        span #{__('cancel_')}
+                                    button.btn.btn-xs.btn-primary(type='submit')
+                                        span
+                                            i.fa.fa-save
+                                            span &nbsp;
+                                        span #{__('save_')}
+                        div.panel.panel-default()
+                            div.panel-body
+                                    div.margin-bottom-15px
+                                        label #{__('company_name')}
+                                        div(editable-text='ctrl.companyInfo.name' e-name='name' e-form='companyInfoForm' e-required) {{ctrl.companyInfo.name}}
+                                    div.margin-bottom-15px
+                                        label #{__('business_')}
+                                        div(editable-text='ctrl.companyInfo.business' e-name='business' e-form='companyInfoForm' e-required) {{ctrl.companyInfo.business}}
+                                    div.margin-bottom-15px
+                                        label #{__('contact_')}
+                                        textarea.form-control.fixed-textarea(readonly editable-textarea='ctrl.companyInfo.contact' e-name='contact' e-form='companyInfoForm' e-required) {{ctrl.companyInfo.contact}}
+                                    div
+                                        label #{__('address_')}
+                                        textarea.form-control.fixed-textarea(readonly editable-textarea='ctrl.companyInfo.address' e-name='address' e-form='companyInfoForm' e-required) {{ctrl.companyInfo.address}}

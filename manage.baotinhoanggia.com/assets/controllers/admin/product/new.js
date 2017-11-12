@@ -42,7 +42,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                                     if (!ctrl.keepBrand) ctrl.selectedBrand = null;
                                     ctrl.selectedSuppliers = [];
                                     ctrl.productImages = null;
-                                    alert('Success');
+                                    alert($scope.global.utils.errors[0]);
                                     //-- reopen form
                                     $timeout(function () {
                                         $scope.addProductForm.$show();
@@ -103,7 +103,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                 },
                 function () {
                     ctrl.addingProduct = false;
-                    alert('Network error');
+                    alert($scope.global.utils.errors[-1]);
                     resolve('Network error')
                 }
             );
@@ -189,7 +189,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                     }
                 },
                 function () {
-                    alert('Network error');
+                    alert($scope.global.utils.errors[-1]);
                 }
             )
         }
