@@ -48,17 +48,27 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
         if (!$sessionStorage.global) $sessionStorage.global = {};
         $scope.global = $sessionStorage.global;
         $scope.global.data = $scope.global.data || {};
-        if (!Cookies.get('lang')){
+        if (!Cookies.get('lang')) {
             Cookies.set('lang', 'vi');
             document.location.reload();
         }
         $scope.global.locale = Cookies.get('lang');
         if (!$scope.global.user)
-            document.location.href='#/admin?action=login';
+            document.location.href = '#/admin?action=login';
         
         $scope.global.utils = {
             
             moment: moment,
+            
+            arrayBufferToBase64: function (buffer) {
+                let binary = '';
+                let bytes = new Uint8Array(buffer);
+                let len = bytes.byteLength;
+                for (let i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return btoa(binary);
+            },
             
             errors: initData.errors,
             

@@ -21,7 +21,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
             postData.params.stockIDs = ctrl.selectedBranches;
             postData.params.typeID = ctrl.selectedType._id;
             postData.params.brandID = ctrl.selectedBrand._id;
-            postData.params.branchID = ctrl.selectedBranch._id;
+            postData.params.branchID = ctrl.selectedBranch;
             postData.params.model = data.model;
             postData.params.photosNumber = ctrl.productImages ? ctrl.productImages.length : 0;
             postData.params.supplierIDs = ctrl.selectedSuppliers.map(function (supp) {

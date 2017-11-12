@@ -126,8 +126,8 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                             div(ng-hide='ctrl.filtering')
                                 div.text-center.no-results(ng-show='ctrl.filteredResults && !ctrl.filteredResults.length')
                                     span #{__('no_result_found')}
-                                div.table-responsive
-                                    table.table.custom-table.table-hover.table-striped(ng-show='ctrl.filteredResults && ctrl.filteredResults.length')
+                                div.table-responsive(ng-show='ctrl.filteredResults && ctrl.filteredResults.length' style='overflow-x: hidden')
+                                    table.table.custom-table.table-hover.table-striped
                                         tbody
                                             tr(ng-repeat='outOrder in ctrl.filteredResults' ng-click='ctrl.showOrderDetails(outOrder._id)')
                                                 td

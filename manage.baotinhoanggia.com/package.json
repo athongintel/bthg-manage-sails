@@ -37,6 +37,7 @@
     "passport-local": "^1.0.0",
     "passport-totp": "0.0.2",
     "pdfkit": "^0.8.3",
+    "pdfmake": "^0.1.33",
     "pug": "^2.0.0-rc.4",
     "randomstring": "^1.1.5",
     "rc": "1.0.1",

@@ -16,9 +16,11 @@ const userSchema = new mongoose.Schema({
     userClass: {type: Array, default: [constants.NORMAL_USER]},
     accountStatus: {type: Number, required: true, default: constants.ACCOUNT_AVAIL},
     branchID: {type: mongoose.Schema.ObjectId, required: true, ref: 'Branch'},
-    firstName: {type: String},
+    name: {type: String},
     lastName: {type: String},
     email: {type: String},
+    position: {type: String},
+    phoneNumber: {type: String},
     forgetPasswordCode: {type: String, select: false},
     forgetPasswordCodeExpiration: {type: String, select: false},
 });

@@ -1,6 +1,5 @@
 const sysUtils = require('../../utils/system');
 const mongoose = require('mongoose');
-const PDFDocument = require('pdfkit');
 
 module.exports = {
     
@@ -322,27 +321,6 @@ module.exports = {
         }
     },
     
-    exportPDF: async function(principal, params){
-        "use strict";
-        /*
-            params: {
-                quotationID: id of the quotation
-            }
-         */
-        try{
-            //-- first get the quotation details
-            let quotationDetails = await OutOrderService.getQuotationDetails(principal, {_id: params.quotationID});
-            if (!quotationDetails.success)
-                return quotationDetails;
-            
-            
-        }
-        catch(err){
-            console.log('exportPDF:', err);
-            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
-        }
-    },
-    
     getQuotationDetails: async function (principal, params) {
         "use strict";
         /*
@@ -353,9 +331,53 @@ module.exports = {
         try {
             let quotation = await _app.model.Quotation.aggregate([
                 {
-                    $match:{
+                    $match: {
                         _id: mongoose.Types.ObjectId(params._id)
                     }
+                },
+                {
+                    $lookup: {
+                        from: 'outStockOrder',
+                        localField: 'outStockOrderID',
+                        foreignField: '_id',
+                        as: 'outStockOrderID'
+                    }
+                },
+                {
+                    $unwind: '$outStockOrderID',
+                },
+                {
+                    $lookup: {
+                        from: 'customerContact',
+                        localField: 'customerContactID',
+                        foreignField: '_id',
+                        as: 'customerContactID'
+                    }
+                },
+                {
+                    $unwind: '$customerContactID',
+                },
+                {
+                    $lookup: {
+                        from: 'user',
+                        localField: 'userID',
+                        foreignField: '_id',
+                        as: 'userID'
+                    }
+                },
+                {
+                    $unwind: '$userID',
+                },
+                {
+                    $lookup: {
+                        from: 'customer',
+                        localField: 'customerContactID.customerID',
+                        foreignField: '_id',
+                        as: 'customerContactID.customerID'
+                    }
+                },
+                {
+                    $unwind: '$customerContactID.customerID',
                 },
                 {
                     $lookup: {
@@ -391,7 +413,7 @@ module.exports = {
                     $unwind: '$selection.productID.typeID',
                 },
                 {
-                    $group:{
+                    $group: {
                         _id: "$_id",
                         createdAt: {$first: "$createdAt"},
                         customerContactID: {$first: "$customerContactID"},

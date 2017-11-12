@@ -69,7 +69,7 @@ const actions = {
     'get_all_out_orders': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.getAllOutOrders, validation: {required: []}},
     'create_quotation': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.createQuotation, validation: {required: ['outStockOrderID', 'customerContactID', 'details']}},
     'get_quotation_details': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.getQuotationDetails, validation: {required: ['_id']}},
-    'export_pdf': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.exportPDF, validation: {required: ['quotationID']}},
+
 };
 
 /*
@@ -181,8 +181,8 @@ module.exports = {
             }
         }).then(
             function (result) {
-                if (!result.success) console.log(result);
-                res.json(result);
+                if (result && !result.success) console.log(result);
+                if (result) res.json(result);
             },
             function (err) {
                 console.log(err);
@@ -266,8 +266,8 @@ module.exports = {
             }
         }).then(
             function (result) {
-                if (!result.success) console.log(result);
-                res.json(result);
+                if (result && !result.success) console.log(result);
+                if (result) res.json(result);
             },
             function (err) {
                 console.log(err);
