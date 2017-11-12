@@ -234,6 +234,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
 
                             },
                             {
+                                fontSize: 10,
                                 text: 'Terms & Conditions',
                                 margin: [0, 10, 0, 5],
                                 bold: true,
@@ -244,6 +245,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                 style: 'terms',
                             },
                             {
+                                fontSize: 9,
                                 table: {
                                     widths: ['*', '*'],
                                     body: [
@@ -283,25 +285,47 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                             q.selections.forEach(function(selection, index){
                                 let subtotal = new BigNumber(selection.amount).mul(new BigNumber(selection.price));
                                 total = total.add(subtotal);
-                                dd.content[4].table.body.push([
-                                    {text: index+1, alignment: 'center'},
-                                    {text: selection.productID.model || '', alignment: 'center'},
-                                    {
-                                        text: selection.productID.description || '',
-                                        alignment: 'justify'
-                                    },
-                                    {
-                                        image: 'data:image/jpeg;base64,' + images[index],
-                                        width: 100
-                                    },
-                                    {text: accounting.formatNumber(selection.amount), alignment: 'right'},
-                                    {text: accounting.formatNumber(selection.price), alignment: 'right'},
-                                    {text: accounting.formatNumber(subtotal.toString()), alignment: 'right'},
-                                    {
-                                        text: '',
-                                        alignment: 'justify'
-                                    }
-                                ]);
+                                if (images[index]) {
+                                    dd.content[4].table.body.push([
+                                        {text: index + 1, alignment: 'center'},
+                                        {text: selection.productID.model || '', alignment: 'center'},
+                                        {
+                                            text: selection.productID.description || '',
+                                            alignment: 'left'
+                                        },
+                                        {
+                                            image: 'data:image/jpeg;base64,' + images[index],
+                                            width: 100
+                                        },
+                                        {text: accounting.formatNumber(selection.amount), alignment: 'right'},
+                                        {text: accounting.formatNumber(selection.price), alignment: 'right'},
+                                        {text: accounting.formatNumber(subtotal.toString()), alignment: 'right'},
+                                        {
+                                            text: '',
+                                            alignment: 'justify'
+                                        }
+                                    ]);
+                                }
+                                else{
+                                    dd.content[4].table.body.push([
+                                        {text: index + 1, alignment: 'center'},
+                                        {text: selection.productID.model || '', alignment: 'center'},
+                                        {
+                                            text: selection.productID.description || '',
+                                            alignment: 'left'
+                                        },
+                                        {
+                                            text: ''
+                                        },
+                                        {text: accounting.formatNumber(selection.amount), alignment: 'right'},
+                                        {text: accounting.formatNumber(selection.price), alignment: 'right'},
+                                        {text: accounting.formatNumber(subtotal.toString()), alignment: 'right'},
+                                        {
+                                            text: '',
+                                            alignment: 'justify'
+                                        }
+                                    ]);
+                                }
                             });
     
                             //-- footer
@@ -390,7 +414,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                 $scope.loadingQuotation = false;
                 if (response.data.success) {
                     $scope.quotation = response.data.result;
-                    console.log($scope.quotation);
+                    // console.log($scope.quotation);
                 }
                 else {
                     alert($scope.global.utils.errors[response.data.error.errorCode]);
