@@ -38,7 +38,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                 alert(i18n_product_selected);
             }
             else {
-                console.log(ctrl.selectedBranch, product.stockSum[ctrl.selectedBranch]);
+                // console.log(ctrl.selectedBranch, product.stockSum[ctrl.selectedBranch]);
                 $modal.open({
                     templateUrl: 'changeValueDialog',
                     controller: 'ChangeValueDialogController',

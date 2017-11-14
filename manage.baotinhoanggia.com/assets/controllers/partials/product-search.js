@@ -79,36 +79,41 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
     
     ctrl.filterProduct = function () {
         let filter = [];
+        ctrl.filteredProducts = [];
+        
         if (ctrl.selectedGroup && ctrl.selectedGroup._id) filter.push({attr: 'typeID.groupID._id', value: ctrl.selectedGroup._id});
         if (ctrl.selectedType && ctrl.selectedType._id) filter.push({attr: 'typeID._id', value: ctrl.selectedType._id});
         if (ctrl.selectedBrand && ctrl.selectedBrand._id) filter.push({attr: 'brandID._id', value: ctrl.selectedBrand._id});
         
-        let regex = new RegExp(`.*${ctrl.productFilter ? ctrl.global.utils.regexEscape(ctrl.productFilter) : ''}.*`, 'i');
-        ctrl.filteredProducts = ctrl.allProducts.filter(function (p) {
-            return !!regex.exec(p.model);
-        });
-        
-        ctrl.filteredProducts = ctrl.filteredProducts.filter(function (p) {
-            let passed = true;
-            filter.forEach(function (pair) {
-                let attrPath = pair.attr.split('.');
-                let value = p;
-                attrPath.some(function (path) {
-                    //-- check whether path is array
-                    if (!value || value[path] === null || value[path] === undefined) return false;
-                    value = value[path]
-                });
-                passed = passed && (value === pair.value);
-            });
-            return passed;
-        });
+        if (filter.length || ctrl.productFilter || (ctrl.selectedSupplier && ctrl.selectedSupplier._id)) {
     
-        if (ctrl.selectedSupplier && ctrl.selectedSupplier._id) {
-            ctrl.filteredProducts = ctrl.filteredProducts.filter(function (p) {
-                return p.supplierIDs.findIndex(function (supp) {
-                    return String(supp) === ctrl.selectedSupplier._id;
-                }) >= 0;
+            let regex = new RegExp(`.*${ctrl.productFilter ? ctrl.global.utils.regexEscape(ctrl.productFilter) : ''}.*`, 'i');
+            ctrl.filteredProducts = ctrl.allProducts.filter(function (p) {
+                return !!regex.exec(p.model);
             });
+    
+            ctrl.filteredProducts = ctrl.filteredProducts.filter(function (p) {
+                let passed = true;
+                filter.forEach(function (pair) {
+                    let attrPath = pair.attr.split('.');
+                    let value = p;
+                    attrPath.some(function (path) {
+                        //-- check whether path is array
+                        if (!value || value[path] === null || value[path] === undefined) return false;
+                        value = value[path]
+                    });
+                    passed = passed && (value === pair.value);
+                });
+                return passed;
+            });
+    
+            if (ctrl.selectedSupplier && ctrl.selectedSupplier._id) {
+                ctrl.filteredProducts = ctrl.filteredProducts.filter(function (p) {
+                    return p.supplierIDs.findIndex(function (supp) {
+                        return String(supp) === ctrl.selectedSupplier._id;
+                    }) >= 0;
+                });
+            }
         }
     };
     

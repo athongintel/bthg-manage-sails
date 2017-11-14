@@ -85,7 +85,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                             {border: [false, true, false, false], text: 'No.', alignment: 'right'},
                                             {
                                                 border: [false, true, false, false],
-                                                text: '-',
+                                                text: q.outStockOrderID.code || '',
                                                 alignment: 'right'
                                             },
                                         ],
@@ -105,7 +105,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                             },
                                             {
                                                 border: [false, false, false, false],
-                                                text: q.createdAt || '',
+                                                text: moment(q.createdAt).format('YYYY-MM-DD') || '',
                                                 alignment: 'right'
                                             },
                                         ],
@@ -288,9 +288,13 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                 if (images[index]) {
                                     dd.content[4].table.body.push([
                                         {text: index + 1, alignment: 'center'},
-                                        {text: selection.productID.model || '', alignment: 'center'},
+                                        {text: selection.productID.typeID.name || '', alignment: 'center'},
                                         {
-                                            text: selection.productID.description || '',
+                                            stack: [
+                                                {text: selection.productID.brandID? `Brand: ${selection.productID.brandID.name} (${$scope.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
+                                                {text: selection.productID.model? 'Model: ' + selection.productID.model : '',},
+                                                {text: selection.productID.description? 'Description: ' + selection.productID.description : '',}
+                                            ],
                                             alignment: 'left'
                                         },
                                         {
@@ -309,9 +313,13 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                 else{
                                     dd.content[4].table.body.push([
                                         {text: index + 1, alignment: 'center'},
-                                        {text: selection.productID.model || '', alignment: 'center'},
+                                        {text: selection.productID.typeID.name || '', alignment: 'center'},
                                         {
-                                            text: selection.productID.description || '',
+                                            stack: [
+                                                {text: selection.productID.brandID? `Brand: ${selection.productID.brandID.name} (${$scope.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
+                                                {text: selection.productID.model? 'Model: ' + selection.productID.model : '',},
+                                                {text: selection.productID.description? 'Description: ' + selection.productID.description : '',}
+                                            ],
                                             alignment: 'left'
                                         },
                                         {
@@ -399,6 +407,9 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
         );
     };
     
+    $scope.confirmOrder = function(i18n_confirm_order_prompt){
+        //-- show confirm orderDialog
+    };
     
     $scope.init = function () {
         $scope.loadingQuotation = true;
@@ -414,7 +425,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                 $scope.loadingQuotation = false;
                 if (response.data.success) {
                     $scope.quotation = response.data.result;
-                    // console.log($scope.quotation);
+                    console.log($scope.quotation);
                 }
                 else {
                     alert($scope.global.utils.errors[response.data.error.errorCode]);

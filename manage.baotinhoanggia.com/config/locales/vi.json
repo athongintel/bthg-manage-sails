@@ -163,5 +163,7 @@
 	"SUCCESS": "Thao tác thành công",
 	"new_quotation_version_created": "Báo giá mới lưu thành công",
 	"business_": "Lĩnh vực kinh doanh",
-	"contact_": "Thông tin liên hệ"
+	"contact_": "Thông tin liên hệ",
+	"order_code": "order_code",
+	"confirm_order": "confirm_order"
 }

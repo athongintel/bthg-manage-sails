@@ -1,5 +1,6 @@
 const sysUtils = require('../../utils/system');
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 module.exports = {
     
@@ -13,7 +14,21 @@ module.exports = {
             }
          */
         try {
+            let code = '';
+            
+            //-- get customer
+            let customer = await _app.model.Customer.findById(params.customerID);
+            if (!customer)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            code += customer.name + '/';
+            //-- get year and month
+            code += moment().format('YYYY-MM') + '/';
+            let orders = await _app.model.OutStockOrder.find({customerID: params.customerID, createdAt: {$gte: new Date(new Date().getFullYear(), 0, 1), $lt: new Date(new Date().getFullYear(), 11, 31)}});
+            code += orders.length + '/BG';
+            
             let outStockOrder = new _app.model.OutStockOrder({
+                code: code,
                 name: params.name,
                 customerID: params.customerID,
                 branchID: params.branchID,
@@ -125,6 +140,7 @@ module.exports = {
                     {
                         $group: {
                             _id: "$_id",
+                            code: {$first: "$code"},
                             name: {$first: "$name"},
                             customerID: {$first: "$customerID"},
                             branchID: {$first: "$branchID"},
@@ -166,18 +182,10 @@ module.exports = {
                     customerID: "$customerID",
                     branchID: "$branchID",
                     userID: "$userID",
-                    status: "$status",
+                    statusTimestamp: "$statusTimestamp",
                     metaInfo: "$metaInfo",
-                    createdAt: "$createdAt",
                 }
             }];
-            if (params.status !== null) {
-                pipelines.push({
-                    $match: {
-                        status: Number(params.status)
-                    }
-                });
-            }
             if (params.customerID !== null) {
                 pipelines.push({
                     $match: {
@@ -240,9 +248,8 @@ module.exports = {
                             customerID: {$first: "$customerID"},
                             branchID: {$first: "$branchID"},
                             userID: {$first: "$userID"},
-                            status: {$first: "$status"},
+                            statusTimestamp: {$first: "$statusTimestamp"},
                             metaInfo: {$first: "$metaInfo"},
-                            createdAt: {$first: "$createdAt"},
                             quots: {$addToSet: "$quotations"}
                         }
                     },
@@ -261,6 +268,17 @@ module.exports = {
             }
             
             let outOrders = await _app.model.OutStockOrder.aggregate(pipelines).exec();
+    
+            if (params.status !== null) {
+                outOrders = outOrders.filter(order=>{
+                    if (order.statusTimestamp && order.statusTimestamp.length) {
+                        return String(order.statusTimestamp[order.statusTimestamp.length-1].status) === String(params.status);
+                    }
+                    else{
+                        return false;
+                    }
+                });
+            }
             
             return sysUtils.returnSuccess(outOrders);
         }
@@ -400,6 +418,17 @@ module.exports = {
                 },
                 {
                     $unwind: '$selection.productID',
+                },
+                {
+                    $lookup: {
+                        from: 'productBrand',
+                        localField: 'selection.productID.brandID',
+                        foreignField: '_id',
+                        as: 'selection.productID.brandID'
+                    }
+                },
+                {
+                    $unwind: '$selection.productID.brandID',
                 },
                 {
                     $lookup: {

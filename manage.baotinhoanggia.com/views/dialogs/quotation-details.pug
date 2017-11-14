@@ -40,7 +40,10 @@ script(type="text/ng-template" id="quotationDetailsDialog")
         div.row
             fieldset(ng-disabled='loadingQuotation')
                 div.col-xs-6.text-left
-                    button.btn-sm.btn.btn-success.margin-right-5px.margin-bottom-5px(ng-disabled='exportingPDF' ng-click='exportPDF()')
+                    button.btn-sm.btn.btn-success(style='margin-right: 5px; margin-bottom: 5px' ng-click='confirmOrder()')
+                        i.fa.fa-handshake-o
+                        span &nbsp; #{__('confirm_order')}
+                    button.btn-sm.btn.btn-default.margin-bottom-5px(style='margin-left: 0px; margin-bottom: 5px' ng-disabled='exportingPDF' ng-click='exportPDF()')
                         span(ng-show='exportingPDF')
                             i.fa.fa-spinner.fa-spin
                             span &nbsp;
@@ -48,9 +51,7 @@ script(type="text/ng-template" id="quotationDetailsDialog")
                             i.fa.fa-download
                             span &nbsp;
                         span #{__('export_pdf')}
-                    //button.btn-sm.btn.btn-default(style='margin-left:0px; margin-bottom: 5px')
-                        i.fa.fa-download
-                        span &nbsp; #{__('export_pdf')}
+
                 div.col-xs-6.text-right
                     a.btn-sm.btn.btn-default.margin-bottom-5px(href='#/admin/outorder/new?mode=clone&orderID={{quotation.outStockOrderID._id}}&quotationID={{quotation._id}}')
                         span #{__('fork_order')}
