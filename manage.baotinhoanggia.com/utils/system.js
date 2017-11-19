@@ -40,7 +40,6 @@ module.exports = {
         if (str && str.length)
             for (let i=0; i<str.length; i++){
                 let char = str.substr(i, 1);
-                console.log(char);
                 accents.some(accent=>{
                     if (accent[0].indexOf(char) >= 0){
                         //-- replace
