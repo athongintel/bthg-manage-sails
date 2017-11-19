@@ -27,18 +27,20 @@ module.exports = {
             ["ýỷỹỳỵ", 'y'],
             ["đ", 'd'],
             ["ÁẢÃÀẠĂẮẲẲẰẶÂẤẨẨẦẬ", 'A'],
-            ["ÉẺẼÈẸÊẾỂỄỀỆ", 'e'],
-            ["ÚỬŨÙỤƯỨỬỮÙỰ", 'u'],
-            ["ÓỎÕÒỌÔỐỔỖỒỘƠỚỞỠỜỢ", 'o'],
-            ["ÍỈĨÌỊ", 'i'],
-            ["ÝỶỸỲỴ", 'y'],
+            ["ÉẺẼÈẸÊẾỂỄỀỆ", 'E'],
+            ["ÚỬŨÙỤƯỨỬỮÙỰ", 'U'],
+            ["ÓỎÕÒỌÔỐỔỖỒỘƠỚỞỠỜỢ", 'O'],
+            ["ÍỈĨÌỊ", 'I'],
+            ["ÝỶỸỲỴ", 'Y'],
             ["Đ", 'D'],
+            ["̣̉̀́", ''], //-- TODO sac huyen hoi nang, thieu dau nga
         ];
         
         
         if (str && str.length)
             for (let i=0; i<str.length; i++){
                 let char = str.substr(i, 1);
+                console.log(char);
                 accents.some(accent=>{
                     if (accent[0].indexOf(char) >= 0){
                         //-- replace
