@@ -127,5 +127,5 @@ div.partials_product-details
                 div.margin-bottom-5px
                     label #{__('description_')}
                     div(editable-textarea='$ctrl.product.description' e-name='description')
-                        pre {{$ctrl.product.description}}
+                        textarea.fixed-textarea.form-control(readonly='') {{$ctrl.product.description}}
 

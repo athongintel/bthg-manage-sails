@@ -58,9 +58,9 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                                     th #{__('created_at')}
                                     th.text-right #{__('created_by')}
                             tbody
-                                tr(ng-repeat='quotation in ctrl.orderDetails.quots')
+                                tr(ng-repeat='quotation in ctrl.orderDetails.quots' ng-click='ctrl.showQuotationDetails(quotation)')
                                     td
-                                        button.btn.btn-xs.btn-default.margin-right-15px(ng-click='ctrl.showQuotationDetails(quotation)')
+                                        //button.btn.btn-xs.btn-default.margin-right-15px(ng-click='ctrl.showQuotationDetails(quotation)')
                                             i.fa.fa-question-circle
                                         span {{global.utils.moment(quotation.createdAt).format(ctrl.DATETIME_FORMAT)}}
                                     td.text-right
