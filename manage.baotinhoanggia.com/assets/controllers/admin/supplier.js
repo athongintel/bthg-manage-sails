@@ -233,9 +233,9 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
     };
     
     ctrl.filterSupplier = function(){
-        let regex = new RegExp(`.*${ctrl.supplierFilter? $scope.global.utils.regexEscape(ctrl.supplierFilter) : ""}.*`, 'i');
+        let regex = new RegExp(`.*${ctrl.supplierFilter? $scope.global.utils.regexEscape($scope.global.utils.removeAccent(ctrl.supplierFilter)) : ""}.*`, 'i');
         ctrl.filteredSuppliers = ctrl.allSuppliers.filter(function(c){
-            return !!regex.exec(c.name);
+            return !!regex.exec($scope.global.utils.removeAccent(c.name));
         });
     };
     

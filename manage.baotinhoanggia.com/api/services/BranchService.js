@@ -40,7 +40,11 @@ module.exports = {
             }
          */
         try{
-            let branches = await _app.model.Branch.find({name: new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'i')})
+            let branches = await _app.model.Branch.find();
+            let regex = new RegExp(`.*${sysUtils.removeAccent(sysUtils.regexEscape(params.query))}.*`, 'i');
+            branches = branches.filter(branch=>{
+                return !!regex.exec(sysUtils.removeAccent(branch.name));
+            });
             return sysUtils.returnSuccess(branches);
         }
         catch(err){

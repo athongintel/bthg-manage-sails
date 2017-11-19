@@ -346,6 +346,41 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
                 "use strict";
                 return String(exp).replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
             },
+    
+            removeAccent: function(str){
+                "use strict";
+        
+                const accents = [
+                    ["áảãàạăắẳẵằặâấẩẫầậ", 'a'],
+                    ["éẻẽèẹêếểễềệ", 'e'],
+                    ["úủũùụưứửữừự", 'u'],
+                    ["óỏõòọôốổỗồộơớởỡờợ", 'o'],
+                    ["íỉĩìị", 'i'],
+                    ["ýỷỹỳỵ", 'y'],
+                    ["đ", 'd'],
+                    ["ÁẢÃÀẠĂẮẲẲẰẶÂẤẨẨẦẬ", 'A'],
+                    ["ÉẺẼÈẸÊẾỂỄỀỆ", 'e'],
+                    ["ÚỬŨÙỤƯỨỬỮÙỰ", 'u'],
+                    ["ÓỎÕÒỌÔỐỔỖỒỘƠỚỞỠỜỢ", 'o'],
+                    ["ÍỈĨÌỊ", 'i'],
+                    ["ÝỶỸỲỴ", 'y'],
+                    ["Đ", 'D'],
+                ];
+        
+        
+                if (str && str.length)
+                    for (let i=0; i<str.length; i++){
+                        let char = str.substr(i, 1);
+                        accents.some(function(accent){
+                            if (accent[0].indexOf(char) >= 0){
+                                //-- replace
+                                str = str.replace(char, accent[1]);
+                                return true;
+                            }
+                        });
+                    }
+                return str;
+            },
             
             breakQueries: function (path) {
                 //-- find the ?

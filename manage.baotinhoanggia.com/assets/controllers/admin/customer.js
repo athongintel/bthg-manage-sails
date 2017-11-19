@@ -238,9 +238,9 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
     };
     
     ctrl.filterCustomer = function(){
-        let regex = new RegExp(`.*${ctrl.customerFilter? $scope.global.utils.regexEscape(ctrl.customerFilter) : ""}.*`, 'i');
+        let regex = new RegExp(`.*${ctrl.customerFilter? $scope.global.utils.regexEscape($scope.global.utils.removeAccent(ctrl.customerFilter)) : ""}.*`, 'i');
         ctrl.filteredCustomers = ctrl.allCustomers.filter(function(c){
-            return !!regex.exec(c.name + JSON.stringify(c.companyInfo));
+            return !!regex.exec($scope.global.utils.removeAccent(c.name + JSON.stringify(c.companyInfo)));
         });
     };
     

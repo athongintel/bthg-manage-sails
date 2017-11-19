@@ -205,9 +205,9 @@ module.exports = {
                 categories = await _app.model.ProductGroup.find({});
             }
             if (params.query) {
-                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'i');
+                let regex = new RegExp(`.*${sysUtils.removeAccent(sysUtils.regexEscape(params.query))}.*`, 'i');
                 categories = categories.filter(cat => {
-                    return !!regex.exec(cat.name);
+                    return !!regex.exec(sysUtils.removeAccent(cat.name));
                 });
             }
             return sysUtils.returnSuccess(categories);
@@ -362,9 +362,9 @@ module.exports = {
                 brands = await _app.model.ProductBrand.find({});
             }
             if (params.query) {
-                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'i');
+                let regex = new RegExp(`.*${sysUtils.removeAccent(sysUtils.regexEscape(params.query))}.*`, 'i');
                 brands = brands.filter(b => {
-                    return !!regex.exec(b.name);
+                    return !!regex.exec(sysUtils.removeAccent(b.name));
                 });
             }
             return sysUtils.returnSuccess(brands);
@@ -525,9 +525,9 @@ module.exports = {
             }
             
             if (params.query) {
-                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'i');
+                let regex = new RegExp(`.*${sysUtils.removeAccent(sysUtils.regexEscape(params.query))}.*`, 'i');
                 types = types.filter(t => {
-                    return !!regex.exec(t.name);
+                    return !!regex.exec(sysUtils.removeAccent(t.name));
                 })
             }
             return sysUtils.returnSuccess(types);
@@ -548,9 +548,9 @@ module.exports = {
         try {
             let types = await _app.model.ProductType.find({});
             if (params.query) {
-                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`, 'i');
+                let regex = new RegExp(`.*${sysUtils.removeAccent(sysUtils.regexEscape(params.query))}.*`, 'i');
                 types = types.filter(t => {
-                    return !!regex.exec(t.name);
+                    return !!regex.exec(sysUtils.removeAccent(t.name));
                 })
             }
             return sysUtils.returnSuccess(types);

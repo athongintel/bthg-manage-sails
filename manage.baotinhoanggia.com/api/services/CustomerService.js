@@ -110,9 +110,9 @@ module.exports = {
         try {
             let customers = await _app.model.Customer.find({});
             if (params.query){
-                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`,'i');
+                let regex = new RegExp(`.*${sysUtils.removeAccent(sysUtils.regexEscape(params.query))}.*`,'i');
                 customers = customers.filter(c=>{
-                    return !!regex.exec(c.name+JSON.stringify(c.companyInfo));
+                    return !!regex.exec(sysUtils.removeAccent(c.name+JSON.stringify(c.companyInfo)));
                 });
             }
             return sysUtils.returnSuccess(customers);
@@ -134,9 +134,9 @@ module.exports = {
         try {
             let contacts = await _app.model.CustomerContact.find({customerID: params.customerID});
             if (params.query){
-                let regex = new RegExp(`.*${sysUtils.regexEscape(params.query)}.*`,'i');
+                let regex = new RegExp(`.*${sysUtils.removeAccent(sysUtils.regexEscape(params.query))}.*`,'i');
                 contacts = contacts.filter(c=>{
-                    return !!regex.exec(c.name+c.lastName);
+                    return !!regex.exec(sysUtils.removeAccent(c.name+c.lastName));
                 });
             }
             

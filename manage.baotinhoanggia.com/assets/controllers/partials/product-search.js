@@ -87,9 +87,9 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
         
         if (filter.length || ctrl.productFilter || (ctrl.selectedSupplier && ctrl.selectedSupplier._id)) {
     
-            let regex = new RegExp(`.*${ctrl.productFilter ? ctrl.global.utils.regexEscape(ctrl.productFilter) : ''}.*`, 'i');
+            let regex = new RegExp(`.*${ctrl.productFilter ? ctrl.global.utils.regexEscape(ctrl.global.utils.removeAccent(ctrl.productFilter)) : ''}.*`, 'i');
             ctrl.filteredProducts = ctrl.allProducts.filter(function (p) {
-                return !!regex.exec(p.model);
+                return !!regex.exec(ctrl.global.utils.removeAccent(p.model));
             });
     
             ctrl.filteredProducts = ctrl.filteredProducts.filter(function (p) {

@@ -108,9 +108,9 @@ module.exports = {
         try {
             let suppliers = await _app.model.Supplier.find({});
             if (params.query){
-                let regex = new RegExp(`.*${params.query}.*`, 'i');
+                let regex = new RegExp(`.*${sysUtils.regexEscape(sysUtils.removeAccent(params.query))}.*`, 'i');
                 suppliers = suppliers.filter(s=>{
-                    return !!regex.exec(s.name);
+                    return !!regex.exec(sysUtils.removeAccent(s.name));
                 });
             }
             return sysUtils.returnSuccess(suppliers);
