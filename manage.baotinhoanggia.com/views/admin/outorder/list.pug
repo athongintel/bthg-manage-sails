@@ -49,9 +49,10 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                                     span {{global.utils.moment(ctrl.orderDetails.createdAt).format(ctrl.DATETIME_FORMAT)}}
 
 
-                div(ng-show='!ctrl.loadingOrderDetails && ctrl.orderDetails')
-                    label #{__('quotations_')}
-                    div.table-responsive
+                div(ng-if='!ctrl.loadingOrderDetails && ctrl.orderDetails')
+                    label #{__('quotation_details')}
+                    quotation-details(global='global' quotation-id='ctrl.orderDetails.quots[0]._id')
+                    //div.table-responsive
                         table.table.table-striped.table-hover(style='background: silver')
                             thead
                                 tr

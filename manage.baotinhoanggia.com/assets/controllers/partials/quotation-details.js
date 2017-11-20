@@ -1,24 +1,22 @@
-app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibModalInstance', '$http', 'options', function ($scope, $timeout, $modalInstance, $http, options) {
+const QuotationDetailsPartialController = function($scope, $timeout, $http){
     "use strict";
     
-    $scope.close = function () {
-        $modalInstance.dismiss();
-    };
+    const ctrl = this;
     
-    $scope.calculateTotalOrderValue = function () {
+    ctrl.calculateTotalOrderValue = function () {
         let sum = new BigNumber(0);
-        $scope.quotation.selections.forEach(function (selection) {
+        ctrl.quotation.selections.forEach(function (selection) {
             sum = sum.add(new BigNumber(selection.price).mul(selection.amount));
         });
         return sum.toString();
     };
     
-    $scope.exportPDF = function () {
-        $scope.exportingPDF = true;
+    ctrl.exportPDF = function () {
+        ctrl.exportingPDF = true;
         //-- get company info
         
         $http.post('/rpc', {
-            token: $scope.global.user.token,
+            token: ctrl.global.user.token,
             name: 'get_system_variable',
             params: {
                 name: 'COMPANY_INFO'
@@ -27,7 +25,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
             function (response) {
                 if (response.data.success) {
                     let companyInfo = JSON.parse(response.data.result.value);
-                    let q = $scope.quotation;
+                    let q = ctrl.quotation;
                     //-- build pdf file
                     let dd = {
                         content: [
@@ -231,7 +229,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                         ],
                                     ]
                                 },
-
+                                
                             },
                             {
                                 fontSize: 10,
@@ -291,7 +289,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                         {text: selection.productID.typeID.name || '', alignment: 'center'},
                                         {
                                             stack: [
-                                                {text: selection.productID.brandID? `Brand: ${selection.productID.brandID.name} (${$scope.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
+                                                {text: selection.productID.brandID? `Brand: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
                                                 {text: selection.productID.model? 'Model: ' + selection.productID.model : '',},
                                                 {text: selection.productID.description? 'Description: ' + selection.productID.description : '',}
                                             ],
@@ -316,7 +314,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                         {text: selection.productID.typeID.name || '', alignment: 'center'},
                                         {
                                             stack: [
-                                                {text: selection.productID.brandID? `Brand: ${selection.productID.brandID.name} (${$scope.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
+                                                {text: selection.productID.brandID? `Brand: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
                                                 {text: selection.productID.model? 'Model: ' + selection.productID.model : '',},
                                                 {text: selection.productID.description? 'Description: ' + selection.productID.description : '',}
                                             ],
@@ -335,7 +333,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                     ]);
                                 }
                             });
-    
+                            
                             //-- footer
                             dd.content[4].table.body.push([
                                 {
@@ -365,9 +363,9 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                     text: ''
                                 }
                             ]);
-    
-                            pdfMake.createPdf(dd).download(`${$scope.quotation.outStockOrderID.name}.pdf`);
-                            $scope.exportingPDF = false;
+                            
+                            pdfMake.createPdf(dd).download(`${ctrl.quotation.outStockOrderID.name}.pdf`);
+                            ctrl.exportingPDF = false;
                         }
                     };
                     
@@ -379,7 +377,7 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                                 responseType: 'arraybuffer',
                             }).then(
                                 function (response) {
-                                    images[i] = $scope.global.utils.arrayBufferToBase64(response.data);
+                                    images[i] = ctrl.global.utils.arrayBufferToBase64(response.data);
                                     imageCount++;
                                     checkFinishLoadingImages();
                                 },
@@ -398,44 +396,53 @@ app.controller('QuotationDetailsDialogController', ['$scope', '$timeout', '$uibM
                     }
                 }
                 else {
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert(ctrl.global.utils.errors[response.data.error.errorCode]);
                 }
             },
             function () {
-                alert($scope.global.utils.errors[-1]);
+                alert(ctrl.global.utils.errors[-1]);
             }
         );
     };
     
-    $scope.confirmOrder = function(i18n_confirm_order_prompt){
+    ctrl.confirmOrder = function(i18n_confirm_order_prompt){
         //-- show confirm orderDialog
     };
     
-    $scope.init = function () {
-        $scope.loadingQuotation = true;
+    ctrl.$onInit = function () {
+        ctrl.loadingQuotation = true;
         
         $http.post('/rpc', {
-            token: $scope.global.user.token,
+            token: ctrl.global.user.token,
             name: 'get_quotation_details',
             params: {
-                _id: options.quotationId,
+                _id: ctrl.quotationId,
             }
         }).then(
             function (response) {
-                $scope.loadingQuotation = false;
+                ctrl.loadingQuotation = false;
                 if (response.data.success) {
-                    $scope.quotation = response.data.result;
-                    console.log($scope.quotation);
+                    ctrl.quotation = response.data.result;
+                    console.log(ctrl.quotation);
                 }
                 else {
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert(ctrl.global.utils.errors[response.data.error.errorCode]);
                 }
             },
             function () {
-                $scope.loadingQuotation = false;
-                alert($scope.global.utils.errors[-1]);
+                ctrl.loadingQuotation = false;
+                alert(ctrl.global.utils.errors[-1]);
             }
         );
     }
     
-}]);
+};
+
+app.component('quotationDetails', {
+    templateUrl: 'partials/quotation-details',
+    controller: QuotationDetailsPartialController,
+    bindings: {
+        global: '<',
+        quotationId: '<'
+    }
+});

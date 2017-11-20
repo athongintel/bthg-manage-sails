@@ -157,13 +157,13 @@
 	"price_": "Giá bán",
 	"export_pdf": "Xuất file PDF",
 	"terms_": "Điều khoản",
-	"override_default": "override_default",
+	"override_default": "Lưu đè",
 	"create_new_quotation_version": "Lưu thay đổi báo giá",
 	"NETWORK_ERROR": "Lỗi mạng",
 	"SUCCESS": "Thao tác thành công",
 	"new_quotation_version_created": "Báo giá mới lưu thành công",
 	"business_": "Lĩnh vực kinh doanh",
 	"contact_": "Thông tin liên hệ",
-	"order_code": "order_code",
-	"confirm_order": "confirm_order"
+	"order_code": "Mã đơn hàng",
+	"confirm_order": "Xác nhận đặt hàng"
 }

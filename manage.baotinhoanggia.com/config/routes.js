@@ -97,4 +97,8 @@ module.exports.routes = {
         view: 'partials/order-status-selector', locals: {layout: false}
     },
     
+    'GET /partials/quotation-details': {
+        view: 'partials/quotation-details', locals: {layout: false}
+    },
+    
 };
