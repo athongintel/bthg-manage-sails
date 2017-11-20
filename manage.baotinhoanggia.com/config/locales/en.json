@@ -140,5 +140,7 @@
 	"filter_": "filter_",
 	"do_filter": "do_filter",
 	"select_date_range": "select_date_range",
-	"results_": "results_"
+	"results_": "results_",
+	"business_": "business_",
+	"contact_": "contact_"
 }

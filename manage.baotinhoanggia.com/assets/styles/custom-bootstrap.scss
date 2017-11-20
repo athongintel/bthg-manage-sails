@@ -230,6 +230,11 @@ button.action {
     width: 100%;
 }
 
+.editable-wrap .editable-controls > textarea{
+    min-height:600px;
+}
+
+
 //-- this helps the dialog vertically middle
 .modal {
     text-align: center;
