@@ -99,7 +99,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             },
                                             {
                                                 border: [false, false, false, false],
-                                                text: q.customerContactID.customerID.companyInfo && q.customerContactID.customerID.companyInfo.address ? q.customerContactID.customerID.companyInfo.address : ''
+                                                text: q.customerContactID.customerID.address || ''
                                             },
                                             {
                                                 border: [false, false, false, false],
@@ -372,7 +372,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 }
                             ]);
                             
-                            pdfMake.createPdf(dd).download(`${ctrl.quotation.outStockOrderID.name}.pdf`);
+                            pdfMake.createPdf(dd).download(`Bao gia ${ctrl.quotation.outStockOrderID.name}.pdf`);
                             ctrl.exportingPDF = false;
                         }
                     };
@@ -431,7 +431,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                 ctrl.loadingQuotation = false;
                 if (response.data.success) {
                     ctrl.quotation = response.data.result;
-                    console.log(ctrl.quotation);
+                    // console.log(ctrl.quotation);
                 }
                 else {
                     alert(ctrl.global.utils.errors[response.data.error.errorCode]);

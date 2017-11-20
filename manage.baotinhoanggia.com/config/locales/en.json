@@ -130,5 +130,15 @@
 	"export_pdf": "export_pdf",
 	"fork_order": "fork_order",
 	"reversion_": "reversion_",
-	"stock_filter": "stock_filter"
+	"stock_filter": "stock_filter",
+	"order_details": "order_details",
+	"order_code": "order_code",
+	"order_status": "order_status",
+	"customer_": "customer_",
+	"created_by": "created_by",
+	"created_at": "created_at",
+	"filter_": "filter_",
+	"do_filter": "do_filter",
+	"select_date_range": "select_date_range",
+	"results_": "results_"
 }

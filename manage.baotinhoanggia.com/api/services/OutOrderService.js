@@ -21,7 +21,7 @@ module.exports = {
             if (!customer)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             
-            code += customer.name + '/';
+            code += customer.code + '/';
             //-- get year and month
             code += moment().format('YYYY-MM') + '/';
             let orders = await _app.model.OutStockOrder.find({customerID: params.customerID, createdAt: {$gte: new Date(new Date().getFullYear(), 0, 1), $lt: new Date(new Date().getFullYear(), 11, 31)}});
