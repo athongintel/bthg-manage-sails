@@ -198,7 +198,8 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 fontSize: 9,
                                 table: {
                                     widths: ['auto', 50, '*', 100, 'auto', 'auto', 'auto', 50],
-                                    headerRows: 2,
+                                    headerRows: 1,
+                                    dontBreakRows: true,
                                     body: [
                                         [
                                             {text: 'No.', rowSpan: 2, bold: true,},
