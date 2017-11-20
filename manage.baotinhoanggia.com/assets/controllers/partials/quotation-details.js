@@ -37,7 +37,8 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             border: [true, true, true, false],
                                             fontSize: 12,
                                             text: companyInfo.business || '',
-                                            alignment: 'center'
+                                            alignment: 'center',
+                                            color: '#2d72bc',
                                         }],
                                         [{
                                             border: [true, false, true, false],
@@ -51,7 +52,9 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             border: [true, false, true, false],
                                             fontSize: 10,
                                             text: companyInfo.contact || '',
-                                            alignment: 'center'
+                                            alignment: 'center',
+                                            color: '#0e1a4f',
+                                            italics: true,
                                         }],
                                         [{
                                             border: [true, false, true, true],
@@ -68,8 +71,10 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 margin: [0, 10, 0, 10],
                                 bold: true,
                                 fontSize: 16,
+                                color: '#0e1a4f',
                             },
                             {
+                                color: '#0e1a4f',
                                 style: 'infoTable',
                                 table: {
                                     widths: ['auto', '*', 'auto', 'auto'],
@@ -183,14 +188,16 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 },
                             },
                             {
+                                color: '#0e1a4f',
                                 stack: [`Dear ${q.customerContactID.title} ${q.customerContactID.name}`, 'Thank you for your enquiry', 'We are glad to provide you with our quote as below:'],
                                 margin: [0, 10, 0, 10],
                                 fontSize: 9
                             },
                             {
+                                color: '#0e1a4f',
                                 fontSize: 9,
                                 table: {
-                                    widths: ['auto', '*', '*', 100, 'auto', 'auto', 'auto', 'auto'],
+                                    widths: ['auto', 50, '*', 100, 'auto', 'auto', 'auto', 50],
                                     headerRows: 2,
                                     body: [
                                         [
@@ -202,7 +209,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                                 bold: true,
                                             },
                                             {}, {},
-                                            {text: 'Quant.', alignment: 'center', rowSpan: 2, bold: true,},
+                                            {text: 'Qt.', alignment: 'center', rowSpan: 2, bold: true,},
                                             {
                                                 text: 'Unit price\n(VND)',
                                                 alignment: 'center',
@@ -221,7 +228,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             {},
                                             {text: 'Item', alignment: 'center', bold: true,},
                                             {
-                                                text: 'Model & Specs',
+                                                text: 'Description',
                                                 alignment: 'center',
                                                 bold: true,
                                             },
@@ -243,6 +250,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 style: 'terms',
                             },
                             {
+                                color: '#0e1a4f',
                                 fontSize: 9,
                                 table: {
                                     widths: ['*', '*'],
@@ -291,7 +299,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             stack: [
                                                 {text: selection.productID.brandID? `Brand: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
                                                 {text: selection.productID.model? 'Model: ' + selection.productID.model : '',},
-                                                {text: selection.productID.description? 'Description: ' + selection.productID.description : '',}
+                                                {text: selection.productID.description? '\n' + selection.productID.description : '',}
                                             ],
                                             alignment: 'left'
                                         },
