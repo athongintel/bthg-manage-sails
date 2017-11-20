@@ -7,8 +7,9 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
     ctrl.typeFilter = "";
     
     ctrl.filterBrand = function () {
+        let regex = new RegExp(`.*${$scope.global.utils.regexEscape($scope.global.utils.removeAccent(ctrl.brandFilter))}.*`, 'i');
         ctrl.filteredBrands = ctrl.brands.filter(function (brand) {
-            return !brand._id || brand.name.indexOf(ctrl.brandFilter) >= 0;
+            return brand._id && !!regex.exec($scope.global.utils.removeAccent(brand.name));
         });
     };
     

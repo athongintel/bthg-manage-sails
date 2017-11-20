@@ -7,8 +7,9 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
     ctrl.typeFilter = "";
     
     ctrl.filterCategory = function () {
+        let regex = new RegExp(`.*${$scope.global.utils.regexEscape($scope.global.utils.removeAccent(ctrl.categoryFilter))}.*`, 'i');
         ctrl.filteredCategories = ctrl.categories.filter(function (cat) {
-            return cat.name.indexOf(ctrl.categoryFilter) >= 0;
+            return !!regex.exec($scope.global.utils.removeAccent(cat.name));
         });
     };
     
@@ -242,8 +243,9 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
     };
     
     ctrl.filterType = function () {
+        let regex = new RegExp(`.*${$scope.global.utils.regexEscape($scope.global.utils.removeAccent(ctrl.typeFilter))}.*`, 'i');
         ctrl.filteredTypes = ctrl.selectedCategory.types.filter(function (type) {
-            return type.name.indexOf(ctrl.typeFilter) >= 0;
+            return !!regex.exec($scope.global.utils.removeAccent(type.name));
         });
     };
     
@@ -266,16 +268,16 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
                         return String(b._id).localeCompare(String(a._id));
                     });
                     ctrl.categories = response.data.result;
-                    console.log(ctrl.categories);
+                    // console.log(ctrl.categories);
                     ctrl.filterCategory();
                 }
                 else {
-                    //-- TODO: error
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                 }
             },
-            function (err) {
+            function () {
                 ctrl.initializing = false;
-                //-- TODO: error
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             }
         );
     };
