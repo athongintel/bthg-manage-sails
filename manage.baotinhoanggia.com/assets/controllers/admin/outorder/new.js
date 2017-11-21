@@ -90,7 +90,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                     document.location.href = '#/admin/outorder/list?outOrderID=' + ctrl.orderID;
                 }
                 else {
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {
@@ -138,7 +138,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                             }
                             else {
                                 ctrl.creatingOrder = false;
-                                alert($scope.global.utils.errors[response.data.error.errorCode]);
+                                alert($scope.global.utils.errors[response.data.error.errorName]);
                             }
                         },
                         function () {
@@ -148,7 +148,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                     );
                 }
                 else {
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {
@@ -173,7 +173,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                     alert($scope.global.utils.errors[0]);
                 }
                 else {
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {
@@ -246,7 +246,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                             }
                         }
                         else {
-                            alert($scope.global.utils.errors[response.data.error.errorCode]);
+                            alert($scope.global.utils.errors[response.data.error.errorName]);
                         }
                     },
                     function () {
@@ -280,7 +280,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                         ctrl.orderTerms = response.data.result.value;
                     }
                     else {
-                        alert($scope.global.utils.errors[response.data.error.errorCode]);
+                        alert($scope.global.utils.errors[response.data.error.errorName]);
                     }
                 },
                 function () {

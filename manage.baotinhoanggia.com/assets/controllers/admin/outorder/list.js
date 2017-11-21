@@ -62,7 +62,7 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
                     ctrl.orderDetails = response.data.result;
                 }
                 else{
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function(){
@@ -95,7 +95,7 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
                     ctrl.filteredResults = response.data.result;
                 }
                 else{
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function(){

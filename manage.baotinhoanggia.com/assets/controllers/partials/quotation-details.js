@@ -405,7 +405,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                     }
                 }
                 else {
-                    alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                    alert(ctrl.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {
@@ -435,7 +435,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                     // console.log(ctrl.quotation);
                 }
                 else {
-                    alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                    alert(ctrl.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {

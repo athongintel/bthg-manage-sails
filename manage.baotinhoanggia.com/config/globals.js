@@ -21,16 +21,16 @@ _app.model = {
 };
 
 _app.errors = {
-    SYSTEM_ERROR: {errorCode: 1},
-    INPUT_ERROR: {errorCode: 2},
-    MALFORMED_REQUEST_ERROR: {errorCode: 3},
-    NOT_FOUND_ERROR: {errorCode: 4},
-    TOKEN_GENERATING_ERROR: {errorCode: 5},
-    WRONG_PASSWORD_ERROR: {errorCode: 6},
-    NOT_SUPER_ADMIN_ERROR: {errorCode: 7},
-    NOT_AUTHENTICATED_ERROR: {errorCode: 8},
-    DUPLICATED_ERROR: {errorCode: 9},
-    RESOURCE_DIRTY_ERROR: {errorCode: 10},
-    TOKEN_INVALID_ERROR: {errorCode: 11},
-    NOT_AUTHORIZED_ERROR: {errorCode: 12},
+    SYSTEM_ERROR: {errorName: 'SYSTEM_ERROR'},
+    INPUT_ERROR: {errorName: 'INPUT_ERROR'},
+    MALFORMED_REQUEST_ERROR: {errorName: 'MALFORMED_REQUEST_ERROR'},
+    NOT_FOUND_ERROR: {errorName: 'NOT_FOUND_ERROR'},
+    TOKEN_GENERATING_ERROR: {errorName: 'TOKEN_GENERATING_ERROR'},
+    WRONG_PASSWORD_ERROR: {errorName: 'WRONG_PASSWORD_ERROR'},
+    NOT_SUPER_ADMIN_ERROR: {errorName: 'NOT_SUPER_ADMIN_ERROR'},
+    NOT_AUTHENTICATED_ERROR: {errorName: 'NOT_AUTHENTICATED_ERROR'},
+    DUPLICATED_ERROR: {errorName: 'DUPLICATED_ERROR'},
+    RESOURCE_DIRTY_ERROR: {errorName: 'RESOURCE_DIRTY_ERROR'},
+    TOKEN_INVALID_ERROR: {errorName: 'TOKEN_INVALID_ERROR'},
+    NOT_AUTHORIZED_ERROR: {errorName: 'NOT_AUTHORIZED_ERROR'},
 };

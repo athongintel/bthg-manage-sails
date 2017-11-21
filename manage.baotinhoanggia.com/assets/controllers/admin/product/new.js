@@ -96,9 +96,9 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                     }
                     else {
                         ctrl.addingProduct = false;
-                        alert($scope.global.utils.errors[response.data.error.errorCode]);
+                        alert($scope.global.utils.errors[response.data.error.errorName]);
                         console.log(response.data.error);
-                        resolve($scope.global.utils.errors[response.data.error.errorCode]);
+                        resolve($scope.global.utils.errors[response.data.error.errorName]);
                     }
                 },
                 function () {
@@ -125,7 +125,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                 }
             }).then(
                 function (response) {
-                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
+                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                 },
                 function (err) {
                     resolve('Network error');
@@ -184,7 +184,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                         ctrl.selectedGroup = response.data.result;
                     }
                     else {
-                        alert($scope.global.utils.errors[response.data.error.errorCode]);
+                        alert($scope.global.utils.errors[response.data.error.errorName]);
                         console.log(response.data.error);
                     }
                 },

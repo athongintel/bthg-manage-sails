@@ -9,7 +9,7 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
     ctrl.filterBrand = function () {
         let regex = new RegExp(`.*${$scope.global.utils.regexEscape($scope.global.utils.removeAccent(ctrl.brandFilter))}.*`, 'i');
         ctrl.filteredBrands = ctrl.brands.filter(function (brand) {
-            return brand._id && !!regex.exec($scope.global.utils.removeAccent(brand.name));
+            return !brand._id || !!regex.exec($scope.global.utils.removeAccent(brand.name));
         });
     };
     
@@ -64,13 +64,13 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
                     ctrl.filterBrand();
                 }
                 else {
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                     console.log(response.data.error);
                 }
             },
-            function (err) {
+            function () {
                 brand.isBeingRemoved = false;
-                alert($scope.global.utils.errors[-1]);
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             });
     };
     
@@ -109,7 +109,7 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
                         resolve(true);
                     }
                     else {
-                        resolve($scope.global.utils.errors[response.data.error.errorCode]);
+                        resolve($scope.global.utils.errors[response.data.error.errorName]);
                     }
                 },
                 function (err) {
@@ -138,7 +138,7 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
                     }
                 }).then(
                     function (response) {
-                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                     },
                     function () {
                         resolve('Network error');
@@ -169,12 +169,12 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
                     ctrl.filterBrand();
                 }
                 else {
-                    //-- TODO: error
+                    alert($scope.global.utils.errors[response.data.error.errorName])
                 }
             },
-            function (err) {
+            function () {
                 ctrl.initializing = false;
-                //-- TODO: error
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             }
         );
     };

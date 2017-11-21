@@ -77,7 +77,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         ctrl.selectedStocks = ctrl.product.stockIDs? ctrl.product.stockIDs.map(function(stock){ return stock._id; }) : [];
                     }
                     else {
-                        alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                        alert(ctrl.global.utils.errors[response.data.error.errorName]);
                         // console.log(response.data.error);
                     }
                 },
@@ -168,7 +168,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     }
                 }).then(
                     function (response) {
-                        resolve(response.data.success || ctrl.global.utils.errors[response.data.error.errorCode]);
+                        resolve(response.data.success || ctrl.global.utils.errors[response.data.error.errorName]);
                     },
                     function (err) {
                         resolve('Network error');
@@ -197,7 +197,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         ctrl.product = null;
                     }
                     else {
-                        alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                        alert(ctrl.global.utils.errors[response.data.error.errorName]);
                         console.log(response.data.error);
                     }
                 },
@@ -283,8 +283,8 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         }
                     }
                     else {
-                        alert(ctrl.global.utils.errors[response.data.error.errorCode]);
-                        resolve(ctrl.global.utils.errors[response.data.error.errorCode]);
+                        alert(ctrl.global.utils.errors[response.data.error.errorName]);
+                        resolve(ctrl.global.utils.errors[response.data.error.errorName]);
                     }
                 },
                 function () {
@@ -324,7 +324,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                             ctrl.product.photos.splice(index, 1);
                         }
                         else {
-                            alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                            alert(ctrl.global.utils.errors[response.data.error.errorName]);
                             console.log(response.data.error);
                         }
                     },
@@ -370,7 +370,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                             alert($scope.global.utils.errors[0]);
                         }
                         else {
-                            alert($scope.global.utils.errors[response.data.error.errorCode]);
+                            alert($scope.global.utils.errors[response.data.error.errorName]);
                             console.log(response.data.error);
                         }
                     },

@@ -22,7 +22,7 @@ app.controller('AdminCustomerAddDialogController', ['$uibModalInstance', '$scope
                     }
                 }).then(
                     function (response) {
-                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                     },
                     function (err) {
                         resolve(err)
@@ -53,7 +53,7 @@ app.controller('AdminCustomerAddDialogController', ['$uibModalInstance', '$scope
                     $modalInstance.close(response.data.result);
                 }
                 else {
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                     console.log(response.data.error);
                 }
             },

@@ -22,7 +22,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     }
                 }).then(
                     function (response) {
-                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                     },
                     function (err) {
                         resolve(err)
@@ -105,7 +105,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     if (!response.data.success) {
                         ctrl.selectedSupplier.supplierSaveProblem = true;
                     }
-                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
+                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                 },
                 function () {
                     ctrl.selectedSupplier.supplierSaveProblem = true;
@@ -161,7 +161,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     if (response.data.success) {
                         ctrl.updateContact(contact._id, response.data.result);
                     }
-                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
+                    resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                 },
                 function (err) {
                     resolve('Network error.');
@@ -222,7 +222,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     }
                 }).then(
                     function (response) {
-                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorCode]);
+                        resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                     },
                     function () {
                         resolve('Network error');
@@ -257,7 +257,7 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     ctrl.filterSupplier();
                 }
                 else{
-                    ctrl.initFailure = $scope.global.utils.errors[response.data.error.errorCode];
+                    ctrl.initFailure = $scope.global.utils.errors[response.data.error.errorName];
                 }
             },
             function(){

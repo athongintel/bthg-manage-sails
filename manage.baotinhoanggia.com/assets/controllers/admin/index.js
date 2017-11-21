@@ -19,7 +19,7 @@ app.controller('AdminIndexController', ['$scope', '$http', function ($scope, $ht
                     alert($scope.global.utils.errors[0]);
                 }
                 else {
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {
@@ -49,7 +49,7 @@ app.controller('AdminIndexController', ['$scope', '$http', function ($scope, $ht
                     }
                 }
                 else {
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {

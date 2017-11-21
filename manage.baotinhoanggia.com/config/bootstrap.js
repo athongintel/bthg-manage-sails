@@ -15,7 +15,6 @@ module.exports.bootstrap = function (cb) {
         //-- db connect success, init other things
         console.log('- ok');
         try {
-            
             let initResult;
             let services = ['SystemService', 'BranchService', 'UserService'];
             for (let i = 0; i < services.length; i++) {

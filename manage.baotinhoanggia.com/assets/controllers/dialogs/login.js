@@ -13,7 +13,7 @@ app.controller('LoginDialogController', ['$uibModalInstance', '$scope', '$http',
                     $modalInstance.close(response.data.result);
                 }
                 else{
-                    alert($scope.global.utils.errors[response.data.error.errorCode]);
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
                     console.log(response.data.error);
                 }
             },

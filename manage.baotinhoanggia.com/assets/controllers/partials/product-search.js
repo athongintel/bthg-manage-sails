@@ -49,7 +49,7 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
                         ctrl.selectedGroup = response.data.result;
                     }
                     else{
-                        alert(ctrl.global.utils.errors[response.data.error.errorCode]);
+                        alert(ctrl.global.utils.errors[response.data.error.errorName]);
                         // console.log(repsonse.data.error);
                     }
                 },
@@ -157,7 +157,7 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
                     ctrl.filterProduct();
                 }
                 else {
-                    ctrl.queryFailed = ctrl.global.utils.errors[response.data.error.errorCode];
+                    ctrl.queryFailed = ctrl.global.utils.errors[response.data.error.errorName];
                 }
             },
             function () {
