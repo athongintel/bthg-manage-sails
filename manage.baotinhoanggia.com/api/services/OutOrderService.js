@@ -298,7 +298,8 @@ module.exports = {
                     productID: productID,
                     amount: amount,
                     price: price,
-                    sortOrder: the order of products
+                    sortOrder: the order of products,
+                    note: some note
                 }]
                 terms: terms
             }
@@ -328,7 +329,8 @@ module.exports = {
                     productID: detail.productID,
                     amount: detail.amount,
                     price: detail.price,
-                    sortOrder: detail.sortOrder
+                    sortOrder: detail.sortOrder,
+                    note: detail.note,
                 }).save());
             });
             

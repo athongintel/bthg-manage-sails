@@ -11,7 +11,7 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
             div(ng-hide='ctrl.initializing')
                 fieldset(ng-disabled='ctrl.creatingOrder')
                     div.row
-                        div.col-xs-12.col-sm-6
+                        div.col-xs-12.col-sm-5
                             label #{__('new_outorder')}
                             div.panel.panel-default
                                 div.panel-body
@@ -29,7 +29,7 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                             label #{__('select_customer_contact')}
                                             customer-contact-selector(global='global' select-disabled='ctrl.customerContactDisabled' selected-customer='ctrl.selectedCustomer' selected-customer-contact='ctrl.selectedCustomerContact' on-customer-contact-changed='ctrl.selectCustomerContact(selectedCustomerContact)')
 
-                        div.col-xs-12.col-sm-6
+                        div.col-xs-12.col-sm-7
                             div.row
                                 div.col-xs-6
                                     label #{__('terms_')}
@@ -46,25 +46,26 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                             textarea.fixed-textarea.form-control(ng-model='ctrl.orderTerms' style='height: 250px')
 
                     div.row
-                        div.col-xs-12.col-sm-6
+                        div.col-xs-12.col-sm-5
                             label #{__('find_product')}
-                            div.panel.panel-default
-                                div.panel-body
-                                    product-search(global='global' on-product-selected='ctrl.selectProduct(selectedProduct, "' + __('sell_product') + '", "' + __('stock_sum') + '", "' + __('desired_amount') + '", "' + __('product_already_selected') + '")')
-                        div.col-xs-12.col-sm-6
+                                div.panel.panel-default
+                                    div.panel-body
+                                        product-search(global='global' on-product-selected='ctrl.selectProduct(selectedProduct, "' + __('sell_product') + '", "' + __('stock_sum') + '", "' + __('desired_amount') + '", "' + __('product_already_selected') + '")')
+                        div.col-xs-12.col-sm-7
                             label #{__('quotation_')}
                             div.panel.panel-default
                                 div.panel-body
                                     div.table-responsive
                                         table.table.table-striped.table-hover
-                                            thead
+                                            thead(style='white-space: pre')
                                                 tr
                                                     th #{__('type_')}
                                                     th #{__('model_')}
+                                                    th.text-right #{__('note_')}
                                                     th.text-right #{__('amount_')}
-                                                    //th.text-right #{__('old_price')}
                                                     th.text-right #{__('selling_price')}
                                                     th.text-right #{__('subtotal_')}
+
                                             tbody
                                                 tr(ng-repeat='selection in ctrl.selectedProducts')
                                                     td
@@ -74,6 +75,10 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                     td
                                                         div {{selection.productID.model}}
                                                     td
+                                                        div.popover-wrapper
+                                                            a.note(href='' editable-textarea='selection.note' buttons="no")
+                                                                span {{selection.note? "#{__('edit_note')}" : "#{__('empty_')}"}}
+                                                    td
                                                         input.text-right.form-control(cleave='global.utils.cleaveOptions.currency' ng-model='selection.amount')
                                                     //td
                                                         div.text-right {{(selection.productID.lastOutStock? selection.productID.lastOutStock.price : 0) | currency : '' : ''}}
@@ -81,8 +86,9 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                         input.text-right.form-control(cleave='global.utils.cleaveOptions.currency' ng-model='selection.price')
                                                     td
                                                         div.text-right {{selection.price * selection.amount | currency : '' : ''}}
+                                                        //input.form-control(ng-model='selection.note')
                                                 tr(ng-if='ctrl.selectedProducts.length' style='font-size: 20px')
-                                                    td(colspan='4')
+                                                    td(colspan='5')
                                                         div.text-right #{__('total_order_value')}
                                                     td
                                                         div.text-right(style='font-weight: bold')

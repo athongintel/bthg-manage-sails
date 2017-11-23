@@ -138,6 +138,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                                     amount: selection.amount,
                                     price: selection.price,
                                     sortOrder: selection.sortOrder,
+                                    note: selection.note,
                                 }
                             })
                         }

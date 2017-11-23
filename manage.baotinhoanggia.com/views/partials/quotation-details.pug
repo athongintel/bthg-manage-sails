@@ -8,6 +8,7 @@ div.partials_quotation-details
                     tr
                         th #{__('type_')}
                         th #{__('model_')}
+                        th #{__('note_')}
                         th.text-right #{__('amount_')}
                         th.text-right #{__('price_')}
                         th.text-right #{__('subtotal_')}
@@ -18,13 +19,16 @@ div.partials_quotation-details
                         td
                             div {{selection.productID.model}}
                         td
+                            div {{selection.note || ''}}
+                        td
                             div.text-right {{selection.amount | currency : "" : ""}}
                         td
                             div.text-right {{selection.price | currency : "" : ""}}
                         td
                             div.text-right {{selection.price * selection.amount | currency : '' : ''}}
+
                     tr(ng-if='$ctrl.quotation.selections.length' style='font-size: 20px')
-                        td(colspan='4s')
+                        td(colspan='5')
                             div.text-right #{__('total_order_value')}
                         td
                             div.text-right(style='font-weight: bold')
@@ -39,15 +43,39 @@ div.partials_quotation-details
                     i.fa.fa-handshake-o
                     span &nbsp; #{__('confirm_order')}
                 button.btn-sm.btn.btn-default.margin-bottom-5px(style='margin-left: 0px; margin-bottom: 5px' ng-disabled='$ctrl.exportingPDF' ng-click='$ctrl.exportPDF({' +
-                    '"quo001":"' + __("quotation_001") + '",' +
-                    '"quo002":"' + __("quotation_002") + '",' +
-                    '"quo003":"' + __("quotation_003") + '",' +
-                    '"quo004":"' + __("quotation_004") + '",' +
-                    '"quo005":"' + __("quotation_005") + '",' +
-                    '"quo006":"' + __("quotation_006") + '",' +
-                    '"quo007":"' + __("quotation_007") + '",' +
-                    '"quo008":"' + __("quotation_008") + '",' +
-                    '"quo009":"' + __("quotation_009") + '",' +
+                '"quo001":"' + __("quotation_001") + '",' +
+                '"quo002":"' + __("quotation_002") + '",' +
+                '"quo003":"' + __("quotation_003") + '",' +
+                '"quo004":"' + __("quotation_004") + '",' +
+                '"quo005":"' + __("quotation_005") + '",' +
+                '"quo006":"' + __("quotation_006") + '",' +
+                '"quo007":"' + __("quotation_007") + '",' +
+                '"quo008":"' + __("quotation_008") + '",' +
+                '"quo009":"' + __("quotation_009") + '",' +
+                '"quo010":"' + __("quotation_010") + '",' +
+                '"quo011":"' + __("quotation_011") + '",' +
+                '"quo012":"' + __("quotation_012") + '",' +
+                '"quo013":"' + __("quotation_013") + '",' +
+                '"quo014":"' + __("quotation_014") + '",' +
+                '"quo015":"' + __("quotation_015") + '",' +
+                '"quo016":"' + __("quotation_016") + '",' +
+                '"quo017":"' + __("quotation_017") + '",' +
+                '"quo018":"' + __("quotation_018") + '",' +
+                '"quo019":"' + __("quotation_019") + '",' +
+                '"quo020":"' + __("quotation_020") + '",' +
+                '"quo021":"' + __("quotation_021") + '",' +
+                '"quo022":"' + __("quotation_022") + '",' +
+                '"quo023":"' + __("quotation_023") + '",' +
+                '"quo024":"' + __("quotation_024") + '",' +
+                '"quo025":"' + __("quotation_025") + '",' +
+                '"quo026":"' + __("quotation_026") + '",' +
+                '"quo027":"' + __("quotation_027") + '",' +
+                '"quo028":"' + __("quotation_028") + '",' +
+                '"quo029":"' + __("quotation_029") + '",' +
+                '"quo030":"' + __("quotation_030") + '",' +
+                '"quo031":"' + __("quotation_031") + '",' +
+                '"quo032":"' + __("quotation_032") + '",' +
+
                 '})')
                     span(ng-show='$ctrl.exportingPDF')
                         i.fa.fa-spinner.fa-spin

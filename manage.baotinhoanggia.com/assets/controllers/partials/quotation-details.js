@@ -11,7 +11,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
         return sum.toString();
     };
     
-    ctrl.exportPDF = function () {
+    ctrl.exportPDF = function (dict) {
         ctrl.exportingPDF = true;
         //-- get company info
         
@@ -66,7 +66,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 },
                             },
                             {
-                                text: 'QUOTATION',
+                                text: dict.quo001,
                                 alignment: 'center',
                                 margin: [0, 10, 0, 10],
                                 bold: true,
@@ -80,12 +80,12 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                     widths: ['auto', '*', 'auto', 'auto'],
                                     body: [
                                         [
-                                            {border: [false, true, false, false], text: 'To'},
+                                            {border: [false, true, false, false], text: dict.quo002},
                                             {
                                                 border: [false, true, false, false],
                                                 text: q.customerContactID.customerID.name || ''
                                             },
-                                            {border: [false, true, false, false], text: 'No.', alignment: 'right'},
+                                            {border: [false, true, false, false], text: dict.quo003, alignment: 'right'},
                                             {
                                                 border: [false, true, false, false],
                                                 text: q.outStockOrderID.code || '',
@@ -95,7 +95,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                         [
                                             {
                                                 border: [false, false, false, false],
-                                                text: 'Address'
+                                                text: dict.quo004
                                             },
                                             {
                                                 border: [false, false, false, false],
@@ -103,7 +103,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             },
                                             {
                                                 border: [false, false, false, false],
-                                                text: 'Date',
+                                                text: dict.quo005,
                                                 alignment: 'right'
                                             },
                                             {
@@ -115,7 +115,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                         [
                                             {
                                                 border: [false, false, false, false],
-                                                text: 'Att'
+                                                text: dict.quo006
                                             },
                                             {
                                                 border: [false, false, false, false],
@@ -123,7 +123,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             },
                                             {
                                                 border: [false, false, false, false],
-                                                text: 'Sales person',
+                                                text: dict.quo007,
                                                 alignment: 'right'
                                             },
                                             {
@@ -133,7 +133,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             },
                                         ],
                                         [
-                                            {border: [false, false, false, false], text: 'Position'},
+                                            {border: [false, false, false, false], text: dict.quo008},
                                             {
                                                 border: [false, false, false, false],
                                                 text: q.customerContactID.position || '',
@@ -141,7 +141,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             },
                                             {
                                                 border: [false, false, false, false],
-                                                text: 'Position',
+                                                text: dict.quo009,
                                                 alignment: 'right'
                                             },
                                             {
@@ -151,14 +151,14 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             },
                                         ],
                                         [
-                                            {border: [false, false, false, false], text: 'Email'},
+                                            {border: [false, false, false, false], text: dict.quo010},
                                             {
                                                 border: [false, false, false, false],
                                                 text: q.customerContactID.email || ''
                                             },
                                             {
                                                 border: [false, false, false, false],
-                                                text: 'Email',
+                                                text: dict.quo011,
                                                 alignment: 'right'
                                             },
                                             {
@@ -168,14 +168,14 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             },
                                         ],
                                         [
-                                            {border: [false, false, false, true], text: 'Phone'},
+                                            {border: [false, false, false, true], text: dict.quo012},
                                             {
                                                 border: [false, false, false, true],
                                                 text: q.customerContactID.phoneNumber || ''
                                             },
                                             {
                                                 border: [false, false, false, true],
-                                                text: 'Phone',
+                                                text: dict.quo013,
                                                 alignment: 'right'
                                             },
                                             {
@@ -189,7 +189,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                             },
                             {
                                 color: '#0e1a4f',
-                                stack: [`Dear ${q.customerContactID.title} ${q.customerContactID.name}`, 'Thank you for your enquiry', 'We are glad to provide you with our quote as below:'],
+                                stack: [`${dict.quo014} ${q.customerContactID.title} ${q.customerContactID.name}`, dict.quo015, dict.quo016],
                                 margin: [0, 10, 0, 10],
                                 fontSize: 9
                             },
@@ -202,24 +202,24 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                     dontBreakRows: true,
                                     body: [
                                         [
-                                            {text: 'No.', rowSpan: 2, bold: true,},
+                                            {text: dict.quo031, rowSpan: 2, bold: true,},
                                             {
-                                                text: 'Details',
+                                                text: dict.quo017,
                                                 colSpan: 3,
                                                 alignment: 'center',
                                                 bold: true,
                                             },
                                             {}, {},
-                                            {text: 'Qt.', alignment: 'center', rowSpan: 2, bold: true,},
+                                            {text: dict.quo018, alignment: 'center', rowSpan: 2, bold: true,},
                                             {
-                                                text: 'Unit price\n(VND)',
+                                                text: dict.quo019,
                                                 alignment: 'center',
                                                 rowSpan: 2,
                                                 bold: true,
                                             },
-                                            {text: 'Subtotal\n(VND)', alignment: 'center', rowSpan: 2, bold: true,},
+                                            {text: dict.quo020, alignment: 'center', rowSpan: 2, bold: true,},
                                             {
-                                                text: 'Note',
+                                                text: dict.quo021,
                                                 alignment: 'center',
                                                 rowSpan: 2,
                                                 bold: true,
@@ -227,13 +227,13 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                         ],
                                         [
                                             {},
-                                            {text: 'Item', alignment: 'center', bold: true,},
+                                            {text: dict.quo022, alignment: 'center', bold: true,},
                                             {
-                                                text: 'Description',
+                                                text: dict.quo023,
                                                 alignment: 'center',
                                                 bold: true,
                                             },
-                                            {text: 'Photos', alignment: 'center', bold: true,}, {}, {}, {}, {}
+                                            {text: dict.quo024, alignment: 'center', bold: true,}, {}, {}, {}, {}
                                         ],
                                     ]
                                 },
@@ -241,7 +241,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                             },
                             {
                                 fontSize: 10,
-                                text: 'Terms & Conditions',
+                                text: dict.quo025,
                                 margin: [0, 10, 0, 5],
                                 bold: true,
                             },
@@ -256,9 +256,9 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 table: {
                                     widths: ['*', '*'],
                                     body: [
-                                        [{text: 'Customer\'s comfirmation', alignment: 'center'}, {
+                                        [{text: dict.quo026, alignment: 'center'}, {
                                             stack: [{
-                                                text: 'Made by',
+                                                text: dict.quo027,
                                                 alignment: 'center'
                                             }, {text: `${q.userID.position || ''}\n\n\n\n\n\n`, alignment: 'center'}]
                                         }],
@@ -298,8 +298,8 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                         {text: selection.productID.typeID.name || '', alignment: 'center'},
                                         {
                                             stack: [
-                                                {text: selection.productID.brandID? `Brand: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
-                                                {text: selection.productID.model? 'Model: ' + selection.productID.model : '',},
+                                                {text: selection.productID.brandID? `${dict.quo028}: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
+                                                {text: selection.productID.model? `${dict.quo029}: ${selection.productID.model}` : '',},
                                                 {text: selection.productID.description? '\n' + selection.productID.description : '',}
                                             ],
                                             alignment: 'left'
@@ -312,8 +312,8 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                         {text: accounting.formatNumber(selection.price), alignment: 'right'},
                                         {text: accounting.formatNumber(subtotal.toString()), alignment: 'right'},
                                         {
-                                            text: '',
-                                            alignment: 'justify'
+                                            text: selection.note || '',
+                                            alignment: 'left'
                                         }
                                     ]);
                                 }
@@ -323,9 +323,9 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                         {text: selection.productID.typeID.name || '', alignment: 'center'},
                                         {
                                             stack: [
-                                                {text: selection.productID.brandID? `Brand: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
-                                                {text: selection.productID.model? 'Model: ' + selection.productID.model : '',},
-                                                {text: selection.productID.description? 'Description: ' + selection.productID.description : '',}
+                                                {text: selection.productID.brandID? `${dict.quo028}: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
+                                                {text: selection.productID.model? `${dict.quo029}: ${selection.productID.model}` : '',},
+                                                {text: selection.productID.description? '\n' + selection.productID.description : '',}
                                             ],
                                             alignment: 'left'
                                         },
@@ -336,8 +336,8 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                         {text: accounting.formatNumber(selection.price), alignment: 'right'},
                                         {text: accounting.formatNumber(subtotal.toString()), alignment: 'right'},
                                         {
-                                            text: '',
-                                            alignment: 'justify'
+                                            text: selection.note || '',
+                                            alignment: 'left'
                                         }
                                     ]);
                                 }
@@ -365,7 +365,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                     border: [false, false, false, false],
                                     text: ''
                                 },
-                                {text: 'Total', alignment: 'center', bold: true},
+                                {text: dict.quo030, alignment: 'center', bold: true},
                                 {text: accounting.formatNumber(total.toString()), alignment: 'right', bold: true},
                                 {
                                     border: [false, false, false, false],
@@ -373,7 +373,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 }
                             ]);
                             
-                            pdfMake.createPdf(dd).download(`Bao gia ${ctrl.quotation.outStockOrderID.name}.pdf`);
+                            pdfMake.createPdf(dd).download(`${dict.quo032} ${ctrl.quotation.outStockOrderID.name}.pdf`);
                             ctrl.exportingPDF = false;
                         }
                     };
