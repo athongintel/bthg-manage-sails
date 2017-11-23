@@ -83,7 +83,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                 },
                 function () {
                     ctrl.loadingProduct = false;
-                    alert($scope.global.utils.errors[-1]);
+                    alert($scope.global.utils.errors['NETWORK_ERROR']);
                 }
             );
         }
@@ -203,7 +203,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                 },
                 function () {
                     ctrl.product.isBeingRemoved = false;
-                    alert($scope.global.utils.errors[-1]);
+                    alert($scope.global.utils.errors['NETWORK_ERROR']);
                 }
             );
         }
@@ -288,7 +288,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     }
                 },
                 function () {
-                    alert($scope.global.utils.errors[-1]);
+                    alert($scope.global.utils.errors['NETWORK_ERROR']);
                     resolve('Network error');
                 }
             );
@@ -330,7 +330,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     },
                     function () {
                         image.isBeingRemoved = false;
-                        alert($scope.global.utils.errors[-1]);
+                        alert($scope.global.utils.errors['NETWORK_ERROR']);
                     }
                 );
             }
@@ -367,16 +367,15 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         product.outPriceBeingChanged = false;
                         if (response.data.success) {
                             product.lastOutStock = response.data.result;
-                            alert($scope.global.utils.errors[0]);
+                            alert($scope.global.utils.errors['SUCCESS']);
                         }
                         else {
                             alert($scope.global.utils.errors[response.data.error.errorName]);
-                            console.log(response.data.error);
                         }
                     },
                     function () {
                         product.outPriceBeingChanged = false;
-                        alert($scope.global.utils.errors[-1]);
+                        alert($scope.global.utils.errors['NETWORK_ERROR']);
                     }
                 );
             },

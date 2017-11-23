@@ -54,7 +54,6 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
                 ctrl.filtering = false;
                 if (response.data.success){
                     ctrl.loadingOrderDetails = false;
-                    // console.log(response.data.result);
                     if (response.data.result.quots)
                         response.data.result.quots.sort(function(a, b){
                             return new Date(b.createdAt) - new Date(a.createdAt);
@@ -67,7 +66,7 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
             },
             function(){
                 ctrl.loadingOrderDetails = false;
-                alert($scope.global.utils.errors[-1]);
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             }
         );
         
@@ -100,7 +99,7 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
             },
             function(){
                 ctrl.filtering = false;
-                alert($scope.global.utils.errors[-1]);
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             }
         );
     };

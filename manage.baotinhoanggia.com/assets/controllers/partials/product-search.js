@@ -54,7 +54,7 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
                     }
                 },
                 function(){
-                    alert($scope.global.utils.errors[-1]);
+                    alert($scope.global.utils.errors['NETWORK_ERROR']);
                 }
             )
         }

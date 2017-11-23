@@ -202,7 +202,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                         }
                     },
                     function () {
-                        alert($scope.global.utils.errors[-1]);
+                        alert($scope.global.utils.errors['NETWORK_ERROR']);
                     }
                 );
             }

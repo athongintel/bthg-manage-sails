@@ -297,7 +297,8 @@ module.exports = {
                 [required] details: [{
                     productID: productID,
                     amount: amount,
-                    price: price
+                    price: price,
+                    sortOrder: the order of products
                 }]
                 terms: terms
             }
@@ -326,7 +327,8 @@ module.exports = {
                     quotationID: quotation._id,
                     productID: detail.productID,
                     amount: detail.amount,
-                    price: detail.price
+                    price: detail.price,
+                    sortOrder: detail.sortOrder
                 }).save());
             });
             

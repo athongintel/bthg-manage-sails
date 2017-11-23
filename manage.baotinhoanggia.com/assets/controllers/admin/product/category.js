@@ -86,7 +86,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
             },
             function () {
                 category.isBeingRemoved = false;
-                alert($scope.global.utils.errors[-1]);
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             });
     };
     
@@ -184,7 +184,7 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
             },
             function () {
                 type.isBeingRemoved = false;
-                alert($scope.global.utils.errors[-1]);
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             });
     };
     

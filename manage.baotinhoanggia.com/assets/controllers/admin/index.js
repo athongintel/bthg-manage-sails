@@ -16,14 +16,14 @@ app.controller('AdminIndexController', ['$scope', '$http', function ($scope, $ht
         }).then(
             function (response) {
                 if (response.data.success) {
-                    alert($scope.global.utils.errors[0]);
+                    alert($scope.global.utils.errors['SUCCESS']);
                 }
                 else {
                     alert($scope.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {
-                alert($scope.global.utils.errors[-1]);
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             }
         );
     };
@@ -53,7 +53,7 @@ app.controller('AdminIndexController', ['$scope', '$http', function ($scope, $ht
                 }
             },
             function () {
-                alert($scope.global.utils.errors[-1]);
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             }
         );
     }

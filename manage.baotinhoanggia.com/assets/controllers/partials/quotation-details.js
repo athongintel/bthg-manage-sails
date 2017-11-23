@@ -409,7 +409,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                 }
             },
             function () {
-                alert(ctrl.global.utils.errors[-1]);
+                alert(ctrl.global.utils.errors['NETWORK_ERROR']);
             }
         );
     };
@@ -432,7 +432,9 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                 ctrl.loadingQuotation = false;
                 if (response.data.success) {
                     ctrl.quotation = response.data.result;
-                    // console.log(ctrl.quotation);
+                    ctrl.quotation.selections.sort(function(a, b){
+                        return a.sortOrder - b.sortOrder;
+                    });
                 }
                 else {
                     alert(ctrl.global.utils.errors[response.data.error.errorName]);
@@ -440,7 +442,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
             },
             function () {
                 ctrl.loadingQuotation = false;
-                alert(ctrl.global.utils.errors[-1]);
+                alert(ctrl.global.utils.errors['NETWORK_ERROR']);
             }
         );
     }
