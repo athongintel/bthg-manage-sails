@@ -48,9 +48,9 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                     div.row
                         div.col-xs-12.col-sm-5
                             label #{__('find_product')}
-                                div.panel.panel-default
-                                    div.panel-body
-                                        product-search(global='global' on-product-selected='ctrl.selectProduct(selectedProduct, "' + __('sell_product') + '", "' + __('stock_sum') + '", "' + __('desired_amount') + '", "' + __('product_already_selected') + '")')
+                            div.panel.panel-default
+                                div.panel-body
+                                    product-search(global='global' on-product-selected='ctrl.selectProduct(selectedProduct, "' + __('sell_product') + '", "' + __('stock_sum') + '", "' + __('desired_amount') + '", "' + __('product_already_selected') + '")')
                         div.col-xs-12.col-sm-7
                             label #{__('quotation_')}
                             div.panel.panel-default

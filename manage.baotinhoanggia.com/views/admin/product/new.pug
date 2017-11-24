@@ -13,7 +13,18 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
         div.panel-body
             form(editable-form='', name='addProductForm' shown='true' onbeforesave='ctrl.addProduct($data)')
                 fieldset(ng-disabled='ctrl.addingProduct || (ctrl.uploadingPhotos && ctrl.uploadedCount < ctrl.productImages.length)')
-                    div.row
+                    div.row.flex
+                        div.col-xs-6.vf-center
+                            label
+                                input(type='checkbox' ng-model='ctrl.keepPage')
+                                span &nbsp; #{__('keep_page')}
+                        div.col-xs-6.text-right.vf-center
+                            button.btn.btn-primary.action(type='submit' ng-disabled='!ctrl.selectedType || !ctrl.selectedBrand')
+                                span(ng-show='ctrl.addingProduct')
+                                    i.fa.fa-spin.fa-spinner
+                                    span &nbsp;
+                                span #{__('add_')}
+                    div.row.margin-top-15px
                         div.col-xs-12.col-sm-6
                             div
                                 div.margin-bottom-15px
@@ -100,9 +111,6 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
 
                     div.row.flex
                         div.col-xs-6.vf-center
-                            label
-                                input(type='checkbox' ng-model='ctrl.keepPage')
-                                span &nbsp; #{__('keep_page')}
                         div.col-xs-6.text-right.vf-center
                             button.btn.btn-primary.action(type='submit' ng-disabled='!ctrl.selectedType || !ctrl.selectedBrand')
                                 span(ng-show='ctrl.addingProduct')

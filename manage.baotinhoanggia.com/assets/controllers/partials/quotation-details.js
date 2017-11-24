@@ -198,7 +198,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 fontSize: 9,
                                 table: {
                                     widths: ['auto', 50, '*', 100, 'auto', 'auto', 'auto', 50],
-                                    headerRows: 1,
+                                    headerRows: 0,
                                     dontBreakRows: true,
                                     body: [
                                         [
@@ -246,6 +246,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 bold: true,
                             },
                             {
+                                color: '#0e1a4f',
                                 text: q.terms || '',
                                 margin: [0, 0, 0, 20],
                                 style: 'terms',
