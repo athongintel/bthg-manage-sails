@@ -55,6 +55,8 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
         $scope.global.locale = Cookies.get('lang');
         if (!$scope.global.user)
             document.location.href = '#/admin?action=login';
+    
+        moment.tz.setDefault('Asia/Ho_Chi_Minh');
         
         $scope.global.utils = {
             

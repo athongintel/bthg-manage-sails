@@ -26,6 +26,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                 if (response.data.success) {
                     let companyInfo = JSON.parse(response.data.result.value);
                     let q = ctrl.quotation;
+                    // console.log(q);
                     //-- build pdf file
                     let dd = {
                         content: [
@@ -108,7 +109,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                             },
                                             {
                                                 border: [false, false, false, false],
-                                                text: moment(q.createdAt).format('YYYY-MM-DD') || '',
+                                                text: moment(q.createdAt).format('DD-MM-YYYY') || '',
                                                 alignment: 'right'
                                             },
                                         ],

@@ -46,7 +46,7 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                                 div.col-xs-6
                                     label #{__('created_at')}
                                 div.col-xs-6.text-right
-                                    span {{global.utils.moment(ctrl.orderDetails.createdAt).format(ctrl.DATETIME_FORMAT)}}
+                                    span {{ctrl.orderDetails.statusTimestamp? global.utils.moment(ctrl.orderDetails.statusTimestamp[0].at).format(ctrl.DATETIME_FORMAT) : '-'}}
 
 
                 div(ng-if='!ctrl.loadingOrderDetails && ctrl.orderDetails')
@@ -83,7 +83,7 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                                     i.fa.fa-filter
                                     span &nbsp;
                                 span #{__('do_filter')}
-                    div.panel.penl-default
+                    div.panel.panel-default
                         div.panel-body
                             div.row
                                 div.col-xs-12.col-sm-6.margin-bottom-5px
@@ -141,6 +141,6 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                                                 td.text-right
                                                     span {{ctrl.status[outOrder.status]}}
                                                 td.text-right
-                                                    span {{global.utils.moment(outOrder.createdAt).format(ctrl.DATETIME_FORMAT)}}
+                                                    span {{outOrder.statusTimestamp? global.utils.moment(outOrder.statusTimestamp[0].at).format(ctrl.DATETIME_FORMAT) : '-'}}
 
 

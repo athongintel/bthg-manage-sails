@@ -147,7 +147,7 @@ module.exports = {
                             userID: {$first: "$userID"},
                             status: {$first: "$status"},
                             metaInfo: {$first: "$metaInfo"},
-                            createdAt: {$first: "$createdAt"},
+                            statusTimestamp: {$first: "$statusTimestamp"},
                             quots: {$addToSet: "$quotations"}
                         }
                     }
