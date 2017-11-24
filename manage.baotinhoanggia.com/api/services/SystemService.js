@@ -58,36 +58,38 @@ const runBackup = async function () {
 const runBackupWithCronJob = async function () {
     try {
         console.log('- set db backup life cycle');
-        let setLifecycleParams = {
+        let params = {
             Bucket: sails.config.S3_DB_BACKUP_BUCKET,
             LifecycleConfiguration: {
                 Rules: [
                     {
+                        Prefix: sails.config.BACKUP_FILE_PREFIX,
                         Expiration: {
-                            Days: sails.config.BACKUP_EXPIRATION_DAY
+                            Days: 7
                         },
-                        ID: sails.config.BACKUP_LIFECYCLE_ID,
-                        Status: "Enabled"
+                        ID: "bthg-db-backup-life-cycle",
+                        Status: "Enabled",
                     }
                 ]
             }
         };
-        await _app.S3.putBucketLifecycleConfiguration(setLifecycleParams).promise();
+        await _app.S3.putBucketLifecycleConfiguration(params).promise();
         
         return await new Promise((resolve) => {
             new Cron(`00 */${sails.config.BACKUP_INTERVAL_MINUTE} * * * *`, async function () {
                 try {
                     await runBackup();
-                    console.log('[SYSTEM] db backup success at ', moment().format(sails.config.TIME_FORMAT));
+                    console.log('[SYSTEM] db backed-up success at ', moment().format(sails.config.TIME_FORMAT));
                 }
                 catch (err) {
-                    console.log('[SYSTEM] db backup FAILURE at ', moment().format(sails.config.TIME_FORMAT));
+                    console.log('[SYSTEM] db backed-up FAILURE at ', moment().format(sails.config.TIME_FORMAT));
                 }
             }, null, true, sails.config.TIME_ZONE);
             resolve(sysUtils.returnSuccess());
         });
     }
     catch (err) {
+        console.log('runBackupWithCronJob: ', err);
         return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
     }
 };
@@ -96,21 +98,24 @@ const setSystemDefaultVariables = async function () {
     let systemReset = await _app.model.SystemVariable.findOne({name: 'SYSTEM_RESET'});
     if (!systemReset)
         systemReset = await new _app.model.SystemVariable({name: 'SYSTEM_RESET', value: '1'}).save();
-
+    
     if (systemReset.value === '1') {
         systemReset.value = '0';
         await systemReset.save();
-    
+        
         console.log('- init system variables');
         let promises = [];
         
         let DEFAULT_TERMS = await _app.model.SystemVariable.findOne({name: 'DEFAULT_TERMS'});
         if (!DEFAULT_TERMS)
             promises.push(new _app.model.SystemVariable({name: 'DEFAULT_TERMS', value: ''}).save());
-    
+        
         let COMPANY_INFO = await _app.model.SystemVariable.findOne({name: 'COMPANY_INFO'});
         if (!COMPANY_INFO)
-            promises.push(new _app.model.SystemVariable({name: 'COMPANY_INFO', value: JSON.stringify({name: '', business: '', contactInfo: '', address : ''})}).save());
+            promises.push(new _app.model.SystemVariable({
+                name: 'COMPANY_INFO',
+                value: JSON.stringify({name: '', business: '', contactInfo: '', address: ''})
+            }).save());
         
         await Promise.all(promises);
     }
@@ -134,8 +139,15 @@ module.exports = {
         aws.config.setPromisesDependency(global.Promise);
         _app.S3 = new aws.S3();
         
-        await runBackupWithCronJob();
-        await setSystemDefaultVariables();
+        let result;
+        
+        result = await runBackupWithCronJob();
+        if (!result.success)
+            return result;
+        
+        result = await setSystemDefaultVariables();
+        if (!result.success)
+            return result;
         
         return sysUtils.returnSuccess();
     },
@@ -170,26 +182,26 @@ module.exports = {
         }
     },
     
-    getSystemVariable: async function(principal, params){
+    getSystemVariable: async function (principal, params) {
         "use strict";
         /*
             params: {
                 name: name of the variable
             }
          */
-        try{
+        try {
             let systemVariable = await _app.model.SystemVariable.findOne({name: params.name});
             if (!systemVariable) return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             
             return sysUtils.returnSuccess(systemVariable);
         }
-        catch(err){
+        catch (err) {
             console.log('getSystemVariable:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
     },
     
-    setSystemVariable: async function(principal, params){
+    setSystemVariable: async function (principal, params) {
         "use strict";
         /*
             params:{
@@ -197,7 +209,7 @@ module.exports = {
                 value: variable value
             }
          */
-        try{
+        try {
             let systemVariable = await _app.model.SystemVariable.findOne({name: params.name});
             if (!systemVariable) return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             
@@ -205,7 +217,7 @@ module.exports = {
             await systemVariable.save();
             return sysUtils.returnSuccess();
         }
-        catch(err){
+        catch (err) {
             console.log('setSystemVariable:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
