@@ -141,13 +141,18 @@ module.exports = {
         
         let result;
         
-        result = await runBackupWithCronJob();
-        if (!result.success)
-            return result;
-        
-        result = await setSystemDefaultVariables();
-        if (!result.success)
-            return result;
+        if (sails.config.BACKUP_DB_CRON_JOB) {
+            result = await runBackupWithCronJob();
+            if (!result.success)
+                return result;
+    
+            result = await setSystemDefaultVariables();
+            if (!result.success)
+                return result;
+        }
+        else{
+            console.log('- local not backup db');
+        }
         
         return sysUtils.returnSuccess();
     },

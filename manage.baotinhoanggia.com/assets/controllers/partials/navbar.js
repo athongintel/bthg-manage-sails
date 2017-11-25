@@ -40,6 +40,13 @@ app.controller('NavbarController', ['$scope', '$uibModal', function ($scope, $mo
         if (queries['action'] === 'login'){
             ctrl.login();
         }
+        
+        let btnNavbarToggle = $('#btnNavbarToggle');
+        $('li.li-toggle').on('click', function(){
+            if (btnNavbarToggle.is(":visible")) {
+                btnNavbarToggle.click();
+            }
+        });
     };
     
 }]);

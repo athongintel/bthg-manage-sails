@@ -28,10 +28,10 @@ app.controller('AdminSupplierAddDialogController', ['$uibModalInstance', '$scope
                     console.log(response.data.error);
                 }
             },
-            function (err) {
+            function () {
                 "use strict";
                 $scope.processing = false;
-                alert('Network error.');
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             }
         );
     }

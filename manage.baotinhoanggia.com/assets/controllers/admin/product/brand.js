@@ -141,7 +141,7 @@ app.controller('AdminProductBrandController', ['$scope', '$http', function ($sco
                         resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                     },
                     function () {
-                        resolve('Network error');
+                        resolve($scope.global.utils.errors['NETWORK_ERROR']);
                     }
                 );
             });

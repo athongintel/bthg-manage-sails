@@ -292,6 +292,7 @@ module.exports = {
         "use strict";
         /*
             params:{
+                orderName: optional, the order name might be changed
                 [required] outStockOrderID: id of the out stock order
                 [required] customerContactID: id of the contact that receives this quotation
                 [required] details: [{
@@ -311,6 +312,9 @@ module.exports = {
             
             if (!params.details.length)
                 return sysUtils.returnError(_app.errors.MALFORMED_REQUEST_ERROR);
+            
+            outStockOrder.name = params.orderName;
+            outStockOrder.save();
             
             let quotation = new _app.model.Quotation({
                 outStockOrderID: params.outStockOrderID,

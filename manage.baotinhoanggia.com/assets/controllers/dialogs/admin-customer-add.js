@@ -60,7 +60,7 @@ app.controller('AdminCustomerAddDialogController', ['$uibModalInstance', '$scope
             function () {
                 "use strict";
                 $scope.processing = false;
-                alert('Network error.');
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
             }
         );
     };

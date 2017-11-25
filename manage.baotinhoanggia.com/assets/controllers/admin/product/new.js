@@ -104,7 +104,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                 function () {
                     ctrl.addingProduct = false;
                     alert($scope.global.utils.errors['NETWORK_ERROR']);
-                    resolve('Network error')
+                    resolve($scope.global.utils.errors['NETWORK_ERROR']);
                 }
             );
         });
@@ -128,7 +128,7 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
                     resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                 },
                 function (err) {
-                    resolve('Network error');
+                    resolve($scope.global.utils.errors['NETWORK_ERROR']);
                 }
             );
         });

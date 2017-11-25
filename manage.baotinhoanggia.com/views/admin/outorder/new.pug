@@ -31,7 +31,7 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                     div
                                         div.margin-bottom-5px
                                             label #{__('order_name')}
-                                            input.form-control(ng-disabled='ctrl.mode==="edit"' ng-model='ctrl.orderName')
+                                            input.form-control(ng-model='ctrl.orderName')
                                         div.margin-bottom-5px
                                             label #{__('select_stock')}
                                             branch-selector(global='global' select-disabled='!global.utils.isSuperAdmin() || ctrl.mode==="edit"' selected-branch='ctrl.selectedBranch')

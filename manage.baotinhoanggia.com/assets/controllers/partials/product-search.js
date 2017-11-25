@@ -162,7 +162,7 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
             },
             function () {
                 ctrl.queryingProduct = false;
-                ctrl.queryFailed = 'Network error';
+                ctrl.queryFailed = $scope.global.utils.errors['NETWORK_ERROR'];
             }
         )
     };

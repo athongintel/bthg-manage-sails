@@ -170,8 +170,8 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     function (response) {
                         resolve(response.data.success || ctrl.global.utils.errors[response.data.error.errorName]);
                     },
-                    function (err) {
-                        resolve('Network error');
+                    function () {
+                        resolve($scope.global.utils.errors['NETWORK_ERROR']);
                     }
                 )
             });
@@ -289,7 +289,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                 },
                 function () {
                     alert($scope.global.utils.errors['NETWORK_ERROR']);
-                    resolve('Network error');
+                    resolve($scope.global.utils.errors['NETWORK_ERROR']);
                 }
             );
         });

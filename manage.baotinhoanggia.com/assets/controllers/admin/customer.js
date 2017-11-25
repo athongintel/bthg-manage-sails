@@ -114,7 +114,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                 },
                 function () {
                     ctrl.selectedCustomer.customerSaveProblem = true;
-                    resolve('Network error');
+                    resolve($scope.global.utils.errors['NETWORK_ERROR']);
                 }
             );
         });
@@ -168,8 +168,8 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                     }
                     resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                 },
-                function (err) {
-                    resolve('Network error.');
+                function () {
+                    resolve($scope.global.utils.errors['NETWORK_ERROR']);
                 }
             );
         });
@@ -230,7 +230,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                         resolve(response.data.success || $scope.global.utils.errors[response.data.error.errorName]);
                     },
                     function () {
-                        resolve('Network error');
+                        resolve($scope.global.utils.errors['NETWORK_ERROR']);
                     }
                 )
             });
@@ -266,7 +266,7 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
             },
             function(){
                 ctrl.initializing = false;
-                ctrl.initFailure = 'Network error';
+                ctrl.initFailure = $scope.global.utils.errors['NETWORK_ERROR'];
             }
         );
         

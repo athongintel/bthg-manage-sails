@@ -201,6 +201,6 @@
 	"note_": "Ghi chú",
 	"edit_note": "Sửa",
 	"empty_": "trống",
-	"change_group": "change_group",
-	"select_group": "select_group"
+	"change_group": "Thay đổi nhóm",
+	"select_group": "Chọn nhóm chuyển đến"
 }

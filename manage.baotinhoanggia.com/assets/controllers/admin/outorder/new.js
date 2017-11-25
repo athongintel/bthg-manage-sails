@@ -87,6 +87,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
             token: $scope.global.user.token,
             name: 'create_quotation',
             params: {
+                orderName: ctrl.orderName, //-- order name might change
                 outStockOrderID: ctrl.orderID,
                 details: ctrl.selectedProducts,
                 customerContactID: ctrl.selectedCustomerContact,
