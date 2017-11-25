@@ -32,7 +32,7 @@
                     i.fa.fa-sign-in
                     span &nbsp; #{__('login_')}
 
-        ul.nav.navbar-nav(ng-cloak ng-show='global.utils.isPath("admin")')
+        ul.nav.navbar-nav(ng-cloak ng-show='global.user && global.utils.isPath("admin")')
             li.li-toggle(ng-class='{active: global.utils.isPath("admin/index")}')
                 a(href='#/admin/index') #{__('home')}
             li.li-toggle(ng-class='{active: global.utils.isPath("admin/customer")}')
