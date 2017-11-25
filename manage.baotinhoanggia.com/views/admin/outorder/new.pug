@@ -10,6 +10,19 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                 i.fa.fa-spinner.fa-spin
             div(ng-hide='ctrl.initializing')
                 fieldset(ng-disabled='ctrl.creatingOrder')
+                    div.text-right
+                        a.btn.btn-default.margin-right-5px.action(role='button' href='/#admin/outorder/list')
+                            span #{__('cancel_')}
+                        button.btn.btn-primary(ng-click='ctrl.mode==="edit"? ctrl.createNewQuotation("' + __('new_quotation_version_created') + '") : ctrl.createOrder("' + __('create_order_success') + '")' ng-disabled='!ctrl.selectedProducts.length || !ctrl.selectedCustomer || !ctrl.selectedCustomerContact || ctrl.creatingOrder')
+                            span(ng-show='ctrl.creatingOrder')
+                                i.fa.fa-spinner.fa-spin
+                                span &nbsp;
+                            span(ng-hide='ctrl.creatingOrder')
+                                i.fa.fa-save
+                                span &nbsp;
+                            span(ng-if='!ctrl.mode || ctrl.mode==="clone"') #{__('create_order_and_save_quotation')}
+                            span(ng-if='ctrl.mode==="edit"') #{__('create_new_quotation_version')}
+
                     div.row
                         div.col-xs-12.col-sm-5
                             label #{__('new_outorder')}
@@ -34,16 +47,17 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                 div.col-xs-6
                                     label #{__('terms_')}
                                 div.col-xs-6.text-right
-                                    button.btn.btn-xs.btn-warning(ng-disabled='ctrl.overridingTerms' ng-click='ctrl.overrideDefaultTerms()')
-                                        span(ng-show='ctrl.overridingTerms')
-                                            i.fa.fa-spinner.fa-spin
-                                            span &nbsp;
-                                        span(ng-hide='ctrl.overridingTerms')
-                                            i.fa.fa-save
-                                            span &nbsp;
-                                        span #{__('override_default')}
 
                             textarea.fixed-textarea.form-control(ng-model='ctrl.orderTerms' style='height: 250px')
+                            div.text-right.margin-top-5px
+                                button.btn.btn-xs.btn-warning(ng-disabled='ctrl.overridingTerms' ng-click='ctrl.overrideDefaultTerms()')
+                                    span(ng-show='ctrl.overridingTerms')
+                                        i.fa.fa-spinner.fa-spin
+                                        span &nbsp;
+                                    span(ng-hide='ctrl.overridingTerms')
+                                        i.fa.fa-save
+                                        span &nbsp;
+                                    span #{__('override_default')}
 
                     div.row
                         div.col-xs-12.col-sm-5

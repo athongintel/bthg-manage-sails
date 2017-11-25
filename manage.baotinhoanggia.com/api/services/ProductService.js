@@ -144,6 +144,31 @@ module.exports = {
         }
     },
     
+    changeTypeGroup: async function (principal, params) {
+        "use strict";
+        /*
+            params: {
+                [required] typeID: the id of product type
+                [required] newGroupID: the id of product group to switch this type to
+            }
+         */
+        try {
+            let type = await _app.model.ProductType.findById(params.typeID);
+            let group = await _app.model.ProductGroup.findById(params.newGroupID);
+            
+            if (!type || !group)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            type.groupID = group._id;
+            await type.save();
+            return sysUtils.returnSuccess();
+        }
+        catch (err) {
+            console.log('changeTypeGroup:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     getAllProductCategories: async function (principal, params) {
         "use strict";
         /*
@@ -199,7 +224,7 @@ module.exports = {
                         }
                     },
                 ]);
-                console.log(categories);
+                // console.log(categories);
             }
             else {
                 categories = await _app.model.ProductGroup.find({});

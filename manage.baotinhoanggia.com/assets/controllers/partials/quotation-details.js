@@ -72,7 +72,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 margin: [0, 10, 0, 10],
                                 bold: true,
                                 fontSize: 16,
-                                color: '#0e1a4f',
+                                color: '#000000',
                             },
                             {
                                 color: '#0e1a4f',

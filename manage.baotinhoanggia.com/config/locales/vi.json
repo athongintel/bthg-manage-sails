@@ -157,7 +157,7 @@
 	"price_": "Giá bán",
 	"export_pdf": "Xuất file PDF",
 	"terms_": "Điều khoản",
-	"override_default": "Lưu đè",
+	"override_default": "Chọn làm mặc định",
 	"create_new_quotation_version": "Lưu thay đổi báo giá",
 	"NETWORK_ERROR": "Lỗi mạng",
 	"SUCCESS": "Thao tác thành công",
@@ -200,5 +200,7 @@
 	"quotation_032": "Bao gia",
 	"note_": "Ghi chú",
 	"edit_note": "Sửa",
-	"empty_": "trống"
+	"empty_": "trống",
+	"change_group": "change_group",
+	"select_group": "select_group"
 }

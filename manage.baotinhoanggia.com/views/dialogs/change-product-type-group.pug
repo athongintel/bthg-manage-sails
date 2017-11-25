@@ -1,0 +1,14 @@
+script(type="text/ng-template" id="changeProductTypeGroupDialog")
+    .modal-header(ng-init='init()')
+        button.close(type='button', ng-click='close()') x
+        div.header #{__('change_group')}
+    .modal-body
+        div.margin-bottom-15px
+            label #{__('select_group')}
+            group-selector(global='global' selected-group='selectedGroup' on-group-changed='groupChanged(selectedGroup)')
+    .modal-footer
+        div.text-right
+            button.action.btn.btn-default.margin-right-5px(ng-click='close()')
+                span #{__('close_')}
+            button.action.btn.btn-primary(ng-click='changeGroup()' ng-disabled='!newGroup || newGroup._id === selectedGroup._id')
+                span #{__('change_')}

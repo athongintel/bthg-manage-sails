@@ -1,4 +1,4 @@
-app.controller('AdminProductCategoryController', ['$scope', '$http', function ($scope, $http) {
+app.controller('AdminProductCategoryController', ['$scope', '$http', '$uibModal', function ($scope, $http, $modal) {
     "use strict";
     
     let ctrl = this;
@@ -246,6 +246,81 @@ app.controller('AdminProductCategoryController', ['$scope', '$http', function ($
         ctrl.filteredTypes = ctrl.selectedCategory.types.filter(function (type) {
             return !!regex.exec($scope.global.utils.removeAccent(type.name));
         });
+    };
+    
+    ctrl.changeTypeGroup = function (type) {
+        //-- find the corresponding category
+        let category = ctrl.categories.find(function (c) {
+            return String(c._id) === type.groupID;
+        });
+        $modal.open({
+            templateUrl: 'changeProductTypeGroupDialog',
+            controller: 'ChangeProductTypeGroupDialogController',
+            resolve: {
+                options: function () {
+                    return {selectedGroup: category};
+                }
+            },
+            scope: $scope
+        }).result.then(
+            function (result) {
+                //-- change type group
+                let selectedNewGroup = ctrl.categories.find(function (c) {
+                    return String(c._id) === (result.selectedGroup._id);
+                });
+                type.isBeingMoved = true;
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'change_type_group',
+                    params: {
+                        typeID: type._id,
+                        newGroupID: selectedNewGroup._id
+                    }
+                }).then(
+                    function (response) {
+                        type.isBeingMoved = false;
+                        if (response.data.success) {
+                            if (ctrl.selectedCategory && String(ctrl.selectedCategory._id) === String(type.groupID)) {
+                                //-- remove type group group
+                                // console.log('old group', category);
+                                // console.log('new group', selectedNewGroup);
+                                type.groupID = selectedNewGroup._id;
+                                
+                                //-- moving
+                                category.typeCount -= 1;
+                                selectedNewGroup.typeCount += 1;
+                                
+                                //-- only push if new group types had been loaded
+                                if (selectedNewGroup.types)
+                                    selectedNewGroup.types.push(type);
+
+                                if (category.types){
+                                    let removeIndex = category.types.findIndex(function(t){
+                                        return String(t._id) === (type._id);
+                                    });
+                                    if (removeIndex >= 0){
+                                        category.types.splice(removeIndex, 1);
+                                    }
+                                }
+
+                                if (ctrl.selectedCategory === category){
+                                    ctrl.selectCategory(category);
+                                }
+                            }
+                        }
+                        else {
+                            alert($scope.global.utils.errors[response.data.error.errorName]);
+                        }
+                    },
+                    function () {
+                        type.isBeingMoved = false;
+                        alert($scope.global.utils.errors['NETWORK_ERROR']);
+                    }
+                );
+            },
+            function () {
+            }
+        );
     };
     
     ctrl.init = function () {

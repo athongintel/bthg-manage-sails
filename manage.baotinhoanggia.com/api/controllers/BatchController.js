@@ -39,6 +39,7 @@ const actions = {
     'remove_product_category': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: ProductService.removeProductCategory, validation: {required: ['_id']}},
     'update_product_category': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: ProductService.updateProductCategory, validation: {required: ['_id', 'name']}},
     'get_all_product_categories': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getAllProductCategories, validation: {}},
+    'change_type_group': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.changeTypeGroup, validation: {required: ['typeID', 'newGroupID']}},
     
     'add_product_brand': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: ProductService.addProductBrand, validation: {required: ['name']}},
     'get_product_brand': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.getProductBrand, validation: {required: ['_id']}},
