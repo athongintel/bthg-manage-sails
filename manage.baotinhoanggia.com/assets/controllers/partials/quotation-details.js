@@ -1,4 +1,4 @@
-const QuotationDetailsPartialController = function ($scope, $timeout, $http, $uibModal) {
+const QuotationDetailsPartialController = function ($scope, $timeout, $http, $uibModal, $interpolate) {
     "use strict";
     
     const ctrl = this;
@@ -12,6 +12,8 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
     };
     
     ctrl.exportHandOver = function (dict, params) {
+        // console.log('hanover:', dict, params);
+        // console.log();
         ctrl.exportingHandOver = true;
         //-- get company info
         
@@ -50,7 +52,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                             {text: dict.han005, alignment: 'center'}
                                         ],
                                         [
-                                            {bold: true, text: `${dict.han006}: ${Date.now()}`, alignment: 'center'},
+                                            {bold: true, text: $interpolate(params.han_number)({hanNumber: moment().format('DDMMYYYY/BBBG')}), alignment: 'center'},
                                             {text: '', alignment: 'center'}
                                         ],
                                     ]
@@ -65,7 +67,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 margin: [0, 20, 0, 20]
                             },
                             {
-                                text: dict.han008,
+                                text: '',//$interpolate(params.han_based_on)({contractNo: '1', day: monment().format('DD'), month: monment().format('MM'), year: monment().format('YYYY'), customerName: 'cong ty me gi day'}),
                                 margin: [50, 0, 0, 0]
                             },
                             {
@@ -177,18 +179,20 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                     };
                     
                     // console.log(dd.content[9]);
-                    // let total = 0;
+                    let total = new BigNumber(0);
                     q.selections.forEach(function (selection, index) {
+                        // console.log(q);
                         let subtotal = new BigNumber(selection.amount).mul(new BigNumber(selection.price));
+                        total = total.add(subtotal);
                         dd.content[9].table.body.push(
                             [
                                 {text: `${index + 1}`, alignment: 'center'},
-                                {text: 'banh rang kitchen aid'},
-                                {text: 'cai', alignment: 'center'},
-                                {text: '02', alignment: 'center'},
-                                {text: '100000', alignment: 'right'},
-                                {text: '2000000', alignment: 'right'},
-                                {text: 'ghi chu y'}
+                                {text: selection.productID.typeID.name || ''},
+                                {text: 'cái', alignment: 'center'},
+                                {text: selection.amount, alignment: 'center'},
+                                {text: accounting.formatNumber(selection.price), alignment: 'right'},
+                                {text: accounting.formatNumber(subtotal.toFixed(0)), alignment: 'right'},
+                                {text: ''}
                             ]
                         );
                     });
@@ -200,8 +204,8 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                             }, {text: '', border: [false, false, false, false],}, {
                                 text: '',
                                 border: [false, false, false, false],
-                            }, {text: 'Tổng', alignment: 'right'}, {
-                                text: '1210000',
+                            }, {text: dict.han032, alignment: 'right'}, {
+                                text: accounting.formatNumber(total.toFixed(0)),
                                 alignment: 'right'
                             }, {text: '', border: [false, false, false, false],}],
                             [{text: '', border: [false, false, false, false],}, {
@@ -210,8 +214,8 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                             }, {text: '', border: [false, false, false, false],}, {
                                 text: '',
                                 border: [false, false, false, false],
-                            }, {text: 'VAT (10%)', alignment: 'right'}, {
-                                text: '1210000',
+                            }, {text: dict.han033, alignment: 'right'}, {
+                                text: accounting.formatNumber(total.mul(0.1).toFixed(0)),
                                 alignment: 'right'
                             }, {text: '', border: [false, false, false, false],}],
                             [{text: '', border: [false, false, false, false],}, {
@@ -220,14 +224,14 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                             }, {text: '', border: [false, false, false, false],}, {
                                 text: '',
                                 border: [false, false, false, false],
-                            }, {text: 'Tong cộng', alignment: 'right'}, {
-                                text: '1210000',
-                                alignment: 'right'
+                            }, {text: dict.han034, alignment: 'right', bold: true}, {
+                                text: accounting.formatNumber(total.mul(1.1).toFixed(0)),
+                                alignment: 'right', bold: true
                             }, {text: '', border: [false, false, false, false],}],
                         ]
                     );
                     
-                    pdfMake.createPdf(dd).download(`${dict.han032} ${ctrl.quotation.outStockOrderID.name}.pdf`);
+                    pdfMake.createPdf(dd).download(`${dict.han035} ${ctrl.quotation.outStockOrderID.name}.pdf`);
                     ctrl.exportingHandOver = false;
                 }
                 else {
