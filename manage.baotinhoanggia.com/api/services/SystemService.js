@@ -76,7 +76,7 @@ const runBackupWithCronJob = async function () {
         await _app.S3.putBucketLifecycleConfiguration(params).promise();
         
         return await new Promise((resolve) => {
-            new Cron(`00 */${sails.config.BACKUP_INTERVAL_HOUR} * * * *`, async function () {
+            new Cron(`00 00 */${sails.config.BACKUP_INTERVAL_HOUR} * * *`, async function () {
                 try {
                     await runBackup();
                     console.log('[SYSTEM] db backed-up success at ', moment().format(sails.config.TIME_FORMAT));
