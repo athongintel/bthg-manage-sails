@@ -6,6 +6,7 @@ const DateRangePickerController = function ($scope, $element) {
     
     ctrl.$onInit = function () {
         let options = {
+            format: 'DD-MM-YYYY',
             time: {
                 enabled: true
             }

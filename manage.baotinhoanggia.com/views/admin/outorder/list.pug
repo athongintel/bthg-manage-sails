@@ -31,7 +31,7 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                                 div.col-xs-6
                                     label #{__('order_status')}
                                 div.col-xs-6.text-right
-                                    span {{ctrl.orderDetails.statusTimestamp? ctrl.status[ctrl.orderDetails.statusTimestamp[ctrl.orderDetails.statusTimestamp.length-1].status] : '-'}}
+                                    span {{ctrl.getOrderStatus(ctrl.orderDetails)}}
                             div.row
                                 div.col-xs-6
                                     label #{__('customer_')}

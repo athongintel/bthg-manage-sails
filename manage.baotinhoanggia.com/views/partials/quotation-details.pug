@@ -89,59 +89,62 @@ div.partials_quotation-details
                         span &nbsp;
                     span #{__('export_pdf')}
 
-                button.btn.btn-sm.btn-primary(style='margin-right: 5px; margin-bottom: 5px' ng-disabled='$ctrl.exportingHandOver' ng-click='$ctrl.exportHandOver({' +
-                    '"han001":"' + __("handover_001") + '",' +
-                    '"han002":"' + __("handover_002") + '",' +
-                    '"han004":"' + __("handover_004") + '",' +
-                    '"han005":"' + __("handover_005") + '",' +
-                    '"han006":"' + __("handover_006") + '",' +
-                    '"han007":"' + __("handover_007") + '",' +
-                    '"han010":"' + __("handover_010") + '",' +
-                    '"han011":"' + __("handover_011") + '",' +
-                    '"han012":"' + __("handover_012") + '",' +
-                    '"han013":"' + __("handover_013") + '",' +
-                    '"han014":"' + __("handover_014") + '",' +
-                    '"han015":"' + __("handover_015") + '",' +
-                    '"han016":"' + __("handover_016") + '",' +
-                    '"han017":"' + __("handover_017") + '",' +
-                    '"han018":"' + __("handover_018") + '",' +
-                    '"han019":"' + __("handover_019") + '",' +
-                    '"han020":"' + __("handover_020") + '",' +
-                    '"han021":"' + __("handover_021") + '",' +
-                    '"han022":"' + __("handover_022") + '",' +
-                    '"han023":"' + __("handover_023") + '",' +
-                    '"han024":"' + __("handover_024") + '",' +
-                    '"han025":"' + __("handover_025") + '",' +
-                    '"han026":"' + __("handover_026") + '",' +
-                    '"han027":"' + __("handover_027") + '",' +
-                    '"han028":"' + __("handover_028") + '",' +
-                    '"han029":"' + __("handover_029") + '",' +
-                    '"han030":"' + __("handover_030") + '",' +
-                    '"han031":"' + __("handover_031") + '",' +
-                    '"han032":"' + __("handover_032") + '",' +
-                    '"han033":"' + __("handover_033") + '",' +
-                    '"han034":"' + __("handover_034") + '",' +
-                    '"han035":"' + __("handover_035") + '",' +
-                '}, {' +
-                    '"han_number": "' + __("handover_number", '{{hanNumber}}') + '",' +
-                    '"han_based_on": "' + __("handover_based_on", '{{contractNo}}', '{{day}}', '{{month}}', '{{year}}', '{{customerName}}') + '",' +
-                    '"han_header": "' + __("handover_header", '{{day}}', '{{month}}', '{{year}}', '{{location}}') + '",' +
-                    '"han_target": "' + __("handover_target", '{{target}}') + '",' +
-                '})')
-                    span
-                        i.fa.fa-truck
-                        span &nbsp;
-                    span #{__('export_handover')}
-                button.btn.btn-sm.btn-default(style='margin-right: 5px; margin-bottom: 5px')
-                    span
-                        i.fa.fa-money
-                        span &nbsp;
-                    span #{__('export_payment_request')}
-                button.btn.btn-sm.btn-info(style='margin-right: 5px; margin-bottom: 5px')
-                    span
-                        i.fa.fa-print
-                        span &nbsp;
-                    span #{__('export_order_print')}
+                span(ng-show='$ctrl.shouldShowOtherButtons()')
+                    button.btn.btn-sm.btn-primary(style='margin-right: 5px; margin-bottom: 5px' ng-disabled='$ctrl.exportingHandOver' ng-click='$ctrl.exportHandOver({' +
+                        '"han001":"' + __("handover_001") + '",' +
+                        '"han002":"' + __("handover_002") + '",' +
+                        '"han004":"' + __("handover_004") + '",' +
+                        '"han005":"' + __("handover_005") + '",' +
+                        '"han006":"' + __("handover_006") + '",' +
+                        '"han007":"' + __("handover_007") + '",' +
+                        '"han008":"' + __("handover_008") + '",' +
+                        '"han009":"' + __("handover_009") + '",' +
+                        '"han010":"' + __("handover_010") + '",' +
+                        '"han011":"' + __("handover_011") + '",' +
+                        '"han012":"' + __("handover_012") + '",' +
+                        '"han013":"' + __("handover_013") + '",' +
+                        '"han014":"' + __("handover_014") + '",' +
+                        '"han015":"' + __("handover_015") + '",' +
+                        '"han016":"' + __("handover_016") + '",' +
+                        '"han017":"' + __("handover_017") + '",' +
+                        '"han018":"' + __("handover_018") + '",' +
+                        '"han019":"' + __("handover_019") + '",' +
+                        '"han020":"' + __("handover_020") + '",' +
+                        '"han021":"' + __("handover_021") + '",' +
+                        '"han022":"' + __("handover_022") + '",' +
+                        '"han023":"' + __("handover_023") + '",' +
+                        '"han024":"' + __("handover_024") + '",' +
+                        '"han025":"' + __("handover_025") + '",' +
+                        '"han026":"' + __("handover_026") + '",' +
+                        '"han027":"' + __("handover_027") + '",' +
+                        '"han028":"' + __("handover_028") + '",' +
+                        '"han029":"' + __("handover_029") + '",' +
+                        '"han030":"' + __("handover_030") + '",' +
+                        '"han031":"' + __("handover_031") + '",' +
+                        '"han032":"' + __("handover_032") + '",' +
+                        '"han033":"' + __("handover_033") + '",' +
+                        '"han034":"' + __("handover_034") + '",' +
+                        '"han035":"' + __("handover_035") + '",' +
+                    '}, {' +
+                        '"han_number": "' + __("handover_number", '{{hanNumber}}') + '",' +
+                        '"han_based_on": "' + __("handover_based_on", '{{contractNo}}', '{{day}}', '{{month}}', '{{year}}', '{{customerName}}') + '",' +
+                        '"han_header": "' + __("handover_header", '{{day}}', '{{month}}', '{{year}}', '{{location}}') + '",' +
+                        '"han_target": "' + __("handover_target", '{{target}}') + '",' +
+                    '})')
+                        span
+                            i.fa.fa-truck
+                            span &nbsp;
+                        span #{__('export_handover')}
+                    button.btn.btn-sm.btn-default(style='margin-right: 5px; margin-bottom: 5px')
+                        span
+                            i.fa.fa-money
+                            span &nbsp;
+                        span #{__('export_payment_request')}
+                    button.btn.btn-sm.btn-info(style='margin-right: 5px; margin-bottom: 5px')
+                        span
+                            i.fa.fa-print
+                            span &nbsp;
+                        span #{__('export_order_print')}
             div.col-xs-3.text-right
                 a.btn-sm.btn.btn-default.margin-bottom-5px(href='#/admin/outorder/new?mode=clone&orderID={{$ctrl.quotation.outStockOrderID._id}}&quotationID={{$ctrl.quotation._id}}')
                     span #{__('fork_order')}

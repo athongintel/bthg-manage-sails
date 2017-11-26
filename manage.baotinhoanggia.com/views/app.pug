@@ -98,7 +98,15 @@ html(ng-app='app')
                 '"RESOURCE_DIRTY_ERROR" : "' + __('RESOURCE_DIRTY_ERROR')+ '",' +
                 '"TOKEN_INVALID_ERROR" : "' + __('TOKEN_INVALID_ERROR')+ '",' +
                 '"BACKWARD_STATUS_ERROR" : "' + __('BACKWARD_STATUS_ERROR')+ '",' +
-            '}' +
+            '},' +
+            'ORDER_STATUS : [' +
+                '{value: "1", desc: "'+ __('ORDER_OPEN') +'"},' +
+                '{value: "2", desc: "'+ __('ORDER_CONFIRMED') +'"},' +
+                '{value: "3", desc: "'+ __('ORDER_PAYMENT_RECEIVED') +'"},' +
+                '{value: "4", desc: "'+ __('ORDER_FINISHED') +'"},' +
+                '{value: "5", desc: "'+ __('ORDER_CANCELED') +'"},' +
+
+            ']' +
         '})')
             include ./partials/navbar
             div(ng-view='')

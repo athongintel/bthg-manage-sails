@@ -207,7 +207,7 @@
 	"confirm_": "Xác nhận",
 	"export_handover": "Xuất biên bản giao hàng",
 	"export_payment_request": "Xuất yêu cầu thanh toán",
-	"export_order_print": "Xuất bản in báo giá",
+	"export_order_print": "Xuất bản in hoá đơn",
 	"BACKWARD_STATUS_ERROR": "BACKWARD_STATUS_ERROR",
 	"handover_001": "Công ty TNHH MTV",
 	"handover_002": "CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM",
@@ -247,5 +247,12 @@
 	"PO_number": "Số PO khách hàng",
 	"PO_date": "Ngày PO khách hàng",
 	"handover_006": "Tốt",
-	"PO_prepaid": "Trả trước"
+	"PO_prepaid": "Trả trước",
+	"handover_008": "Thương hiệu",
+	"handover_009": "Model",
+	"ORDER_OPEN": "Chờ xác nhận",
+	"ORDER_CONFIRMED": "Đã xác nhận",
+	"ORDER_PAYMENT_RECEIVED": "Đã thanh toán",
+	"ORDER_FINISHED": "Hoàn thành",
+	"ORDER_CANCELED": "Đã huỷ"
 }

@@ -31,6 +31,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                     let dd = {
                         content: [
                             {
+                                fontSize: 11,
                                 table: {
                                     widths: ['*', '*'],
                                     body: [
@@ -51,7 +52,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                             {text: dict.han005, alignment: 'center'}
                                         ],
                                         [
-                                            {bold: true, text: $interpolate(params.han_number)({hanNumber: moment().format('DDMMYYYY/BBBG')}), alignment: 'center'},
+                                            {fontSize: 10, bold: true, text: $interpolate(params.han_number)({hanNumber: moment().format('DDMMYYYY/BBBG')}), alignment: 'center'},
                                             {text: '', alignment: 'center'}
                                         ],
                                     ]
@@ -62,30 +63,40 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 bold: true,
                                 text: dict.han007,
                                 alignment: 'center',
-                                fontSize: 18,
-                                margin: [0, 20, 0, 20]
+                                fontSize: 16,
+                                margin: [0, 10, 0, 10]
                             },
                             {
+                                fontSize: 10,
                                 text: $interpolate(params.han_based_on)({contractNo: q.outStockOrderID.clientPONumber, day: moment(q.outStockOrderID.clientPODate).format('DD'), month: moment(q.outStockOrderID.clientPODate).format('MM'), year: moment(q.outStockOrderID.clientPODate).format('YYYY'), customerName: q.outStockOrderID.customerID.name}),
-                                margin: [50, 0, 0, 0]
+                                margin: [25, 0, 0, 0]
                             },
                             {
+                                fontSize: 10,
                                 text: `\n${$interpolate(params.han_header)({day: moment().format('DD'), month: moment().format('MM'), year: moment().format('YYYY'), location: q.outStockOrderID.customerID.companyInfo? q.outStockOrderID.customerID.companyInfo.address : ''})}`,
                                 margin: [0, 0, 0, 0]
                             },
-                            {bold: true, text: `\n${dict.han010}`},
                             {
+                                fontSize: 10,
+                                bold: true, text: `\n${dict.han010}`
+                            },
+                            {
+                                fontSize: 10,
                                 table: {
                                     widths: ['auto', 'auto', '*', 'auto', '*'],
                                     body: [
-                                        [{text: '1.'}, {text: dict.han011}, {text: `${q.userID.name} ${q.userID.lastName}` || ''}, {text: dict.han012}, {text: q.userID.position || ''}],
+                                        [{text: '1.'}, {text: dict.han011}, {text: 'Đặng Xuân Hoàng'}, {text: dict.han012}, {text: 'Giám đốc'}],
                                         [{text: '2.'}, {text: dict.han011}, {text: dict.han013}, {text: dict.han012}, {text: dict.han013}],
                                     ]
                                 },
                                 layout: 'noBorders',
                             },
-                            {bold: true, text: `\n${$interpolate(params.han_target)({target: q.outStockOrderID.customerID.name})}`},
                             {
+                                fontSize: 10,
+                                bold: true, text: `${$interpolate(params.han_target)({target: q.outStockOrderID.customerID.name})}`
+                            },
+                            {
+                                fontSize: 10,
                                 table: {
                                     widths: ['auto', 'auto', '*', 'auto', '*'],
                                     body: [
@@ -95,9 +106,13 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 },
                                 layout: 'noBorders',
                             },
-                            {text: `\n${dict.han014}`},
                             {
-                                margin: [0, 15, 0, 15],
+                                fontSize: 10,
+                                text: `\n${dict.han014}`
+                            },
+                            {
+                                fontSize: 10,
+                                margin: [0, 5, 0, 5],
                                 table: {
                                     widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto'],
                                     body: [
@@ -122,6 +137,8 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 }
                             },
                             {
+                                margin: [0,0,0,5],
+                                fontSize: 10,
                                 ul: [
                                     dict.han022,
                                     dict.han023,
@@ -129,9 +146,11 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 ]
                             },
                             {
+                                fontSize: 10,
                                 text: dict.han025
                             },
                             {
+                                fontSize: 10,
                                 margin: [0, 20, 0, 0],
                                 table: {
                                     widths: ['*', '*', '*', '*'],
@@ -165,7 +184,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                             italics: true
                                         }, {text: dict.han031, alignment: 'center', italics: true}],
                                         [{
-                                            text: `\n\n\n\n\n${q.userID.name} ${q.userID.lastName}`,
+                                            text: `\n\n\n\n\nĐặng Xuân Hoàng`,
                                             alignment: 'center',
                                             bold: true
                                         }, {}, {}, {}],
@@ -185,7 +204,14 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                         dd.content[9].table.body.push(
                             [
                                 {text: `${index + 1}`, alignment: 'center'},
-                                {text: selection.productID.typeID.name || ''},
+                                {
+                                    stack: [
+                                        {text: selection.productID.brandID ? `${dict.han008}: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
+                                        {text: selection.productID.model ? `${dict.han009}: ${selection.productID.model}` : '',},
+                                        {text: selection.productID.description ? '\n' + selection.productID.description : '',}
+                                    ],
+                                    alignment: 'left'
+                                },
                                 {text: 'cái', alignment: 'center'},
                                 {text: selection.amount, alignment: 'center'},
                                 {text: accounting.formatNumber(selection.price), alignment: 'right'},
@@ -242,6 +268,10 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                 alert(ctrl.global.utils.errors['NETWORK_ERROR']);
             }
         );
+    };
+    
+    ctrl.shouldShowOtherButtons = function(){
+        return ctrl.quotation && ctrl.quotation.outStockOrderID.statusTimestamp && Number(ctrl.quotation.outStockOrderID.statusTimestamp[ctrl.quotation.outStockOrderID.statusTimestamp.length-1].status) > 1;
     };
     
     ctrl.exportPDF = function (dict) {

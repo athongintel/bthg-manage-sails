@@ -60,13 +60,7 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
         
         $scope.global.utils = {
             
-            ORDER_STATUS: [
-                {value: '1', desc: 'ORDER_OPEN'},
-                {value: '2', desc: 'ORDER_CONFIRMED'},
-                {value: '3', desc: 'ORDER_PAYMENT_RECEIVED'},
-                {value: '4', desc: 'ORDER_FINISHED'},
-                {value: '5', desc: 'ORDER_CANCELED'},
-            ],
+            ORDER_STATUS: initData.ORDER_STATUS,
             
             moment: moment,
             

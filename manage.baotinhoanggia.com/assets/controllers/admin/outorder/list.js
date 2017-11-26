@@ -4,10 +4,13 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
     const ctrl = this;
     
     ctrl.DATETIME_FORMAT = 'DD-MM-YYYY ~ HH:mm';
-    ctrl.status = ['', 'ORDER_OPEN', 'ORDER_CONFIRMED', 'ORDER_PAYMENT_RECEIVED', 'ORDER_FINISHED', 'ORDER_CANCELED'];
     
     ctrl.changeStatus = function (status) {
         ctrl.selectedStatus = status;
+    };
+    
+    ctrl.getOrderStatus = function(details){
+        return details && details.statusTimestamp? $scope.global.utils.ORDER_STATUS[Number(details.statusTimestamp[details.statusTimestamp.length-1].status)-1].desc : '-';
     };
     
     ctrl.changeCustomer = function (customer) {
