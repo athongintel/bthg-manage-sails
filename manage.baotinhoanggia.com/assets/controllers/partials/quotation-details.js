@@ -11,6 +11,237 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         return sum.toString();
     };
     
+    ctrl.exportHandOver = function (dict, params) {
+        ctrl.exportingHandOver = true;
+        //-- get company info
+        
+        $http.post('/rpc', {
+            token: ctrl.global.user.token,
+            name: 'get_system_variable',
+            params: {
+                name: 'COMPANY_INFO'
+            }
+        }).then(
+            function (response) {
+                if (response.data.success) {
+                    let companyInfo = JSON.parse(response.data.result.value);
+                    let q = ctrl.quotation;
+                    //-- build pdf file
+                    let dd = {
+                        content: [
+                            {
+                                table: {
+                                    widths: ['*', '*'],
+                                    body: [
+                                        [
+                                            {text: dict.han001, alignment: 'center'},
+                                            {
+                                                bold: true,
+                                                text: dict.han002,
+                                                alignment: 'center'
+                                            }
+                                        ],
+                                        [
+                                            {bold: true, text: dict.han003, alignment: 'center'},
+                                            {bold: true, text: dict.han004, alignment: 'center'}
+                                        ],
+                                        [
+                                            {text: dict.han005, alignment: 'center'},
+                                            {text: dict.han005, alignment: 'center'}
+                                        ],
+                                        [
+                                            {bold: true, text: `${dict.han006}: ${Date.now()}`, alignment: 'center'},
+                                            {text: '', alignment: 'center'}
+                                        ],
+                                    ]
+                                },
+                                layout: 'noBorders',
+                            },
+                            {
+                                bold: true,
+                                text: dict.han007,
+                                alignment: 'center',
+                                fontSize: 18,
+                                margin: [0, 20, 0, 20]
+                            },
+                            {
+                                text: dict.han008,
+                                margin: [50, 0, 0, 0]
+                            },
+                            {
+                                text: `\n${dict.han009}`,
+                                margin: [0, 0, 0, 0]
+                            },
+                            {bold: true, text: `\n${dict.han010}`},
+                            {
+                                table: {
+                                    widths: ['auto', 'auto', '*', 'auto', '*'],
+                                    body: [
+                                        [{text: '1.'}, {text: dict.han011}, {text: params.admin || ''}, {text: dict.han012}, {text: params.adminPosition || ''}],
+                                        [{text: '2.'}, {text: dict.han011}, {text: dict.han013}, {text: dict.han012}, {text: dict.han013}],
+                                    ]
+                                },
+                                layout: 'noBorders',
+                            },
+                            {bold: true, text: `\n${params.customerName}`},
+                            {
+                                table: {
+                                    widths: ['auto', 'auto', '*', 'auto', '*'],
+                                    body: [
+                                        [{text: '1.'}, {text: dict.han011}, {text: dict.han013}, {text: dict.han012}, {text: dict.han013}],
+                                        [{text: '2.'}, {text: dict.han011}, {text: dict.han013}, {text: dict.han012}, {text: dict.han013}],
+                                    ]
+                                },
+                                layout: 'noBorders',
+                            },
+                            {text: `\n${dict.han014}`},
+                            {
+                                margin: [0, 15, 0, 15],
+                                table: {
+                                    widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                                    body: [
+                                        [{text: dict.han015, alignment: 'center', bold: true}, {
+                                            text: dict.han016,
+                                            alignment: 'center',
+                                            bold: true
+                                        }, {text: dict.han017, alignment: 'center', bold: true}, {
+                                            text: dict.han018,
+                                            alignment: 'center',
+                                            bold: true
+                                        }, {
+                                            text: dict.han019,
+                                            alignment: 'center',
+                                            bold: true
+                                        }, {
+                                            text: dict.han020,
+                                            alignment: 'center',
+                                            bold: true
+                                        }, {text: dict.han021, alignment: 'center', bold: true}],
+                                    ]
+                                }
+                            },
+                            {
+                                ul: [
+                                    dict.han022,
+                                    dict.han023,
+                                    dict.han024,
+                                ]
+                            },
+                            {
+                                text: dict.han025
+                            },
+                            {
+                                margin: [0, 20, 0, 0],
+                                table: {
+                                    widths: ['*', '*', '*', '*'],
+                                    body: [
+                                        [{
+                                            text: dict.han026,
+                                            colSpan: 2,
+                                            alignment: 'center',
+                                            bold: true
+                                        }, {}, {text: dict.han027, colSpan: 2, alignment: 'center', bold: true}, {}],
+                                        [{text: dict.han028, alignment: 'center', bold: true}, {
+                                            text: dict.han029,
+                                            alignment: 'center',
+                                            bold: true
+                                        }, {text: dict.han028, alignment: 'center', bold: true}, {
+                                            text: dict.han030,
+                                            alignment: 'center',
+                                            bold: true
+                                        }],
+                                        [{
+                                            text: dict.han031,
+                                            alignment: 'center',
+                                            italics: true
+                                        }, {
+                                            text: dict.han031,
+                                            alignment: 'center',
+                                            italics: true
+                                        }, {
+                                            text: dict.han031,
+                                            alignment: 'center',
+                                            italics: true
+                                        }, {text: dict.han031, alignment: 'center', italics: true}],
+                                        [{
+                                            text: `\n\n\n\n\n${params.adminName}`,
+                                            alignment: 'center',
+                                            bold: true
+                                        }, {}, {}, {}],
+                                    ]
+                                },
+                                layout: 'noBorders',
+                            }
+                        ]
+                        
+                    };
+                    
+                    // console.log(dd.content[9]);
+                    // let total = 0;
+                    q.selections.forEach(function (selection, index) {
+                        let subtotal = new BigNumber(selection.amount).mul(new BigNumber(selection.price));
+                        dd.content[9].table.body.push(
+                            [
+                                {text: `${index + 1}`, alignment: 'center'},
+                                {text: 'banh rang kitchen aid'},
+                                {text: 'cai', alignment: 'center'},
+                                {text: '02', alignment: 'center'},
+                                {text: '100000', alignment: 'right'},
+                                {text: '2000000', alignment: 'right'},
+                                {text: 'ghi chu y'}
+                            ]
+                        );
+                    });
+                    dd.content[9].table.body = dd.content[9].table.body.concat(
+                        [
+                            [{text: '', border: [false, false, false, false],}, {
+                                text: '',
+                                border: [false, false, false, false],
+                            }, {text: '', border: [false, false, false, false],}, {
+                                text: '',
+                                border: [false, false, false, false],
+                            }, {text: 'Tổng', alignment: 'right'}, {
+                                text: '1210000',
+                                alignment: 'right'
+                            }, {text: '', border: [false, false, false, false],}],
+                            [{text: '', border: [false, false, false, false],}, {
+                                text: '',
+                                border: [false, false, false, false],
+                            }, {text: '', border: [false, false, false, false],}, {
+                                text: '',
+                                border: [false, false, false, false],
+                            }, {text: 'VAT (10%)', alignment: 'right'}, {
+                                text: '1210000',
+                                alignment: 'right'
+                            }, {text: '', border: [false, false, false, false],}],
+                            [{text: '', border: [false, false, false, false],}, {
+                                text: '',
+                                border: [false, false, false, false],
+                            }, {text: '', border: [false, false, false, false],}, {
+                                text: '',
+                                border: [false, false, false, false],
+                            }, {text: 'Tong cộng', alignment: 'right'}, {
+                                text: '1210000',
+                                alignment: 'right'
+                            }, {text: '', border: [false, false, false, false],}],
+                        ]
+                    );
+                    
+                    pdfMake.createPdf(dd).download(`${dict.han032} ${ctrl.quotation.outStockOrderID.name}.pdf`);
+                    ctrl.exportingHandOver = false;
+                }
+                else {
+                    ctrl.exportingHandOver = false;
+                    alert(ctrl.global.utils.errors[response.data.error.errorName]);
+                }
+            },
+            function () {
+                ctrl.exportingHandOver = false;
+                alert(ctrl.global.utils.errors['NETWORK_ERROR']);
+            }
+        );
+    };
+    
     ctrl.exportPDF = function (dict) {
         ctrl.exportingPDF = true;
         //-- get company info
@@ -411,10 +642,12 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                     }
                 }
                 else {
+                    ctrl.exportingPDF = false;
                     alert(ctrl.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {
+                ctrl.exportingPDF = false;
                 alert(ctrl.global.utils.errors['NETWORK_ERROR']);
             }
         );

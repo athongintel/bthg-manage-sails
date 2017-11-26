@@ -80,7 +80,6 @@ div.partials_quotation-details
                 '"quo030":"' + __("quotation_030") + '",' +
                 '"quo031":"' + __("quotation_031") + '",' +
                 '"quo032":"' + __("quotation_032") + '",' +
-
                 '})')
                     span(ng-show='$ctrl.exportingPDF')
                         i.fa.fa-spinner.fa-spin
@@ -90,7 +89,40 @@ div.partials_quotation-details
                         span &nbsp;
                     span #{__('export_pdf')}
 
-                button.btn.btn-sm.btn-primary(style='margin-right: 5px; margin-bottom: 5px')
+                button.btn.btn-sm.btn-primary(style='margin-right: 5px; margin-bottom: 5px' ng-disabled='$ctrl.exportingHandOver' ng-click='$ctrl.exportHandOver({' +
+                    '"han001":"' + __("handover_001") + '",' +
+                    '"han002":"' + __("handover_002") + '",' +
+                    '"han003":"' + __("handover_003") + '",' +
+                    '"han004":"' + __("handover_004") + '",' +
+                    '"han005":"' + __("handover_005") + '",' +
+                    '"han006":"' + __("handover_006") + '",' +
+                    '"han007":"' + __("handover_007") + '",' +
+                    '"han008":"' + __("handover_008") + '",' +
+                    '"han009":"' + __("handover_009") + '",' +
+                    '"han010":"' + __("handover_010") + '",' +
+                    '"han011":"' + __("handover_011") + '",' +
+                    '"han012":"' + __("handover_012") + '",' +
+                    '"han013":"' + __("handover_013") + '",' +
+                    '"han014":"' + __("handover_014") + '",' +
+                    '"han015":"' + __("handover_015") + '",' +
+                    '"han016":"' + __("handover_016") + '",' +
+                    '"han017":"' + __("handover_017") + '",' +
+                    '"han018":"' + __("handover_018") + '",' +
+                    '"han019":"' + __("handover_019") + '",' +
+                    '"han020":"' + __("handover_020") + '",' +
+                    '"han021":"' + __("handover_021") + '",' +
+                    '"han022":"' + __("handover_022") + '",' +
+                    '"han023":"' + __("handover_023") + '",' +
+                    '"han024":"' + __("handover_024") + '",' +
+                    '"han025":"' + __("handover_025") + '",' +
+                    '"han026":"' + __("handover_026") + '",' +
+                    '"han027":"' + __("handover_027") + '",' +
+                    '"han028":"' + __("handover_028") + '",' +
+                    '"han029":"' + __("handover_029") + '",' +
+                    '"han030":"' + __("handover_030") + '",' +
+                    '"han031":"' + __("handover_031") + '",' +
+                    '"han032":"' + __("handover_032") + '",' +
+                '}, {})')
                     span
                         i.fa.fa-truck
                         span &nbsp;
