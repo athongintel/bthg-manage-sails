@@ -5,9 +5,19 @@ script(type="text/ng-template" id="confirmOrderDialog")
             div.header #{__('change_order_status')}
         .modal-body(ng-init='init()')
             order-status-selector(global='global' pre-selected-status='preSelectedStatus' on-status-changed='selectNewStatus(selectedStatus)')
+            div(ng-show='selectedStatus==="2"')
+                div.margin-top-15px
+                    label #{__('PO_number')}
+                    input.form-control(ng-model='poNumber')
+                div.margin-top-15px
+                    label #{__('PO_date')}
+                    date-range-picker(global='global' single='true' on-date-changed='selectPODate(selectedDateRange)')
+                div.margin-top-15px
+                    label #{__('PO_prepaid')}
+                    input.form-control.text-right.huge-input(cleave='global.utils.cleaveOptions.currency' ng-model='poPrepaid')
         .modal-footer
             div.text-right
-                button.btn.btn-primary(ng-disabled='!selectedStatus || isEquals()' ng-click='confirmStatus()')
+                button.btn.btn-primary(ng-disabled='!selectedStatus || !checkValid()' ng-click='confirmStatus()')
                     span(ng-show='processing')
                         i.fa.fa-spinner.fa-spin
                         span &nbsp;

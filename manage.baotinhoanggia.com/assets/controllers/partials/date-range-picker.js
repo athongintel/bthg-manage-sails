@@ -5,13 +5,21 @@ const DateRangePickerController = function ($scope, $element) {
     
     
     ctrl.$onInit = function () {
-        ctrl.picker = $element.find('.date-range-select').dateRangePicker({
+        let options = {
             time: {
                 enabled: true
             }
-        });
+        };
+        if (ctrl.single){
+            options.singleDate = true;
+            options.autoClose = true;
+        }
+        ctrl.picker = $element.find('.date-range-select').dateRangePicker(options);
         ctrl.picker.bind('datepicker-apply',function(event, obj){
             ctrl.onDateChanged({selectedDateRange: obj});
+        });
+        ctrl.picker.bind('datepicker-first-date-selected', function(event, obj){
+            if (ctrl.single) ctrl.onDateChanged({selectedDateRange: obj});
         });
     };
     
@@ -27,6 +35,8 @@ app.component('dateRangePicker', {
     controller: DateRangePickerController,
     bindings: {
         global: '<',
+        single: '<',
+        selectedDate: '<',
         selectedDateRange: '<',
         onDateChanged: '&'
     }

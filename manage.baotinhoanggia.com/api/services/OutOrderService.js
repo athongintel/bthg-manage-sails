@@ -362,6 +362,7 @@ module.exports = {
             params:{
                 [required] orderID: id of the out stock order
                 [required] status: the new status
+                metaInfo: the info needed to update order
                 [required] quotationID: id of the relevant quotation
             }
          */
@@ -380,11 +381,16 @@ module.exports = {
             switch (Number(params.status)) {
                 case _app.model.OutStockOrder.constants.ORDER_CONFIRMED:
                 {
+                    outStockOrder.clientPONumber = params.metaInfo.poNumber;
+                    outStockOrder.clientPODate = params.metaInfo.poDate;
+                    outStockOrder.prepaid = params.metaInfo.poPrepaid;
+                    await outStockOrder.save();
+                    
                     //-- create corresponding out stocks
                     let quotationResult = await OutOrderService.getQuotationDetails(principal, {_id: params.quotationID});
                     if (!quotationResult.success)
                         return quotationResult;
-                    // console.log(quotationResult.result);
+                    
                     let selections = quotationResult.result.selections;
                     let promises = [];
                     selections.forEach(selection => {
@@ -439,6 +445,17 @@ module.exports = {
                 },
                 {
                     $unwind: '$outStockOrderID',
+                },
+                {
+                    $lookup: {
+                        from: 'customer',
+                        localField: 'outStockOrderID.customerID',
+                        foreignField: '_id',
+                        as: 'outStockOrderID.customerID'
+                    }
+                },
+                {
+                    $unwind: '$outStockOrderID.customerID',
                 },
                 {
                     $lookup: {

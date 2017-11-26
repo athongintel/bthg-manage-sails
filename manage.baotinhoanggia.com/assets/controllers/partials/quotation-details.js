@@ -12,11 +12,9 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
     };
     
     ctrl.exportHandOver = function (dict, params) {
-        // console.log('hanover:', dict, params);
-        // console.log();
         ctrl.exportingHandOver = true;
         //-- get company info
-        
+        let data = {};
         $http.post('/rpc', {
             token: ctrl.global.user.token,
             name: 'get_system_variable',
@@ -28,6 +26,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                 if (response.data.success) {
                     let companyInfo = JSON.parse(response.data.result.value);
                     let q = ctrl.quotation;
+                    // console.log(q, companyInfo);
                     //-- build pdf file
                     let dd = {
                         content: [
@@ -44,7 +43,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                             }
                                         ],
                                         [
-                                            {bold: true, text: dict.han003, alignment: 'center'},
+                                            {bold: true, text: companyInfo.name, alignment: 'center'},
                                             {bold: true, text: dict.han004, alignment: 'center'}
                                         ],
                                         [
@@ -67,11 +66,11 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 margin: [0, 20, 0, 20]
                             },
                             {
-                                text: '',//$interpolate(params.han_based_on)({contractNo: '1', day: monment().format('DD'), month: monment().format('MM'), year: monment().format('YYYY'), customerName: 'cong ty me gi day'}),
+                                text: $interpolate(params.han_based_on)({contractNo: q.outStockOrderID.clientPONumber, day: moment(q.outStockOrderID.clientPODate).format('DD'), month: moment(q.outStockOrderID.clientPODate).format('MM'), year: moment(q.outStockOrderID.clientPODate).format('YYYY'), customerName: q.outStockOrderID.customerID.name}),
                                 margin: [50, 0, 0, 0]
                             },
                             {
-                                text: `\n${dict.han009}`,
+                                text: `\n${$interpolate(params.han_header)({day: moment().format('DD'), month: moment().format('MM'), year: moment().format('YYYY'), location: q.outStockOrderID.customerID.companyInfo? q.outStockOrderID.customerID.companyInfo.address : ''})}`,
                                 margin: [0, 0, 0, 0]
                             },
                             {bold: true, text: `\n${dict.han010}`},
@@ -79,13 +78,13 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 table: {
                                     widths: ['auto', 'auto', '*', 'auto', '*'],
                                     body: [
-                                        [{text: '1.'}, {text: dict.han011}, {text: params.admin || ''}, {text: dict.han012}, {text: params.adminPosition || ''}],
+                                        [{text: '1.'}, {text: dict.han011}, {text: `${q.userID.name} ${q.userID.lastName}` || ''}, {text: dict.han012}, {text: q.userID.position || ''}],
                                         [{text: '2.'}, {text: dict.han011}, {text: dict.han013}, {text: dict.han012}, {text: dict.han013}],
                                     ]
                                 },
                                 layout: 'noBorders',
                             },
-                            {bold: true, text: `\n${params.customerName}`},
+                            {bold: true, text: `\n${$interpolate(params.han_target)({target: q.outStockOrderID.customerID.name})}`},
                             {
                                 table: {
                                     widths: ['auto', 'auto', '*', 'auto', '*'],
@@ -166,7 +165,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                             italics: true
                                         }, {text: dict.han031, alignment: 'center', italics: true}],
                                         [{
-                                            text: `\n\n\n\n\n${params.adminName}`,
+                                            text: `\n\n\n\n\n${q.userID.name} ${q.userID.lastName}`,
                                             alignment: 'center',
                                             bold: true
                                         }, {}, {}, {}],
@@ -178,7 +177,6 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                         
                     };
                     
-                    // console.log(dd.content[9]);
                     let total = new BigNumber(0);
                     q.selections.forEach(function (selection, index) {
                         // console.log(q);
@@ -192,7 +190,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 {text: selection.amount, alignment: 'center'},
                                 {text: accounting.formatNumber(selection.price), alignment: 'right'},
                                 {text: accounting.formatNumber(subtotal.toFixed(0)), alignment: 'right'},
-                                {text: ''}
+                                {text: dict.han006, alignment: 'center'}
                             ]
                         );
                     });
@@ -680,12 +678,21 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                     params: {
                         orderID: ctrl.quotation.outStockOrderID._id,
                         quotationID: ctrl.quotation._id,
-                        status: result.selectedStatus
+                        status: result.selectedStatus,
+                        metaInfo: result.metaInfo
                     }
                 }).then(
                     function (response) {
                         ctrl.changingOrderStatus = false;
                         if (response.data.success) {
+                            //-- update metainfo if any
+                            switch(result.selectedStatus){
+                                case "2":
+                                    ctrl.quotation.outStockOrderID.clientPONumber = result.metaInfo.poNumber;
+                                    ctrl.quotation.outStockOrderID.clientPODate = result.metaInfo.poDate;
+                                    ctrl.quotation.outStockOrderID.prepaid = result.metaInfo.poPrepaid;
+                                    break;
+                            }
                             ctrl.quotation.outStockOrderID.statusTimestamp.push(response.data.result);
                             ctrl.onOrderStatusChanged({status: response.data.result});
                             alert(ctrl.global.utils.errors['SUCCESS']);

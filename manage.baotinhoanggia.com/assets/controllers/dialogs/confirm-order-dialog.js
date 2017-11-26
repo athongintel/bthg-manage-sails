@@ -14,12 +14,36 @@ app.controller('ConfirmOrderDialogController', ['$scope', '$uibModalInstance', '
         $scope.selectedStatus = status;
     };
     
-    $scope.isEquals = function(){
-        return String($scope.preSelectedStatus) === String($scope.selectedStatus);
+    $scope.checkValid = function(){
+        let valid =  Number($scope.preSelectedStatus) < Number($scope.selectedStatus);
+        switch($scope.selectedStatus){
+            case "2":
+                valid = valid && !!$scope.poNumber && !!$scope.poDate;
+                break;
+        }
+        return valid;
+    };
+    
+    $scope.selectPODate = function(poDate){
+        $scope.$apply(function(){
+            $scope.poDate = poDate.date1;
+        });
     };
     
     $scope.confirmStatus = function(){
-        modalInstance.close({selectedStatus: $scope.selectedStatus});
+        let result = {
+            selectedStatus: $scope.selectedStatus,
+        };
+        switch($scope.selectedStatus){
+            case "2":
+                result.metaInfo = {
+                    poNumber: $scope.poNumber,
+                    poDate: $scope.poDate,
+                    poPrepaid: $scope.poPrepaid,
+                };
+                break
+        }
+        modalInstance.close(result);
     };
 
 }]);

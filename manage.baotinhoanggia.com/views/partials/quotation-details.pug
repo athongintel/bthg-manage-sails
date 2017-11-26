@@ -92,13 +92,10 @@ div.partials_quotation-details
                 button.btn.btn-sm.btn-primary(style='margin-right: 5px; margin-bottom: 5px' ng-disabled='$ctrl.exportingHandOver' ng-click='$ctrl.exportHandOver({' +
                     '"han001":"' + __("handover_001") + '",' +
                     '"han002":"' + __("handover_002") + '",' +
-                    '"han003":"' + __("handover_003") + '",' +
                     '"han004":"' + __("handover_004") + '",' +
                     '"han005":"' + __("handover_005") + '",' +
                     '"han006":"' + __("handover_006") + '",' +
                     '"han007":"' + __("handover_007") + '",' +
-                    '"han008":"' + __("handover_008") + '",' +
-                    '"han009":"' + __("handover_009") + '",' +
                     '"han010":"' + __("handover_010") + '",' +
                     '"han011":"' + __("handover_011") + '",' +
                     '"han012":"' + __("handover_012") + '",' +
@@ -127,6 +124,9 @@ div.partials_quotation-details
                     '"han035":"' + __("handover_035") + '",' +
                 '}, {' +
                     '"han_number": "' + __("handover_number", '{{hanNumber}}') + '",' +
+                    '"han_based_on": "' + __("handover_based_on", '{{contractNo}}', '{{day}}', '{{month}}', '{{year}}', '{{customerName}}') + '",' +
+                    '"han_header": "' + __("handover_header", '{{day}}', '{{month}}', '{{year}}', '{{location}}') + '",' +
+                    '"han_target": "' + __("handover_target", '{{target}}') + '",' +
                 '})')
                     span
                         i.fa.fa-truck

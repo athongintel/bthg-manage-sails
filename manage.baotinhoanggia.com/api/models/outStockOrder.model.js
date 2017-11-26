@@ -16,6 +16,9 @@ const outStockOrderSchema = new mongoose.Schema({
     branchID: {type: mongoose.Schema.ObjectId, ref: 'Branch', required: true},
     userID: {type: mongoose.Schema.ObjectId, ref: 'User', required: true},
     metaInfo: {type: mongoose.Schema.Types.Mixed},
+    clientPONumber: {type: String},
+    clientPODate: {type: Date, default: Date.now},
+    prepaid: {type: String},
     statusTimestamp: {type: Array, default: [{status: constants.ORDER_OPEN, at: new Date()}]},
 });
 
