@@ -1,4 +1,4 @@
-const QuotationDetailsPartialController = function($scope, $timeout, $http){
+const QuotationDetailsPartialController = function ($scope, $timeout, $http, $uibModal) {
     "use strict";
     
     const ctrl = this;
@@ -86,7 +86,11 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                                 border: [false, true, false, false],
                                                 text: q.customerContactID.customerID.name || ''
                                             },
-                                            {border: [false, true, false, false], text: dict.quo003, alignment: 'right'},
+                                            {
+                                                border: [false, true, false, false],
+                                                text: dict.quo003,
+                                                alignment: 'right'
+                                            },
                                             {
                                                 border: [false, true, false, false],
                                                 text: q.outStockOrderID.code || '',
@@ -288,10 +292,10 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                     let images = [];
                     let imageCount = 0;
                     
-                    let checkFinishLoadingImages = function(){
-                        if (imageCount === q.selections.length){
+                    let checkFinishLoadingImages = function () {
+                        if (imageCount === q.selections.length) {
                             let total = new BigNumber(0);
-                            q.selections.forEach(function(selection, index){
+                            q.selections.forEach(function (selection, index) {
                                 let subtotal = new BigNumber(selection.amount).mul(new BigNumber(selection.price));
                                 total = total.add(subtotal);
                                 if (images[index]) {
@@ -300,9 +304,9 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                         {text: selection.productID.typeID.name || '', alignment: 'center'},
                                         {
                                             stack: [
-                                                {text: selection.productID.brandID? `${dict.quo028}: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
-                                                {text: selection.productID.model? `${dict.quo029}: ${selection.productID.model}` : '',},
-                                                {text: selection.productID.description? '\n' + selection.productID.description : '',}
+                                                {text: selection.productID.brandID ? `${dict.quo028}: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
+                                                {text: selection.productID.model ? `${dict.quo029}: ${selection.productID.model}` : '',},
+                                                {text: selection.productID.description ? '\n' + selection.productID.description : '',}
                                             ],
                                             alignment: 'left'
                                         },
@@ -319,15 +323,15 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                         }
                                     ]);
                                 }
-                                else{
+                                else {
                                     dd.content[4].table.body.push([
                                         {text: index + 1, alignment: 'center'},
                                         {text: selection.productID.typeID.name || '', alignment: 'center'},
                                         {
                                             stack: [
-                                                {text: selection.productID.brandID? `${dict.quo028}: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
-                                                {text: selection.productID.model? `${dict.quo029}: ${selection.productID.model}` : '',},
-                                                {text: selection.productID.description? '\n' + selection.productID.description : '',}
+                                                {text: selection.productID.brandID ? `${dict.quo028}: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
+                                                {text: selection.productID.model ? `${dict.quo029}: ${selection.productID.model}` : '',},
+                                                {text: selection.productID.description ? '\n' + selection.productID.description : '',}
                                             ],
                                             alignment: 'left'
                                         },
@@ -380,7 +384,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                         }
                     };
                     
-                    for (let i=0; i<q.selections.length; i++){
+                    for (let i = 0; i < q.selections.length; i++) {
                         if (q.selections[i].productID.photos && q.selections[i].productID.photos.length) {
                             $http({
                                 url: q.selections[i].productID.photos[0].url,
@@ -399,7 +403,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                                 }
                             );
                         }
-                        else{
+                        else {
                             images[i] = null;
                             imageCount++;
                             checkFinishLoadingImages();
@@ -416,13 +420,56 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
         );
     };
     
-    ctrl.confirmOrder = function(i18n_confirm_order_prompt){
+    ctrl.confirmOrder = function (i18n_confirm_order_prompt) {
         //-- show confirm orderDialog
+        $uibModal.open({
+            templateUrl: 'confirmOrderDialog',
+            controller: 'ConfirmOrderDialogController',
+            resolve: {
+                options: function () {
+                    return {
+                        status: ctrl.quotation.outStockOrderID.statusTimestamp ? ctrl.quotation.outStockOrderID.statusTimestamp[ctrl.quotation.outStockOrderID.statusTimestamp.length - 1].status : null,
+                        global: ctrl.global,
+                    };
+                }
+            },
+        }).result.then(
+            function (result) {
+                //-- change order status
+                ctrl.changingOrderStatus = true;
+                $http.post('/rpc', {
+                    token: ctrl.global.user.token,
+                    name: 'change_order_status',
+                    params: {
+                        orderID: ctrl.quotation.outStockOrderID._id,
+                        quotationID: ctrl.quotation._id,
+                        status: result.selectedStatus
+                    }
+                }).then(
+                    function (response) {
+                        ctrl.changingOrderStatus = false;
+                        if (response.data.success) {
+                            ctrl.quotation.outStockOrderID.statusTimestamp.push(response.data.result);
+                            ctrl.onOrderStatusChanged({status: response.data.result});
+                            alert(ctrl.global.utils.errors['SUCCESS']);
+                        }
+                        else {
+                            alert(ctrl.global.utils.errors[response.data.error.errorName]);
+                        }
+                    },
+                    function () {
+                        ctrl.changingOrderStatus = false;
+                        alert(ctrl.global.utils.errors['NETWORK_ERROR']);
+                    }
+                );
+            },
+            function () {
+            }
+        );
     };
     
     ctrl.$onInit = function () {
         ctrl.loadingQuotation = true;
-        
         $http.post('/rpc', {
             token: ctrl.global.user.token,
             name: 'get_quotation_details',
@@ -434,7 +481,7 @@ const QuotationDetailsPartialController = function($scope, $timeout, $http){
                 ctrl.loadingQuotation = false;
                 if (response.data.success) {
                     ctrl.quotation = response.data.result;
-                    ctrl.quotation.selections.sort(function(a, b){
+                    ctrl.quotation.selections.sort(function (a, b) {
                         return a.sortOrder - b.sortOrder;
                     });
                 }
@@ -456,6 +503,7 @@ app.component('quotationDetails', {
     controller: QuotationDetailsPartialController,
     bindings: {
         global: '<',
-        quotationId: '<'
+        quotationId: '<',
+        onOrderStatusChanged: '&'
     }
 });

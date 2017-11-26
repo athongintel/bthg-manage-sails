@@ -155,7 +155,7 @@
 	"reversion_": "Thay đổi",
 	"export_excel": "Xuất file Excel",
 	"price_": "Giá bán",
-	"export_pdf": "Xuất file PDF",
+	"export_pdf": "Xuất báo giá",
 	"terms_": "Điều khoản",
 	"override_default": "Chọn làm mặc định",
 	"create_new_quotation_version": "Lưu thay đổi báo giá",
@@ -165,7 +165,7 @@
 	"business_": "Lĩnh vực kinh doanh",
 	"contact_": "Thông tin liên hệ",
 	"order_code": "Mã đơn hàng",
-	"confirm_order": "Xác nhận đặt hàng",
+	"confirm_order": "Trạng thái đơn hàng",
 	"quotation_001": "BÁO GIÁ CUNG CẤP THIẾT BỊ",
 	"quotation_002": "Đến",
 	"quotation_003": "Số",
@@ -202,5 +202,11 @@
 	"edit_note": "Sửa",
 	"empty_": "trống",
 	"change_group": "Thay đổi nhóm",
-	"select_group": "Chọn nhóm chuyển đến"
+	"select_group": "Chọn nhóm chuyển đến",
+	"change_order_status": "Thay đổi trạng thái đơn hàng",
+	"confirm_": "Xác nhận",
+	"export_handover": "Xuất biên bản giao hàng",
+	"export_payment_request": "Xuất yêu cầu thanh toán",
+	"export_order_print": "Xuất bản in báo giá",
+	"BACKWARD_STATUS_ERROR": "BACKWARD_STATUS_ERROR"
 }

@@ -31,7 +31,7 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                                 div.col-xs-6
                                     label #{__('order_status')}
                                 div.col-xs-6.text-right
-                                    span {{ctrl.status[ctrl.orderDetails.status]}}
+                                    span {{ctrl.orderDetails.statusTimestamp? ctrl.status[ctrl.orderDetails.statusTimestamp[ctrl.orderDetails.statusTimestamp.length-1].status] : '-'}}
                             div.row
                                 div.col-xs-6
                                     label #{__('customer_')}
@@ -51,7 +51,7 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
 
                 div(ng-if='!ctrl.loadingOrderDetails && ctrl.orderDetails')
                     label #{__('quotation_details')}
-                    quotation-details(global='global' quotation-id='ctrl.orderDetails.quots[0]._id')
+                    quotation-details(global='global' quotation-id='ctrl.orderDetails.quots[0]._id' on-order-status-changed='ctrl.orderStatusChanged(status)')
                     //div.table-responsive
                         table.table.table-striped.table-hover(style='background: silver')
                             thead
@@ -93,7 +93,7 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                                         div.col-xs-3.text-right
                                             button.btn.btn-xs.btn-default(ng-click='ctrl.changeStatus(null)')
                                                 i.fa.fa-remove.text-danger
-                                    order-status-selector(pre-selected-status='ctrl.selectedStatus' on-status-changed='ctrl.changeStatus(selectedStatus)')
+                                    order-status-selector(global='global' pre-selected-status='ctrl.selectedStatus' on-status-changed='ctrl.changeStatus(selectedStatus)')
 
                                 div.col-xs-12.col-sm-6.margin-bottom-5px
                                     div.row

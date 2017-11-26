@@ -1,0 +1,16 @@
+script(type="text/ng-template" id="confirmOrderDialog")
+    div(ng-init='init()')
+        .modal-header
+            button.close(type='button', ng-click='close()') x
+            div.header #{__('change_order_status')}
+        .modal-body(ng-init='init()')
+            order-status-selector(global='global' pre-selected-status='preSelectedStatus' on-status-changed='selectNewStatus(selectedStatus)')
+        .modal-footer
+            div.text-right
+                button.btn.btn-primary(ng-disabled='!selectedStatus || isEquals()' ng-click='confirmStatus()')
+                    span(ng-show='processing')
+                        i.fa.fa-spinner.fa-spin
+                        span &nbsp;
+                    span #{__('confirm_')}
+
+

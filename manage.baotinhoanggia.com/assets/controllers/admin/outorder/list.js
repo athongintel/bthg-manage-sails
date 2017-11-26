@@ -39,6 +39,11 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
         );
     };
     
+    ctrl.orderStatusChanged = function(status){
+        console.log('status changed', status);
+        ctrl.orderDetails.statusTimestamp.push(status);
+    };
+    
     ctrl.showOrderDetails = function(orderID){
         ctrl.selectedOrder = orderID;
         ctrl.loadingOrderDetails = true;

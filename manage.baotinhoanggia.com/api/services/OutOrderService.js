@@ -8,7 +8,7 @@ module.exports = {
         "use strict";
         /*
             params:{
-                name: order name,
+                [required] name: order name,
                 [required] customerID,
                 [required] branchID (branch that fulfill the order),
             }
@@ -24,16 +24,23 @@ module.exports = {
             code += customer.code + '/';
             //-- get year and month
             code += moment().format('YYYY-MM') + '/';
-            let orders = await _app.model.OutStockOrder.find({customerID: params.customerID, createdAt: {$gte: new Date(new Date().getFullYear(), 0, 1), $lt: new Date(new Date().getFullYear(), 11, 31)}});
+            let orders = await _app.model.OutStockOrder.find({
+                customerID: params.customerID,
+                createdAt: {
+                    $gte: new Date(new Date().getFullYear(), 0, 1),
+                    $lt: new Date(new Date().getFullYear(), 11, 31)
+                }
+            });
             code += orders.length + '/BG';
             
-            let outStockOrder = new _app.model.OutStockOrder({
+            let data = {
                 code: code,
                 name: params.name,
                 customerID: params.customerID,
                 branchID: params.branchID,
                 userID: principal.user._id
-            });
+            };
+            let outStockOrder = new _app.model.OutStockOrder(data);
             
             outStockOrder = await outStockOrder.save();
             return sysUtils.returnSuccess(outStockOrder);
@@ -268,13 +275,13 @@ module.exports = {
             }
             
             let outOrders = await _app.model.OutStockOrder.aggregate(pipelines).exec();
-    
+            
             if (params.status !== null) {
-                outOrders = outOrders.filter(order=>{
+                outOrders = outOrders.filter(order => {
                     if (order.statusTimestamp && order.statusTimestamp.length) {
-                        return String(order.statusTimestamp[order.statusTimestamp.length-1].status) === String(params.status);
+                        return String(order.statusTimestamp[order.statusTimestamp.length - 1].status) === String(params.status);
                     }
-                    else{
+                    else {
                         return false;
                     }
                 });
@@ -313,8 +320,10 @@ module.exports = {
             if (!params.details.length)
                 return sysUtils.returnError(_app.errors.MALFORMED_REQUEST_ERROR);
             
-            outStockOrder.name = params.orderName;
-            outStockOrder.save();
+            if (params.orderName) {
+                outStockOrder.name = params.orderName;
+                outStockOrder.save();
+            }
             
             let quotation = new _app.model.Quotation({
                 outStockOrderID: params.outStockOrderID,
@@ -347,11 +356,70 @@ module.exports = {
         }
     },
     
+    changeOrderStatus: async function (principal, params) {
+        "use strict";
+        /*
+            params:{
+                [required] orderID: id of the out stock order
+                [required] status: the new status
+                [required] quotationID: id of the relevant quotation
+            }
+         */
+        try {
+            let outStockOrder = await _app.model.OutStockOrder.findById(params.orderID);
+            if (!outStockOrder)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            if (!outStockOrder.statusTimestamp)
+                outStockOrder.statusTimestamp = [];
+            
+            //-- new status must not be equal or smaller than old one
+            if (Number(params.status) <= Number(outStockOrder.statusTimestamp[outStockOrder.statusTimestamp.length - 1].status))
+                return sysUtils.returnError(_app.errors.BACKWARD_STATUS_ERROR);
+            
+            switch (Number(params.status)) {
+                case _app.model.OutStockOrder.constants.ORDER_CONFIRMED:
+                {
+                    //-- create corresponding out stocks
+                    let quotationResult = await OutOrderService.getQuotationDetails(principal, {_id: params.quotationID});
+                    if (!quotationResult.success)
+                        return quotationResult;
+                    // console.log(quotationResult.result);
+                    let selections = quotationResult.result.selections;
+                    let promises = [];
+                    selections.forEach(selection => {
+                        promises.push(
+                            (new _app.model.OutStock({
+                                productID: selection.productID._id,
+                                branchID: quotationResult.result.outStockOrderID.branchID,
+                                userID: principal.user._id,
+                                quantity: selection.amount,
+                                price: selection.price,
+                                outStockOrderID: quotationResult.result.outStockOrderID,
+                            })).save()
+                        );
+                    });
+                    await Promise.all(promises);
+                    break;
+                }
+            }
+            
+            let timestamp = {at: Date.now(), status: params.status};
+            outStockOrder.statusTimestamp.push(timestamp);
+            await outStockOrder.save();
+            return sysUtils.returnSuccess(timestamp);
+        }
+        catch (err) {
+            console.log('changeOrderStatus:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     getQuotationDetails: async function (principal, params) {
         "use strict";
         /*
             params:{
-                [required] _id: id of the out order
+                [required] _id: id of the quotation
             }
          */
         try {

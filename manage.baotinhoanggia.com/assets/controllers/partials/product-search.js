@@ -7,7 +7,6 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
         ctrl.selectedBranch = ctrl.global.user.branchID._id;
         ctrl.selectedGroup = {};
         ctrl.selectedType = {};
-        ctrl.selectedBrand = {};
         ctrl.selectedSupplier = {};
         
         ctrl.refreshProducts();
@@ -27,7 +26,7 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
             }
             return sum;
         };
-        let display = product.stockSum && product.stockSum[branch._id]? product.stockSum[branch._id].sum : '0';
+        let display = product.stockSum && product.stockSum[branch]? product.stockSum[branch].sum : '0';
         if (ctrl.global.utils.isSuperAdmin())
             display += '/' + calculateAllStocksSum(product);
         return display;

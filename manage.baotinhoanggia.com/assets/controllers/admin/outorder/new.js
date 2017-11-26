@@ -161,10 +161,12 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                     );
                 }
                 else {
+                    ctrl.creatingOrder = false;
                     alert($scope.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {
+                ctrl.creatingOrder = false;
                 alert($scope.global.utils.errors['NETWORK_ERROR']);
             }
         )

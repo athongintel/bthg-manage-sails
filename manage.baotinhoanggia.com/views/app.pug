@@ -60,7 +60,7 @@ html(ng-app='app')
         script(src="/controllers/dialogs/admin-supplier-add.js")
         script(src="/controllers/dialogs/change-product-type-group.js")
         script(src="/controllers/dialogs/change-value-dialog.js")
-        script(src="/controllers/dialogs/confirm-order.js")
+        script(src="/controllers/dialogs/confirm-order-dialog.js")
         script(src="/controllers/dialogs/login.js")
         script(src="/controllers/dialogs/product-details-dialog.js")
         script(src="/controllers/dialogs/view-photo.js")
@@ -97,6 +97,7 @@ html(ng-app='app')
                 '"DUPLICATED_ERROR" : "' + __('DUPLICATED_ERROR')+ '",' +
                 '"RESOURCE_DIRTY_ERROR" : "' + __('RESOURCE_DIRTY_ERROR')+ '",' +
                 '"TOKEN_INVALID_ERROR" : "' + __('TOKEN_INVALID_ERROR')+ '",' +
+                '"BACKWARD_STATUS_ERROR" : "' + __('BACKWARD_STATUS_ERROR')+ '",' +
             '}' +
         '})')
             include ./partials/navbar
@@ -111,4 +112,5 @@ html(ng-app='app')
             include ./dialogs/change-value-dialog
             include ./dialogs/view-photo
             include ./dialogs/change-product-type-group
+            include ./dialogs/confirm-order-dialog
 

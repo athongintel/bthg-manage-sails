@@ -38,11 +38,16 @@ div.partials_quotation-details
             textarea.form-control.fixed-textarea(readonly style='min-height: 200px') {{$ctrl.quotation.terms}}
     div.row.margin-top-15px
         fieldset(ng-disabled='$ctrl.loadingQuotation')
-            div.col-xs-6.text-left
-                button.btn-sm.btn.btn-success(style='margin-right: 5px; margin-bottom: 5px' ng-click='$ctrl.confirmOrder()')
-                    i.fa.fa-handshake-o
-                    span &nbsp; #{__('confirm_order')}
-                button.btn-sm.btn.btn-default.margin-bottom-5px(style='margin-left: 0px; margin-bottom: 5px' ng-disabled='$ctrl.exportingPDF' ng-click='$ctrl.exportPDF({' +
+            div.col-xs-9.text-left
+                button.btn-sm.btn.btn-success(ng-disabled='$ctrl.changingOrderStatus' style='margin-right: 5px; margin-bottom: 5px' ng-click='$ctrl.confirmOrder()')
+                    span(ng-show='$ctrl.changingOrderStatus')
+                        i.fa.fa-spinner.fa-spin
+                        span &nbsp;
+                    span(ng-hide='$ctrl.changingOrderStatus')
+                        i.fa.fa-handshake-o
+                        span &nbsp;
+                    span #{__('confirm_order')}
+                button.btn-sm.btn.btn-default.margin-bottom-5px(style='margin-right: 5px; margin-bottom: 5px' ng-disabled='$ctrl.exportingPDF' ng-click='$ctrl.exportPDF({' +
                 '"quo001":"' + __("quotation_001") + '",' +
                 '"quo002":"' + __("quotation_002") + '",' +
                 '"quo003":"' + __("quotation_003") + '",' +
@@ -85,7 +90,22 @@ div.partials_quotation-details
                         span &nbsp;
                     span #{__('export_pdf')}
 
-            div.col-xs-6.text-right
+                button.btn.btn-sm.btn-primary(style='margin-right: 5px; margin-bottom: 5px')
+                    span
+                        i.fa.fa-truck
+                        span &nbsp;
+                    span #{__('export_handover')}
+                button.btn.btn-sm.btn-default(style='margin-right: 5px; margin-bottom: 5px')
+                    span
+                        i.fa.fa-money
+                        span &nbsp;
+                    span #{__('export_payment_request')}
+                button.btn.btn-sm.btn-info(style='margin-right: 5px; margin-bottom: 5px')
+                    span
+                        i.fa.fa-print
+                        span &nbsp;
+                    span #{__('export_order_print')}
+            div.col-xs-3.text-right
                 a.btn-sm.btn.btn-default.margin-bottom-5px(href='#/admin/outorder/new?mode=clone&orderID={{$ctrl.quotation.outStockOrderID._id}}&quotationID={{$ctrl.quotation._id}}')
                     span #{__('fork_order')}
                 a.btn-sm.btn.btn-primary(href='#/admin/outorder/new?mode=edit&orderID={{$ctrl.quotation.outStockOrderID._id}}&quotationID={{$ctrl.quotation._id}}' style='margin-left:5px; margin-bottom: 5px; margin-right: 0px')

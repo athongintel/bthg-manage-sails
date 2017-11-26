@@ -70,6 +70,7 @@ const actions = {
     'get_all_out_orders': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.getAllOutOrders, validation: {required: []}},
     'create_quotation': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.createQuotation, validation: {required: ['outStockOrderID', 'customerContactID', 'details']}},
     'get_quotation_details': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.getQuotationDetails, validation: {required: ['_id']}},
+    'change_order_status': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.changeOrderStatus, validation: {required: ['orderID', 'status', 'quotationID']}},
 
 };
 
