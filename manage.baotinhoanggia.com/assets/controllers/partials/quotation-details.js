@@ -377,12 +377,15 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                         })
                                     },
                                     {
-                                        text: $interpolate(params.pay_based2)({poHandOver: q.outStockOrderID.clientPONumber, customerName: q.customerContactID.customerID.name})
+                                        text: $interpolate(params.pay_based2)({
+                                            poHandOver: q.outStockOrderID.clientPONumber,
+                                            customerName: q.customerContactID.customerID.name
+                                        })
                                     }
                                 ]
                             },
                             {
-                                margin: [0,10,0,10],
+                                margin: [0, 10, 0, 10],
                                 fontSize: 10,
                                 table: {
                                     widths: ['auto', '*'],
@@ -424,7 +427,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                             {
                                 margin: [0, 0, 0, 5],
                                 fontSize: 10,
-                                text: $interpolate(params.pay_amount_text)(),
+                                //text: $interpolate(params.pay_amount_text)(),
                                 bold: true,
                             },
                             {
@@ -527,12 +530,18 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                             [
                                 {text: '', border: [false, false, false, false],},
                                 {text: '', border: [false, false, false, false],},
-                                {text: dict.pay027, alignment: 'right', colSpan: 2},
+                                {bold: true, text: dict.pay027, alignment: 'right', colSpan: 2},
                                 {},
-                                {text: accounting.formatNumber(total.mul(1.1).sub(q.outStockOrderID.prepaid || '0').toFixed(0)), alignment: 'right'},
+                                {
+                                    bold: true,
+                                    text: accounting.formatNumber(total.mul(1.1).sub(q.outStockOrderID.prepaid || '0').toFixed(0)),
+                                    alignment: 'right'
+                                },
                             ],
                         ]
                     );
+                    
+                    dd.content[8].text = $interpolate(params.pay_amount_text)({amountText: ctrl.convertNumberToText(total.mul(1.1).sub(q.outStockOrderID.prepaid || '0').toFixed(0))});
                     
                     pdfMake.createPdf(dd).download(`${dict.pay029} ${ctrl.quotation.outStockOrderID.name}.pdf`);
                     ctrl.exportingPaymentRequest = false;
@@ -547,6 +556,87 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                 alert(ctrl.global.utils.errors['NETWORK_ERROR']);
             }
         );
+    };
+    
+    ctrl.convertNumberToText = function (number) {
+        let result = '';
+        // console.log('converting: ', number);
+        let currencyTextPostfixes = {
+            '0': ['không', 'lẻ'],
+            '1': ['một', 'mốt'],
+            '2': ['hai'],
+            '3': ['ba'],
+            '4': ['bốn'],
+            '5': ['năm', 'lăm'],
+            '6': ['sáu'],
+            '7': ['bảy'],
+            '8': ['tám'],
+            '9': ['chín'],
+            'ten': ['mười', 'mươi'],
+            'hundred': ['trăm'],
+            'separator': ['', 'ngàn', 'triệu', 'tỉ'],
+        };
+        
+        let convertTriplet = function (triplet, hasBefore, dirty) {
+            // console.log('convert: ', triplet, hasBefore);
+            let t = '';
+            
+            if (triplet[0] === '0' && triplet[1] === '0' && triplet[2] === '0')
+                if (dirty)
+                    return currencyTextPostfixes['0'][0];
+                else
+                    return '';
+            
+            if (triplet[0] === '0')
+                t += hasBefore ? currencyTextPostfixes['0'][0] + ' ' + currencyTextPostfixes['hundred'] : '';
+            else
+                t += (currencyTextPostfixes[triplet[0]][0]) + ' ' + currencyTextPostfixes['hundred'];
+            
+            if (triplet[1] === '0')
+                if (triplet[2] === '0')
+                    t += '';
+                else
+                    t += hasBefore || triplet[0] !== '0' ? ' ' + currencyTextPostfixes['0'][1] : '';
+            else if (triplet[1] === '1')
+                t += ' ' + currencyTextPostfixes['ten'][0];
+            else
+                t += ' ' + currencyTextPostfixes[triplet[1]][0] + ' ' + currencyTextPostfixes['ten'][1];
+            
+            if (triplet[2] === '0')
+                t += '';
+            else if (triplet[2] === '1') {
+                if (triplet[1] === '1' || (triplet[0]==='0' && triplet[1]==='0'))
+                    t += ' ' + currencyTextPostfixes['1'][0];
+                else
+                    t += ' ' + currencyTextPostfixes['1'][1];
+            }
+            else if (triplet[2] === '5' && triplet[1] !== '0')
+                t += ' ' + currencyTextPostfixes['5'][1];
+            else
+                t += ' ' + currencyTextPostfixes[triplet[2]][0];
+            
+            // console.log('return: ', t);
+            return t;
+        };
+        
+        number = String(number);
+        let sep = 0;
+        let dirty = false;
+        while (number.length>3){
+            let triplet = number.substr(number.length-3, 3);
+            if (triplet !== "000") dirty = true;
+            triplet = triplet.split('');
+            let t = convertTriplet(triplet, true, dirty);
+            result = (t? (t + ' ' + currencyTextPostfixes['separator'][sep]) : '') + ' ' + result;
+            number = number.substr(0, number.length-3);
+            sep++;
+        }
+        if (number.length === 1) number  = `00${number}`;
+        else if (number.length === 2) number  = `0${number}`;
+        result = convertTriplet(number, false) + ' ' + currencyTextPostfixes['separator'][sep] + ' ' + result;
+        
+        console.log('result: ', result);
+        return result.trim();
     };
     
     ctrl.exportPDF = function (dict) {

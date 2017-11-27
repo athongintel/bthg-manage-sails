@@ -131,7 +131,10 @@ div.partials_quotation-details
                         '"han_header": "' + __("handover_header", '{{day}}', '{{month}}', '{{year}}', '{{location}}') + '",' +
                         '"han_target": "' + __("handover_target", '{{target}}') + '",' +
                     '})')
-                        span
+                        span(ng-show='$ctrl.exportingHandOver')
+                            i.fa.fa-spinner.fa-spin
+                            span &nbsp;
+                        span(ng-hide='$ctrl.exportingHandOver')
                             i.fa.fa-truck
                             span &nbsp;
                         span #{__('export_handover')}
@@ -171,12 +174,15 @@ div.partials_quotation-details
                     '"pay_to2": "' + __("pay_to2", '{{customerName}}') + '",' +
                     '"pay_amount_text": "' + __("pay_amount_text", '{{amountText}}') + '",' +
                     '})')
-                        span
+                        span(ng-show='$ctrl.exportingPaymentRequest')
+                            i.fa.fa-spinner.fa-spin
+                            span &nbsp;
+                        span(ng-hide='$ctrl.exportingPaymentRequest')
                             i.fa.fa-money
                             span &nbsp;
                         span #{__('export_payment_request')}
 
-                    button.btn.btn-sm.btn-info(style='margin-right: 5px; margin-bottom: 5px')
+                    button.btn.btn-sm.btn-info(ng-click='$ctrl.convertNumberToText("195505300003")' style='margin-right: 5px; margin-bottom: 5px')
                         span
                             i.fa.fa-print
                             span &nbsp;
