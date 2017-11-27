@@ -52,7 +52,12 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                             {text: dict.han005, alignment: 'center'}
                                         ],
                                         [
-                                            {fontSize: 10, bold: true, text: $interpolate(params.han_number)({hanNumber: moment().format('DDMMYYYY/BBBG')}), alignment: 'center'},
+                                            {
+                                                fontSize: 10,
+                                                bold: true,
+                                                text: $interpolate(params.han_number)({hanNumber: moment().format('DDMMYYYY') + '/BBBG'}),
+                                                alignment: 'center'
+                                            },
                                             {text: '', alignment: 'center'}
                                         ],
                                     ]
@@ -68,12 +73,23 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                             },
                             {
                                 fontSize: 10,
-                                text: $interpolate(params.han_based_on)({contractNo: q.outStockOrderID.clientPONumber, day: moment(q.outStockOrderID.clientPODate).format('DD'), month: moment(q.outStockOrderID.clientPODate).format('MM'), year: moment(q.outStockOrderID.clientPODate).format('YYYY'), customerName: q.outStockOrderID.customerID.name}),
+                                text: $interpolate(params.han_based_on)({
+                                    contractNo: q.outStockOrderID.clientPONumber,
+                                    day: moment(q.outStockOrderID.clientPODate).format('DD'),
+                                    month: moment(q.outStockOrderID.clientPODate).format('MM'),
+                                    year: moment(q.outStockOrderID.clientPODate).format('YYYY'),
+                                    customerName: q.outStockOrderID.customerID.name
+                                }),
                                 margin: [25, 0, 0, 0]
                             },
                             {
                                 fontSize: 10,
-                                text: `\n${$interpolate(params.han_header)({day: moment().format('DD'), month: moment().format('MM'), year: moment().format('YYYY'), location: q.outStockOrderID.customerID.companyInfo? q.outStockOrderID.customerID.companyInfo.address : ''})}`,
+                                text: `\n${$interpolate(params.han_header)({
+                                    day: moment().format('DD'),
+                                    month: moment().format('MM'),
+                                    year: moment().format('YYYY'),
+                                    location: q.outStockOrderID.customerID.name
+                                })}`,
                                 margin: [0, 0, 0, 0]
                             },
                             {
@@ -93,7 +109,8 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                             },
                             {
                                 fontSize: 10,
-                                bold: true, text: `${$interpolate(params.han_target)({target: q.outStockOrderID.customerID.name})}`
+                                bold: true,
+                                text: `${$interpolate(params.han_target)({target: q.outStockOrderID.customerID.name})}`
                             },
                             {
                                 fontSize: 10,
@@ -137,7 +154,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 }
                             },
                             {
-                                margin: [0,0,0,5],
+                                margin: [0, 0, 0, 5],
                                 fontSize: 10,
                                 ul: [
                                     dict.han022,
@@ -206,6 +223,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 {text: `${index + 1}`, alignment: 'center'},
                                 {
                                     stack: [
+                                        {text: selection.productID.typeID.name},
                                         {text: selection.productID.brandID ? `${dict.han008}: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
                                         {text: selection.productID.model ? `${dict.han009}: ${selection.productID.model}` : '',},
                                         {text: selection.productID.description ? '\n' + selection.productID.description : '',}
@@ -270,8 +288,265 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         );
     };
     
-    ctrl.shouldShowOtherButtons = function(){
-        return ctrl.quotation && ctrl.quotation.outStockOrderID.statusTimestamp && Number(ctrl.quotation.outStockOrderID.statusTimestamp[ctrl.quotation.outStockOrderID.statusTimestamp.length-1].status) > 1;
+    ctrl.exportPaymentRequest = function (dict, params) {
+        ctrl.exportingPaymentRequest = true;
+        //-- get company info
+        let data = {};
+        $http.post('/rpc', {
+            token: ctrl.global.user.token,
+            name: 'get_system_variable',
+            params: {
+                name: 'COMPANY_INFO'
+            }
+        }).then(
+            function (response) {
+                if (response.data.success) {
+                    let companyInfo = JSON.parse(response.data.result.value);
+                    let q = ctrl.quotation;
+                    // console.log(q, companyInfo);
+                    //-- build pdf file
+                    let dd = {
+                        content: [
+                            {
+                                fontSize: 11,
+                                table: {
+                                    widths: ['*', '*'],
+                                    body: [
+                                        [
+                                            {text: dict.pay001, alignment: 'center'},
+                                            {
+                                                bold: true,
+                                                text: dict.pay002,
+                                                alignment: 'center'
+                                            }
+                                        ],
+                                        [
+                                            {bold: true, text: companyInfo.name, alignment: 'center'},
+                                            {bold: true, text: dict.pay003, alignment: 'center'}
+                                        ],
+                                        [
+                                            {text: dict.pay004, alignment: 'center'},
+                                            {text: dict.pay004, alignment: 'center'}
+                                        ],
+                                        [
+                                            {
+                                                fontSize: 10,
+                                                bold: true,
+                                                text: $interpolate(params.pay_number)({payNumber: moment().format('DDMMYYYY/BBBG')}),
+                                                alignment: 'center'
+                                            },
+                                            {text: '', alignment: 'center'}
+                                        ],
+                                    ]
+                                },
+                                layout: 'noBorders',
+                            },
+                            {
+                                fontSize: 10,
+                                alignment: 'right',
+                                text: $interpolate(params.pay_date)({
+                                    day: moment().format('DD'),
+                                    month: moment().format('MM'),
+                                    year: moment().format('YYYY'),
+                                })
+                            },
+                            {
+                                bold: true,
+                                text: dict.pay005,
+                                alignment: 'center',
+                                fontSize: 16,
+                                margin: [0, 10, 0, 0]
+                            },
+                            {
+                                fontSize: 10,
+                                text: dict.pay006,
+                                alignment: 'center',
+                                italics: true,
+                            },
+                            {
+                                margin: [25, 10, 0, 0],
+                                fontSize: 10,
+                                ul: [
+                                    {
+                                        text: $interpolate(params.pay_based1)({
+                                            poNumber: q.outStockOrderID.clientPONumber,
+                                            day: moment(q.outStockOrderID.clientPODate).format('DD'),
+                                            month: moment(q.outStockOrderID.clientPODate).format('MM'),
+                                            year: moment(q.outStockOrderID.clientPODate).format('YYYY'),
+                                            customerName: q.customerContactID.customerID.name
+                                        })
+                                    },
+                                    {
+                                        text: $interpolate(params.pay_based2)({poHandOver: q.outStockOrderID.clientPONumber, customerName: q.customerContactID.customerID.name})
+                                    }
+                                ]
+                            },
+                            {
+                                margin: [0,10,0,10],
+                                fontSize: 10,
+                                table: {
+                                    widths: ['auto', '*'],
+                                    body: [
+                                        [
+                                            {text: dict.pay007},
+                                            {
+                                                ul: [
+                                                    {text: $interpolate(params.pay_to1)({customerName: q.customerContactID.customerID.name})},
+                                                    {text: $interpolate(params.pay_to2)({customerName: q.customerContactID.customerID.name})},
+                                                ]
+                                            }
+                                        ]
+                                    ]
+                                },
+                                layout: 'noBorders',
+                            },
+                            {
+                                fontSize: 10,
+                                text: dict.pay008,
+                                alignment: 'justify',
+                            },
+                            {
+                                fontSize: 10,
+                                margin: [0, 10, 0, 10],
+                                table: {
+                                    widths: ['auto', '*', 'auto', 'auto', 'auto'],
+                                    body: [
+                                        [
+                                            {text: dict.pay009, alignment: 'center', bold: true},
+                                            {text: dict.pay010, alignment: 'center', bold: true},
+                                            {text: dict.pay011, alignment: 'center', bold: true},
+                                            {text: dict.pay012, alignment: 'center', bold: true},
+                                            {text: dict.pay013, alignment: 'center', bold: true},
+                                        ]
+                                    ]
+                                }
+                            },
+                            {
+                                margin: [0, 0, 0, 5],
+                                fontSize: 10,
+                                text: $interpolate(params.pay_amount_text)(),
+                                bold: true,
+                            },
+                            {
+                                fontSize: 10,
+                                text: dict.pay014
+                            },
+                            {
+                                fontSize: 10,
+                                ul: [
+                                    {text: dict.pay017},
+                                    {text: dict.pay018},
+                                    {text: dict.pay019},
+                                ]
+                            },
+                            {
+                                fontSize: 10,
+                                margin: [0, 20, 0, 0],
+                                table: {
+                                    widths: ['*', '*'],
+                                    body: [
+                                        [{
+                                            text: dict.pay020,
+                                            alignment: 'center',
+                                            bold: true
+                                        }, {
+                                            text: dict.pay021,
+                                            alignment: 'center',
+                                            bold: true
+                                        }],
+                                        [{
+                                            text: `\n\n\n\n\nNGUYỄN ĐAN THANH`,
+                                            alignment: 'center',
+                                            bold: true
+                                        }, {
+                                            text: `\n\n\n\n\nĐẶNG XUÂN HOÀNG`,
+                                            alignment: 'center',
+                                            bold: true
+                                        }],
+                                    ]
+                                },
+                                layout: 'noBorders',
+                            }
+                        ]
+                        
+                    };
+                    
+                    let total = new BigNumber(0);
+                    q.selections.forEach(function (selection, index) {
+                        // console.log(q);
+                        let subtotal = new BigNumber(selection.amount).mul(new BigNumber(selection.price));
+                        total = total.add(subtotal);
+                        dd.content[7].table.body.push(
+                            [
+                                {text: `${index + 1}`, alignment: 'center'},
+                                {
+                                    stack: [
+                                        {text: selection.productID.typeID.name},
+                                        //{text: selection.productID.brandID ? `${dict.pay008}: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
+                                        //{text: selection.productID.model ? `${dict.pay009}: ${selection.productID.model}` : '',},
+                                        //{text: selection.productID.description ? '\n' + selection.productID.description : '',}
+                                    ],
+                                    alignment: 'left'
+                                },
+                                {text: accounting.formatNumber(selection.price), alignment: 'right'},
+                                {text: selection.amount, alignment: 'center'},
+                                {text: accounting.formatNumber(subtotal.toFixed(0)), alignment: 'right'},
+                            ]
+                        );
+                    });
+                    dd.content[7].table.body = dd.content[7].table.body.concat(
+                        [
+                            [
+                                {text: '', border: [false, false, false, false],},
+                                {text: '', border: [false, false, false, false],},
+                                {text: dict.pay023, alignment: 'right', colSpan: 2},
+                                {},
+                                {text: accounting.formatNumber(total.toFixed(0)), alignment: 'right'},
+                            ],
+                            [
+                                {text: '', border: [false, false, false, false],},
+                                {text: '', border: [false, false, false, false],},
+                                {text: dict.pay024, alignment: 'right', colSpan: 2},
+                                {},
+                                {text: accounting.formatNumber(total.mul(0.1).toFixed(0)), alignment: 'right'},
+                            ],
+                            [
+                                {text: '', border: [false, false, false, false],},
+                                {text: '', border: [false, false, false, false],},
+                                {text: dict.pay025, alignment: 'right', colSpan: 2},
+                                {},
+                                {text: accounting.formatNumber(total.mul(1.1).toFixed(0)), alignment: 'right'},
+                            ],
+                            [
+                                {text: '', border: [false, false, false, false],},
+                                {text: '', border: [false, false, false, false],},
+                                {text: dict.pay026, alignment: 'right', colSpan: 2},
+                                {},
+                                {text: accounting.formatNumber(q.outStockOrderID.prepaid), alignment: 'right'},
+                            ],
+                            [
+                                {text: '', border: [false, false, false, false],},
+                                {text: '', border: [false, false, false, false],},
+                                {text: dict.pay027, alignment: 'right', colSpan: 2},
+                                {},
+                                {text: accounting.formatNumber(total.mul(1.1).sub(q.outStockOrderID.prepaid || '0').toFixed(0)), alignment: 'right'},
+                            ],
+                        ]
+                    );
+                    
+                    pdfMake.createPdf(dd).download(`${dict.pay029} ${ctrl.quotation.outStockOrderID.name}.pdf`);
+                    ctrl.exportingPaymentRequest = false;
+                }
+                else {
+                    ctrl.exportingPaymentRequest = false;
+                    alert(ctrl.global.utils.errors[response.data.error.errorName]);
+                }
+            },
+            function () {
+                ctrl.exportingPaymentRequest = false;
+                alert(ctrl.global.utils.errors['NETWORK_ERROR']);
+            }
+        );
     };
     
     ctrl.exportPDF = function (dict) {
@@ -685,6 +960,10 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         );
     };
     
+    ctrl.shouldShowOtherButtons = function () {
+        return ctrl.quotation && ctrl.quotation.outStockOrderID.statusTimestamp && Number(ctrl.quotation.outStockOrderID.statusTimestamp[ctrl.quotation.outStockOrderID.statusTimestamp.length - 1].status) > 1;
+    };
+    
     ctrl.confirmOrder = function (i18n_confirm_order_prompt) {
         //-- show confirm orderDialog
         $uibModal.open({
@@ -716,7 +995,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                         ctrl.changingOrderStatus = false;
                         if (response.data.success) {
                             //-- update metainfo if any
-                            switch(result.selectedStatus){
+                            switch (result.selectedStatus) {
                                 case "2":
                                     ctrl.quotation.outStockOrderID.clientPONumber = result.metaInfo.poNumber;
                                     ctrl.quotation.outStockOrderID.clientPODate = result.metaInfo.poDate;

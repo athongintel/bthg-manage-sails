@@ -135,11 +135,47 @@ div.partials_quotation-details
                             i.fa.fa-truck
                             span &nbsp;
                         span #{__('export_handover')}
-                    button.btn.btn-sm.btn-default(style='margin-right: 5px; margin-bottom: 5px')
+
+                    button.btn.btn-sm.btn-default(style='margin-right: 5px; margin-bottom: 5px' ng-disabled='$ctrl.exportingPaymentRequest' ng-click='$ctrl.exportPaymentRequest({' +
+                    '"pay001":"' + __("pay_001") + '",' +
+                    '"pay002":"' + __("pay_002") + '",' +
+                    '"pay003":"' + __("pay_003") + '",' +
+                    '"pay004":"' + __("pay_004") + '",' +
+                    '"pay005":"' + __("pay_005") + '",' +
+                    '"pay006":"' + __("pay_006") + '",' +
+                    '"pay007":"' + __("pay_007") + '",' +
+                    '"pay008":"' + __("pay_008") + '",' +
+                    '"pay009":"' + __("pay_009") + '",' +
+                    '"pay010":"' + __("pay_010") + '",' +
+                    '"pay011":"' + __("pay_011") + '",' +
+                    '"pay012":"' + __("pay_012") + '",' +
+                    '"pay013":"' + __("pay_013") + '",' +
+                    '"pay014":"' + __("pay_014") + '",' +
+                    '"pay017":"' + __("pay_017") + '",' +
+                    '"pay018":"' + __("pay_018") + '",' +
+                    '"pay019":"' + __("pay_019") + '",' +
+                    '"pay020":"' + __("pay_020") + '",' +
+                    '"pay021":"' + __("pay_021") + '",' +
+                    '"pay023":"' + __("pay_023") + '",' +
+                    '"pay024":"' + __("pay_024") + '",' +
+                    '"pay025":"' + __("pay_025") + '",' +
+                    '"pay026":"' + __("pay_026") + '",' +
+                    '"pay027":"' + __("pay_027") + '",' +
+                    '"pay029":"' + __("pay_029") + '",' +
+                    '}, {' +
+                    '"pay_number": "' + __("pay_number", '{{payNumber}}') + '",' +
+                    '"pay_date": "' + __("pay_date", '{{day}}', '{{month}}', '{{year}}') + '",' +
+                    '"pay_based1": "' + __("pay_based1", '{{poNumber}}', '{{day}}', '{{month}}', '{{year}}', '{{customerName}}') + '",' +
+                    '"pay_based2": "' + __("pay_based2", '{{poHandOver}}', '{{customerName}}') + '",' +
+                    '"pay_to1": "' + __("pay_to1", '{{customerName}}') + '",' +
+                    '"pay_to2": "' + __("pay_to2", '{{customerName}}') + '",' +
+                    '"pay_amount_text": "' + __("pay_amount_text", '{{amountText}}') + '",' +
+                    '})')
                         span
                             i.fa.fa-money
                             span &nbsp;
                         span #{__('export_payment_request')}
+
                     button.btn.btn-sm.btn-info(style='margin-right: 5px; margin-bottom: 5px')
                         span
                             i.fa.fa-print
