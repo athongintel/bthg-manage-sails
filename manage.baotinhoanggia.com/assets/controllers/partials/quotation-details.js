@@ -635,7 +635,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         else if (number.length === 2) number  = `0${number}`;
         result = convertTriplet(number, false) + ' ' + currencyTextPostfixes['separator'][sep] + ' ' + result;
         
-        console.log('result: ', result);
+        // console.log('result: ', result);
         return result.trim();
     };
     
