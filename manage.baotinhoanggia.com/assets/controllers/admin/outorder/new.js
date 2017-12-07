@@ -40,10 +40,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
     
     ctrl.getPriceAfterAdjustment = function(selection){
         if (selection.priceAdjust){
-            return new BigNumber(selection.price || '0').mul(100 + (selection.priceAdjust? (Number(selection.priceAdjust)) : 0)).div(100).toString();
-        }
-        else{
-            return selection.price;
+            return new BigNumber(selection.price || '0').add(new BigNumber(selection.priceAdjust || "0")).toString();
         }
     };
     

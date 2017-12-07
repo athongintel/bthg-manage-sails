@@ -10,15 +10,26 @@ script(type="text/ng-template" id="selectProductDialog")
             label #{__('selection')}
             input.huge-input.form-control.text-right(cleave="options.global.utils.cleaveOptions.currency" ng-model="amount" autofocus)
         div.margin-bottom-15px
-            label #{__('price_adjust')}
-            input.huge-input.form-control.text-right(cleave="options.global.utils.cleaveOptions.currency" ng-model="priceAdjust")
+            div.row
+                div.col-xs-6
+                    label #{__('price_adjust')}
+                div.col-xs-6
+                    div.text-right
+                        button.btn.btn-xs.btn-default(ng-click='switchAbsolute()')
+                            span
+                                span &nbsp;
+                                i.fa.fa-money(ng-show='absoluteMode')
+                                i.fa.fa-percent(ng-hide='absoluteMode')
+                                span &nbsp;
+
+            input.huge-input.form-control.text-right(cleave="options.global.utils.cleaveOptions.currency" ng-model='adjustValue' ng-change="adjustPrice()")
         div.margin-bottom-15px.row
             div.col-xs-6
                 label #{__('price_')}
-                div.huge-input.text-right {{options.oldPrice | currency : '' : ''}}
+                div.huge-input.text-right {{formatValue(options.oldPrice)}}
             div.col-xs-6
                 label #{__('price_adjusted')}
-                div.huge-input.text-right {{getAdjustedPrice() | currency : '' : ''}}
+                div.huge-input.text-right {{formatValue(getAdjustedPrice())}}
         div.margin-bottom-15px
             label #{__('note_')}
             textarea.fixed-textarea.form-control(ng-model="note")

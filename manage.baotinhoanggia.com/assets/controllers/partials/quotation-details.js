@@ -68,7 +68,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 bold: true,
                                 text: dict.han007,
                                 alignment: 'center',
-                                fontSize: 16,
+                                fontSize: 22,
                                 margin: [0, 10, 0, 10]
                             },
                             {
@@ -441,7 +441,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 text: dict.pay014
                             },
                             {
-                                margin: [30, 0, 30, 0],
+                                margin: [30, 5, 30, 0],
                                 fontSize: 10,
                                 ul: [
                                     {text: dict.pay017},
@@ -561,7 +561,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                         ]
                     );
                     
-                    dd.content[8].text = $interpolate(params.pay_amount_text)({amountText: ctrl.convertNumberToText(total.mul(1.1).sub(q.outStockOrderID.prepaid || '0').toFixed(0))});
+                    dd.content[8].text = $interpolate(params.pay_amount_text)({amountText: ctrl.capitalizeFirstLetter(ctrl.convertNumberToText(total.mul(1.1).sub(q.outStockOrderID.prepaid || '0').toFixed(0)))});
                     
                     pdfMake.createPdf(dd).download(`${dict.pay029} ${ctrl.quotation.outStockOrderID.name}.pdf`);
                     ctrl.exportingPaymentRequest = false;
