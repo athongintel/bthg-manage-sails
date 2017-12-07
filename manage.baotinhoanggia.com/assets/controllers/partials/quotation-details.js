@@ -601,43 +601,50 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                 
                 //-- ten don vi
                 {
-                    margin: [60,100,0,0],
-                    text: q.customerContactID.customerID.companyInfo && q.customerContactID.customerID.companyInfo.name? q.customerContactID.customerID.companyInfo.name : ' '},
+                    margin: [60, 100, 0, 0],
+                    text: q.customerContactID.customerID.companyInfo && q.customerContactID.customerID.companyInfo.name ? q.customerContactID.customerID.companyInfo.name : ' '
+                },
                 
                 //-- ma so thue
                 {
-                    margin: [60,5,0,0],
-                    text: q.customerContactID.customerID.companyInfo && q.customerContactID.customerID.companyInfo.taxNumber? q.customerContactID.customerID.companyInfo.taxNumber : ' '},
-    
-                //-- ma so thue
+                    margin: [60, 5, 0, 0],
+                    text: q.customerContactID.customerID.companyInfo && q.customerContactID.customerID.companyInfo.taxNumber ? q.customerContactID.customerID.companyInfo.taxNumber : ' '
+                },
+                
+                //-- dia chi
                 {
-                    margin: [30,5,0,0],
-                    fontSize: 10,
-                    text: q.customerContactID.customerID.companyInfo && q.customerContactID.customerID.companyInfo.address? q.customerContactID.customerID.companyInfo.address : ' '},
-    
-    
+                    margin: [30, 5, 0, 0],
+                    fontSize: 11,
+                    text: q.customerContactID.customerID.companyInfo && q.customerContactID.customerID.companyInfo.address ? q.customerContactID.customerID.companyInfo.address : ' '
+                },
+                
+                
                 //-- hinh thuc thanh toan
                 {
                     margin: [120, 5, 0, 0],
-                    text: 'TM/CK'},
+                    text: 'TM/CK'
+                },
                 
                 {
                     layout: 'noBorders',
-                    margin: [-30, 48, 10, 15],
+                    margin: [-30, 48, 10, 0],
                     table: {
                         widths: [25, '*', 40, 40, 80, 120],
                         body: [
-                            [{},{},{},{},{},{}]
+                            //[{}, {}, {}, {}, {}, {}]
                         ]
                     }
                 },
                 {
+                    canvas: []
+                },
+                {
                     layout: 'noBorders',
-                    margin: [-30, 22, 10, 0],
+                    margin: [-30, 0, 10, 0],
                     table: {
                         widths: [80, '*', 80, '*'],
                         body: [
-                            [{},{},{},{}]
+                            //[{}, {}, {}, {}]
                         ]
                     },
                 },
@@ -652,72 +659,112 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
             dd.content[7].table.body.push(
                 [
                     {
-                        margin: [0, 1, 0, 1],
+                        margin: [0, 2, 0, 2],
                         text: `${index + 1}`, alignment: 'left'
                     },
                     {
-                        margin: [0, 1, 0, 1],
+                        margin: [0, 2, 0, 2],
                         stack: [
                             {text: selection.productID.typeID.name + ' ' + selection.productID.model},
                         ],
                         alignment: 'left'
                     },
                     {
-                        margin: [0, 1, 0, 1],
+                        margin: [0, 2, 0, 2],
                         text: dict.print001,
                     },
                     {
-                        margin: [0, 1, 0, 1],
+                        margin: [0, 2, 0, 2],
                         text: selection.amount, alignment: 'center'
                     },
                     {
-                        margin: [0, 1, 0, 1],
+                        margin: [0, 2, 0, 2],
                         text: accounting.formatNumber(selection.price), alignment: 'right'
                     },
                     {
-                        margin: [0, 1, 0, 1],
+                        margin: [0, 2, 0, 2],
                         text: accounting.formatNumber(subtotal.toFixed(0)), alignment: 'right'
                     },
                 ]
             );
         });
-
+        
         let rest = numberOfRows - q.selections.length;
-        for (let i=0;i <rest; i++){
-            dd.content[7].table.body.push(
-                [
-                    {text: ' '}, {text: ' '}, {text: ' '}, {text: ' '}, {text: ' '}, {text: ' '}
-                ]
+        if (rest > 0) {
+            for (let i=0; i<rest; i++){
+                dd.content[7].table.body.push([
+                    {
+                        margin: [0, 2, 0, 2],
+                        text: ' '},
+                    {
+                        margin: [0, 2, 0, 2],
+                        text: ' '},
+                    {
+                        margin: [0, 2, 0, 2],
+                        text: ' '},
+                    {
+                        margin: [0, 2, 0, 2],
+                        text: ' '},
+                    {
+                        margin: [0, 2, 0, 2],
+                        text: ' '},
+                    {
+                        margin: [0, 2, 0, 2],
+                        text: ' '},
+                ])
+            }
+            
+            let rowHeight = 23;
+            let offset = [0, 10];
+            //-- calculate starting point
+            dd.content[8].canvas.push(
+                {
+                    type: 'polyline',
+                    lineWidth: 2,
+                    points: [{x: offset[0], y: offset[1] - rowHeight * rest}, {x: offset[0] + 260, y: offset[1]  - rowHeight * rest }, {x: offset[0] + 500, y: offset[1] - rowHeight}]
+                }
             );
         }
         
-        dd.content[8].table.body = dd.content[8].table.body.concat(
+        dd.content[9].table.body = dd.content[9].table.body.concat(
             [
                 [
                     {text: '', border: [false, false, false, false],},
                     {text: '', border: [false, false, false, false],},
                     {text: '', border: [false, false, false, false],},
-                    {text: accounting.formatNumber(total.toFixed(0)), alignment: 'right'},
+                    {
+                        margin: [0, 2, 0, 2],
+                        text: accounting.formatNumber(total.toFixed(0)), alignment: 'right'
+                    },
                 ],
                 [
                     {text: '', border: [false, false, false, false],},
                     {
-                        margin: [20,0,0,0],
-                        text: '10', border: [false, false, false, false],},
+                        margin: [20, 0, 0, 0],
+                        text: '10', border: [false, false, false, false],
+                    },
                     {text: '', border: [false, false, false, false],},
-                    {text: accounting.formatNumber(total.mul(0.1).toFixed(0)), alignment: 'right'},
+                    {
+                        margin: [0, 2, 0, 2],
+                        text: accounting.formatNumber(total.mul(0.1).toFixed(0)), alignment: 'right'
+                    },
                 ],
                 [
                     {text: '', border: [false, false, false, false],},
                     {text: '', border: [false, false, false, false],},
                     {text: '', border: [false, false, false, false],},
-                    {text: accounting.formatNumber(total.mul(1.1).toFixed(0)), alignment: 'right'},
+                    {
+                        margin: [0, 2, 0, 2],
+                        text: accounting.formatNumber(total.mul(1.1).toFixed(0)), alignment: 'right'
+                    },
                 ],
                 [
                     {text: '', border: [false, false, false, false],},
                     {
-                        margin: [50,5,0,0],
-                        text: ctrl.capitalizeFirstLetter(ctrl.convertNumberToText(total.mul(1.1).toFixed(0))) + ' ' + dict.print003 + '.', colSpan: 3},
+                        margin: [50, 2, 0, 2],
+                        text: ctrl.capitalizeFirstLetter(ctrl.convertNumberToText(total.mul(1.1).toFixed(0))) + ' ' + dict.print003 + '.',
+                        colSpan: 3
+                    },
                     {text: ''},
                     {text: ''},
                 ]
@@ -729,7 +776,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         
     };
     
-    ctrl.capitalizeFirstLetter = function(string) {
+    ctrl.capitalizeFirstLetter = function (string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     };
     
