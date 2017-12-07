@@ -11,10 +11,255 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         return sum.toString();
     };
     
+    ctrl.exportWarrantyTicket = function (selection, dict) {
+        ctrl.exportingWarranty = true;
+        // playground requires you to assign document definition to a variable called dd
+        $http.post('/rpc', {
+            token: ctrl.global.user.token,
+            name: 'get_system_variable',
+            params: {
+                name: 'COMPANY_INFO'
+            }
+        }).then(
+            function (response) {
+                if (response.data.success) {
+                    let companyInfo = JSON.parse(response.data.result.value);
+                    let q = ctrl.quotation;
+                    console.log(selection, q);
+                    let dd = {
+                        content: [
+                            {
+                                table: {
+                                    widths: ['*'],
+                                    body: [
+                                        [
+                                            {
+                                                fillColor: '#C2D69B',
+                                                stack: [
+                                                    {
+                                                        bold: true,
+                                                        text: dict.war001, alignment: 'center'
+                                                    },
+                                                    {
+                                                        color: '#984806',
+                                                        fontSize: 20,
+                                                        bold: true,
+                                                        text: companyInfo.name, alignment: 'center'
+                                                    },
+                                                    {
+                                                        text: dict.war029,
+                                                        alignment: 'center'
+                                                    },
+                                                    {
+                                                        text: dict.war030,
+                                                        alignment: 'center'
+                                                    },
+                                                ]
+                                            }
+                                        ]
+                                    ]
+                                }
+                            },
+                            {
+                                color: '#17365D',
+                                fontSize: 22,
+                                bold: true,
+                                margin: [0, 20, 0, 0],
+                                text: dict.war002, alignment: 'center'
+                            },
+                            {
+                                color: '#17365D',
+                                fontSize: 16,
+                                bold: true,
+                                text: dict.war003, alignment: 'center'
+                            },
+                            {
+                                margin: [0, 20, 0, 0],
+                                color: '#264faf',
+                                fillColor: '#F2F2F2',
+                                table: {
+                                    widths: ['auto', '*', 'auto', '*'],
+                                    body: [
+                                        [{
+                                            margin: [0, 10, 0, 0],
+                                            border: [true, true, false, false],
+                                            text: dict.war004
+                                        }, {
+                                            margin: [0, 10, 0, 0],
+                                            border: [false, true, false, false],
+                                            text: moment().format('DDMMYY')
+                                        }, {
+                                            margin: [0, 10, 0, 0],
+                                            border: [false, true, false, false],
+                                            text: dict.war005
+                                        }, {
+                                            alignment: 'right',
+                                            margin: [0, 10, 0, 0],
+                                            border: [false, true, true, false], text: dict.war027}],
+                                        [{
+                                            border: [true, false, false, false],
+                                            text: dict.war006
+                                        }, {
+                                            border: [false, false, false, false],
+                                            text: selection.productID.typeID.name + ' ' + selection.productID.model
+                                        }, {
+                                            border: [false, false, false, false],
+                                            text: dict.war007
+                                        }, {
+                                            alignment: 'right', border: [false, false, true, false], text: ''}],
+                                        [{
+                                            border: [true, false, false, false],
+                                            text: dict.war008
+                                        }, {
+                                            border: [false, false, false, false],
+                                            text: q.customerContactID.customerID.name || ''
+                                        }, {
+                                            border: [false, false, false, false],
+                                            text: dict.war009
+                                        }, {
+                                            alignment: 'right',
+                                            border: [false, false, true, false],
+                                            text: q.customerContactID.customerID.phoneNumber || ''
+                                        }],
+                                        [{
+                                            border: [true, false, false, false],
+                                            text: dict.war010
+                                        }, {
+                                            border: [false, false, true, false],
+                                            text: q.customerContactID.customerID.address || '',
+                                            colSpan: 3
+                                        }, {}, {}],
+                                        [{
+                                            margin: [0,0,0,10],
+                                            border: [true, false, false, true],
+                                            text: dict.war011
+                                        }, {
+                                            margin: [0,0,0,10],
+                                            border: [false, false, false, true],
+                                            text: moment().format('DD/MM/YYYY')
+                                        }, {
+                                            margin: [0,0,0,10],
+                                            border: [false, false, false, true],
+                                            text: dict.war012
+                                        }, {
+                                            alignment: 'right',
+                                            margin: [0,0,0,10],
+                                            border: [false, false, true, true],
+                                            text: moment().add(1, 'year').format('DD/MM/YYYY')
+                                        }],
+                                    ]
+                                }
+                            },
+                            {
+                                bold: true,
+                                fontSize: 14,
+                                margin: [0, 20, 0, 0],
+                                fillColor: '#F2DBDB',
+                                table: {
+                                    widths: ['*'],
+                                    body: [
+                                        [
+                                            {
+                                                alignment: 'center',
+                                                stack: [
+                                                    {margin: [0, 10, 0, 0], text: dict.war013},
+                                                    {margin: [0, 0, 0, 10], text: dict.war014},
+                                                ]
+                                            }
+                                        ]
+                                    ],
+                                }
+                            },
+                            {
+                                bold: true,
+                                fontSize: 14,
+                                margin: [0, 20, 0, 0],
+                                fillColor: '#C2D69B',
+                                table: {
+                                    widths: ['*'],
+                                    body: [
+                                        [
+                                            {
+                                                alignment: 'center',
+                                                stack: [
+                                                    {margin: [0, 10, 0, 0], text: dict.war015},
+                                                    {margin: [0, 0, 0, 10], text: dict.war016},
+                                                ],
+                                            }
+                                        ]
+                                    ],
+                                }
+                            },
+                            {
+                                margin: [0, 20, 0, 0],
+                                color: '#264faf',
+                                fillColor: '#F2F2F2',
+                                table: {
+                                    widths: ['auto', '*'],
+                                    body: [
+                                        [{
+                                            colSpan: 2,
+                                            fontSize: 20,
+                                            bold: true,
+                                            alignment: 'center',
+                                            text: dict.war028
+                                        }, {}],
+                                        [{
+                                            border: [true, true, false, false],
+                                            text: '1.'
+                                        }, {border: [false, true, true, false], text: dict.war017}],
+                                        [{
+                                            border: [true, false, false, false],
+                                            text: '2.'
+                                        }, {border: [false, false, true, false], text: dict.war018}],
+                                        [{
+                                            border: [true, false, false, false],
+                                            text: '3.'
+                                        }, {border: [false, false, true, false], text: dict.war019}],
+                                        [{
+                                            border: [true, false, false, false],
+                                            text: '4.'
+                                        }, {border: [false, false, true, false], text: dict.war020}],
+                                        [{border: [true, false, false, true], text: ''}, {
+                                            border: [false, false, true, true],
+                                            layout: 'noBorders',
+                                            table: {
+                                                widths: ['auto', '*'],
+                                                body: [
+                                                    [{text: 'a)'}, {text: dict.war021}],
+                                                    [{text: 'b)'}, {text: dict.war022}],
+                                                    [{text: 'c)'}, {text: dict.war023}],
+                                                    [{text: 'd)'}, {text: dict.war024}],
+                                                    [{text: 'e)'}, {text: dict.war025}],
+                                                ],
+                                            }
+                                        }],
+                                    ],
+                                }
+                            },
+                        ]
+                    };
+                    
+                    pdfMake.createPdf(dd).download(`${dict.war026} ${selection.productID.typeID.name + ' ' + selection.productID.model}.pdf`);
+                    ctrl.exportingWarranty = false;
+                    
+                }
+                else {
+                    ctrl.exportingWarranty = false;
+                    alert(ctrl.global.utils.errors[response.data.error.errorName]);
+                }
+            },
+            function () {
+                ctrl.exportingWarranty = false;
+                alert(ctrl.global.utils.errors['NETWORK_ERROR']);
+            }
+        );
+        
+    };
+    
     ctrl.exportHandOver = function (dict, params) {
         ctrl.exportingHandOver = true;
         //-- get company info
-        let data = {};
         $http.post('/rpc', {
             token: ctrl.global.user.token,
             name: 'get_system_variable',
@@ -691,26 +936,32 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         
         let rest = numberOfRows - q.selections.length;
         if (rest > 0) {
-            for (let i=0; i<rest; i++){
+            for (let i = 0; i < rest; i++) {
                 dd.content[7].table.body.push([
                     {
                         margin: [0, 2, 0, 2],
-                        text: ' '},
+                        text: ' '
+                    },
                     {
                         margin: [0, 2, 0, 2],
-                        text: ' '},
+                        text: ' '
+                    },
                     {
                         margin: [0, 2, 0, 2],
-                        text: ' '},
+                        text: ' '
+                    },
                     {
                         margin: [0, 2, 0, 2],
-                        text: ' '},
+                        text: ' '
+                    },
                     {
                         margin: [0, 2, 0, 2],
-                        text: ' '},
+                        text: ' '
+                    },
                     {
                         margin: [0, 2, 0, 2],
-                        text: ' '},
+                        text: ' '
+                    },
                 ])
             }
             
@@ -721,7 +972,10 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                 {
                     type: 'polyline',
                     lineWidth: 2,
-                    points: [{x: offset[0], y: offset[1] - rowHeight * rest}, {x: offset[0] + 260, y: offset[1]  - rowHeight * rest }, {x: offset[0] + 500, y: offset[1] - rowHeight}]
+                    points: [{x: offset[0], y: offset[1] - rowHeight * rest}, {
+                        x: offset[0] + 260,
+                        y: offset[1] - rowHeight * rest
+                    }, {x: offset[0] + 500, y: offset[1] - rowHeight}]
                 }
             );
         }

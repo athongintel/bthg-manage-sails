@@ -15,7 +15,49 @@ div.partials_quotation-details
                 tbody
                     tr(ng-repeat='selection in $ctrl.quotation.selections')
                         td
-                            div {{selection.productID.typeID.name}}
+                            div
+                                span.margin-right-5px
+                                    button.btn-xs.btn.btn-default(ng-click='$ctrl.exportWarrantyTicket(selection, {' +
+                                    '"war001":"' + __("war_001") + '",' +
+                                    '"war002":"' + __("war_002") + '",' +
+                                    '"war003":"' + __("war_003") + '",' +
+                                    '"war004":"' + __("war_004") + '",' +
+                                    '"war005":"' + __("war_005") + '",' +
+                                    '"war006":"' + __("war_006") + '",' +
+                                    '"war007":"' + __("war_007") + '",' +
+                                    '"war008":"' + __("war_008") + '",' +
+                                    '"war009":"' + __("war_009") + '",' +
+                                    '"war010":"' + __("war_010") + '",' +
+                                    '"war011":"' + __("war_011") + '",' +
+                                    '"war012":"' + __("war_012") + '",' +
+                                    '"war013":"' + __("war_013") + '",' +
+                                    '"war014":"' + __("war_014") + '",' +
+                                    '"war015":"' + __("war_015") + '",' +
+                                    '"war016":"' + __("war_016") + '",' +
+                                    '"war017":"' + __("war_017") + '",' +
+                                    '"war018":"' + __("war_018") + '",' +
+                                    '"war019":"' + __("war_019") + '",' +
+                                    '"war020":"' + __("war_020") + '",' +
+                                    '"war021":"' + __("war_021") + '",' +
+                                    '"war022":"' + __("war_022") + '",' +
+                                    '"war023":"' + __("war_023") + '",' +
+                                    '"war024":"' + __("war_024") + '",' +
+                                    '"war025":"' + __("war_025") + '",' +
+                                    '"war026":"' + __("war_026") + '",' +
+                                    '"war027":"' + __("war_027") + '",' +
+                                    '"war028":"' + __("war_028") + '",' +
+                                    '"war029":"' + __("war_029") + '",' +
+                                    '"war030":"' + __("war_030") + '",' +
+                                    '})' style='margin-right: 5px; margin-bottom: 5px')
+                                        span(ng-show='$ctrl.exportingWarranty')
+                                            span &nbsp;
+                                            i.fa.fa-spinner.fa-spin
+                                            span &nbsp;
+                                        span(ng-hide='$ctrl.exportingWarranty')
+                                            span &nbsp;
+                                            i.fa.fa-wrench
+                                            span &nbsp;
+                                span {{selection.productID.typeID.name}}
                         td
                             div {{selection.productID.model}}
                         td
