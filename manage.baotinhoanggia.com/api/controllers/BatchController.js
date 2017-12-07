@@ -61,6 +61,7 @@ const actions = {
     'update_product': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: ProductService.updateProduct, validation: {required: ['_id', 'model', 'typeID', 'brandID']}},
     'remove_product_photos': {policies: [PO.isAuthenticated, PO.isAdmin], action: ProductService.removeProductPhotos, validation: {required: ['_id', 'fileNames']}},
     'change_product_price_manually': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: ProductService.changeProductPrice, validation: {required: ['_id', 'price']}},
+    'fix_product_price': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: SystemService.fixProductPrice, validation: {required: []}},
     
     'get_all_branches': {policies: [PO.isAuthenticated, PO.isAdmin], action: BranchService.getAllBranches, validation: {required: []}},
     'get_branch': {policies: [PO.isAuthenticated, PO.isAdmin], action: BranchService.getBranch, validation: {required: ['_id']}},

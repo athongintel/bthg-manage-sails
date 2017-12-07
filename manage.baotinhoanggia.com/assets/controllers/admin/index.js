@@ -28,6 +28,29 @@ app.controller('AdminIndexController', ['$scope', '$http', function ($scope, $ht
         );
     };
     
+    ctrl.fixProductPrice = function () {
+        ctrl.fixingPrice = true;
+        $http.post('/rpc', {
+            token: $scope.global.user.token,
+            name: 'fix_product_price',
+            params: {}
+        }).then(
+            function (response) {
+                ctrl.fixingPrice = false;
+                if (response.data.success) {
+                    alert($scope.global.utils.errors['SUCCESS']);
+                }
+                else {
+                    alert($scope.global.utils.errors[response.data.error.errorName]);
+                }
+            },
+            function () {
+                ctrl.fixingPrice = false;
+                alert($scope.global.utils.errors['NETWORK_ERROR']);
+            }
+        )
+    };
+    
     ctrl.init = function () {
         
         $http.post('/batch', {

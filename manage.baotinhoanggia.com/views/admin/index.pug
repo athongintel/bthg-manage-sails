@@ -44,3 +44,11 @@ div(ng-controller='AdminIndexController as ctrl' ng-init='ctrl.init()')
                                     div
                                         label #{__('address_')}
                                         textarea.form-control.fixed-textarea(readonly editable-textarea='ctrl.companyInfo.address' e-name='address' e-form='companyInfoForm' e-required) {{ctrl.companyInfo.address}}
+                div.col-xs-12.col-sm-6
+                    label #{__('system_tools')}
+                    div
+                        button.btn.btn-default(ng-disabled='ctrl.fixingPrice' ng-click='ctrl.fixProductPrice()')
+                            span(ng-show='ctrl.fixingPrice')
+                                i.fa.fa-spinner.fa-spin
+                                span &nbsp;
+                            span Fix product price

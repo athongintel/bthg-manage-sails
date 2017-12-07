@@ -157,6 +157,28 @@ module.exports = {
         return sysUtils.returnSuccess();
     },
     
+    fixProductPrice: async function(principal, params){
+        "use strict";
+        try {
+            let products = _app.model.Product.find({});
+            for (let i=0; i<products.length; i++){
+                let product = products[i];
+                //-- get last outStock
+                let lastStock = await _app.model.OutStock.findOne({productID: product._id, metaInfo: {$in : ['STOCK_INIT_STOCK', 'STOCK_MANUAL_CHANGE']}}).sort({createdAt: -1});
+                //-- fix price for this product
+                if (lastStock) {
+                    product.price = lastStock.price;
+                    await product.save();
+                }
+            }
+            return sysUtils.returnSuccess();
+        }
+        catch (err) {
+            console.log('fixProductPrice:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     checkAttribute: async function (principal, params) {
         "use strict";
         /*
