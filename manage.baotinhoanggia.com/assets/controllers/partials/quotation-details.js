@@ -37,6 +37,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                                 fillColor: '#C2D69B',
                                                 stack: [
                                                     {
+                                                        margin: [0,10,0,0],
                                                         bold: true,
                                                         text: dict.war001, alignment: 'center'
                                                     },
@@ -51,6 +52,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                                         alignment: 'center'
                                                     },
                                                     {
+                                                        margin: [0,0,0,10],
                                                         text: dict.war030,
                                                         alignment: 'center'
                                                     },
@@ -64,7 +66,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 color: '#17365D',
                                 fontSize: 22,
                                 bold: true,
-                                margin: [0, 20, 0, 0],
+                                margin: [0, 10, 0, 0],
                                 text: dict.war002, alignment: 'center'
                             },
                             {
@@ -74,11 +76,11 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 text: dict.war003, alignment: 'center'
                             },
                             {
-                                margin: [0, 20, 0, 0],
+                                margin: [0, 10, 0, 0],
                                 color: '#264faf',
                                 fillColor: '#F2F2F2',
                                 table: {
-                                    widths: ['auto', '*', 'auto', '*'],
+                                    widths: ['auto', '*', 'auto', 'auto'],
                                     body: [
                                         [{
                                             margin: [0, 10, 0, 0],
@@ -152,8 +154,8 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                             },
                             {
                                 bold: true,
-                                fontSize: 14,
-                                margin: [0, 20, 0, 0],
+                                fontSize: 11,
+                                margin: [0, 10, 0, 0],
                                 fillColor: '#F2DBDB',
                                 table: {
                                     widths: ['*'],
@@ -172,8 +174,8 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                             },
                             {
                                 bold: true,
-                                fontSize: 14,
-                                margin: [0, 20, 0, 0],
+                                fontSize: 11,
+                                margin: [0, 5, 0, 0],
                                 fillColor: '#C2D69B',
                                 table: {
                                     widths: ['*'],
@@ -198,6 +200,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                     widths: ['auto', '*'],
                                     body: [
                                         [{
+                                            border: [true, true, true, false],
                                             colSpan: 2,
                                             fontSize: 20,
                                             bold: true,
@@ -205,9 +208,9 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                             text: dict.war028
                                         }, {}],
                                         [{
-                                            border: [true, true, false, false],
+                                            border: [true, false, false, false],
                                             text: '1.'
-                                        }, {border: [false, true, true, false], text: dict.war017}],
+                                        }, {border: [false, false, true, false], text: dict.war017}],
                                         [{
                                             border: [true, false, false, false],
                                             text: '2.'
