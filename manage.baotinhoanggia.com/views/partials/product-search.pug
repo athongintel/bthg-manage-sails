@@ -45,13 +45,13 @@ div.partials_product-search
                 div.col-xs-9
                     label #{__('model_filter')}
                 div.col-xs-3.text-right
-                    button.btn.btn-xs.btn-default(ng-click='$ctrl.refreshProducts()')
+                    button.btn.btn-xs.btn-default(ng-click='$ctrl.filterByModel()')
                         i.fa.fa-refresh
                         //span &nbsp; #{__('refresh_')}
             div.input-group.margin-bottom-15px
                 span.input-group-addon
                     span.glyphicon.glyphicon-search
-                input.form-control(ng-model='$ctrl.productFilter' ng-change='$ctrl.filterProduct()' ng-disabled='$ctrl.queryingProduct')
+                input.form-control(ng-model='$ctrl.productFilter' ng-change='$ctrl.filterByModel()' ng-disabled='$ctrl.queryingProduct')
         div.col-xs-12.col-sm-6
             label #{__('stock_filter')}
             branch-selector(global='$ctrl.global' select-disabled='!$ctrl.global.utils.isSuperAdmin()' selected-branch='$ctrl.selectedBranch' on-branch-changed='$ctrl.changeBranch(selectedBranch)')

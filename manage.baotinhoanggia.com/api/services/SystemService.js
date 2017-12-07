@@ -160,14 +160,16 @@ module.exports = {
     fixProductPrice: async function(principal, params){
         "use strict";
         try {
-            let products = _app.model.Product.find({});
+            let products = await _app.model.Product.find({});
+            //console.log('fixProductPrice, products', products);
             for (let i=0; i<products.length; i++){
                 let product = products[i];
                 //-- get last outStock
-                let lastStock = await _app.model.OutStock.findOne({productID: product._id, metaInfo: {$in : ['STOCK_INIT_STOCK', 'STOCK_MANUAL_CHANGE']}}).sort({createdAt: -1});
+                let lastStock = await _app.model.OutStock.find({productID: product._id, metaInfo: {$in : ['STOCK_INIT_STOCK', 'STOCK_MANUAL_CHANGE']}}).sort({createdAt: -1});
+                //console.log('fixProductPrice, lastStock: ', lastStock);
                 //-- fix price for this product
-                if (lastStock) {
-                    product.price = lastStock.price;
+                if (lastStock && lastStock.length) {
+                    product.price = lastStock[0].price;
                     await product.save();
                 }
             }

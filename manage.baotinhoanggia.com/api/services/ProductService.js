@@ -895,21 +895,38 @@ module.exports = {
         "use strict";
         /*
             params: {
+                filter: {attr, value}
                 stock_info: query stock info
             }
          */
         try {
-            let productsPromise = _app.model.Product.find({}).populate('brandID').populate('typeID');
-            if (params.filter && params.filter.length)
-                params.filter.forEach(pair => {
-                    productsPromise = productsPromise.where(pair.attr, pair.value);
-                });
+            let productsPromise = _app.model.Product.find({}).populate('brandID').populate({path :'typeID', populate: {path: 'groupID'}});
             
             if (!sysUtils.isSuperAdmin(principal))
                 productsPromise = productsPromise.where('stockIDs', principal.user.branchID._id);
             productsPromise = productsPromise.lean().exec();
             
             let products = await productsPromise;
+            // console.log('FILTER', params.filter);
+            if (params.filter && params.filter.length) {
+                products = products.filter(product=>{
+                    let passed = true;
+                    params.filter.forEach(function (pair) {
+                        let attrPath = pair.attr.split('.');
+                        let value = product;
+                        // console.log('attrPath:', attrPath);
+                        attrPath.some(function (path) {
+                            //-- check whether path is array
+                            if (!value || value[path] === null || value[path] === undefined) return false;
+                            value = value[path];
+                            console.log(value);
+                        });
+                        // console.log('comparision: ', value, pair.value, value === pair.value);
+                        passed = passed && (String(value) === String(pair.value));
+                    });
+                    return passed;
+                });
+            }
             
             //-- query for last stock
             for (let i = 0; i < products.length; i++) {
