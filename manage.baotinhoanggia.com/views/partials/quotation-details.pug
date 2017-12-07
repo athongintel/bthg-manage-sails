@@ -182,8 +182,15 @@ div.partials_quotation-details
                             span &nbsp;
                         span #{__('export_payment_request')}
 
-                    button.btn.btn-sm.btn-info(ng-click='$ctrl.convertNumberToText("195505300003")' style='margin-right: 5px; margin-bottom: 5px')
-                        span
+                    button.btn.btn-sm.btn-info(ng-click='$ctrl.exportOrderPrinting({' +
+                    '"print001":"' + __("print_001") + '",' +
+                    '"print002":"' + __("print_002") + '",' +
+                    '"print003":"' + __("print_003") + '",' +
+                    '})' style='margin-right: 5px; margin-bottom: 5px')
+                        span(ng-show='$ctrl.exportingOrderPrinting')
+                            i.fa.fa-spinner.fa-spin
+                            span &nbsp;
+                        span(ng-hide='$ctrl.exportingOrderPrinting')
                             i.fa.fa-print
                             span &nbsp;
                         span #{__('export_order_print')}

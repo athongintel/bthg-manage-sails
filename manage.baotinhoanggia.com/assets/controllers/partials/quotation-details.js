@@ -308,6 +308,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                     let dd = {
                         content: [
                             {
+                                margin: [30, 0, 30, 0],
                                 fontSize: 11,
                                 table: {
                                     widths: ['*', '*'],
@@ -332,7 +333,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                             {
                                                 fontSize: 10,
                                                 bold: true,
-                                                text: $interpolate(params.pay_number)({payNumber: moment().format('DDMMYYYY/BBBG')}),
+                                                text: $interpolate(params.pay_number)({payNumber: moment().format('DDMMYYYY') + '/DNNT'}),
                                                 alignment: 'center'
                                             },
                                             {text: '', alignment: 'center'}
@@ -342,6 +343,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 layout: 'noBorders',
                             },
                             {
+                                margin: [30, 0, 30, 0],
                                 fontSize: 10,
                                 alignment: 'right',
                                 text: $interpolate(params.pay_date)({
@@ -351,20 +353,22 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 })
                             },
                             {
+                                
                                 bold: true,
                                 text: dict.pay005,
                                 alignment: 'center',
-                                fontSize: 16,
+                                fontSize: 22,
                                 margin: [0, 10, 0, 0]
                             },
                             {
+                                margin: [30, 0, 30, 0],
                                 fontSize: 10,
                                 text: dict.pay006,
                                 alignment: 'center',
                                 italics: true,
                             },
                             {
-                                margin: [25, 10, 0, 0],
+                                margin: [50, 10, 30, 0],
                                 fontSize: 10,
                                 ul: [
                                     {
@@ -378,14 +382,14 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                     },
                                     {
                                         text: $interpolate(params.pay_based2)({
-                                            poHandOver: q.outStockOrderID.clientPONumber,
+                                            poHandOver: moment().format('DDMMYYYY') + '/BBBG',
                                             customerName: q.customerContactID.customerID.name
                                         })
                                     }
                                 ]
                             },
                             {
-                                margin: [0, 10, 0, 10],
+                                margin: [30, 10, 30, 10],
                                 fontSize: 10,
                                 table: {
                                     widths: ['auto', '*'],
@@ -404,13 +408,14 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 layout: 'noBorders',
                             },
                             {
+                                margin: [30, 0, 30, 0],
                                 fontSize: 10,
                                 text: dict.pay008,
                                 alignment: 'justify',
                             },
                             {
+                                margin: [30, 10, 30, 10],
                                 fontSize: 10,
-                                margin: [0, 10, 0, 10],
                                 table: {
                                     widths: ['auto', '*', 'auto', 'auto', 'auto'],
                                     body: [
@@ -425,16 +430,18 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 }
                             },
                             {
-                                margin: [0, 0, 0, 5],
+                                margin: [30, 0, 30, 5],
                                 fontSize: 10,
                                 //text: $interpolate(params.pay_amount_text)(),
                                 bold: true,
                             },
                             {
+                                margin: [30, 0, 30, 0],
                                 fontSize: 10,
                                 text: dict.pay014
                             },
                             {
+                                margin: [30, 0, 30, 0],
                                 fontSize: 10,
                                 ul: [
                                     {text: dict.pay017},
@@ -443,8 +450,8 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                                 ]
                             },
                             {
+                                margin: [30, 10, 30, 0],
                                 fontSize: 10,
-                                margin: [0, 20, 0, 0],
                                 table: {
                                     widths: ['*', '*'],
                                     body: [
@@ -481,19 +488,32 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                         total = total.add(subtotal);
                         dd.content[7].table.body.push(
                             [
-                                {text: `${index + 1}`, alignment: 'center'},
                                 {
+                                    margin: [0, 10, 0, 10],
+                                    text: `${index + 1}`, alignment: 'center'
+                                },
+                                {
+                                    margin: [0, 10, 0, 10],
                                     stack: [
-                                        {text: selection.productID.typeID.name},
+                                        {text: selection.productID.typeID.name + ' ' + selection.productID.model},
                                         //{text: selection.productID.brandID ? `${dict.pay008}: ${selection.productID.brandID.name} (${ctrl.global.utils.originNameFromCode(selection.productID.brandID.origin)})` : '',},
-                                        //{text: selection.productID.model ? `${dict.pay009}: ${selection.productID.model}` : '',},
+                                        // {text: selection.productID.model ? `${dict.pay009}: ${selection.productID.model}` : '',},
                                         //{text: selection.productID.description ? '\n' + selection.productID.description : '',}
                                     ],
                                     alignment: 'left'
                                 },
-                                {text: accounting.formatNumber(selection.price), alignment: 'right'},
-                                {text: selection.amount, alignment: 'center'},
-                                {text: accounting.formatNumber(subtotal.toFixed(0)), alignment: 'right'},
+                                {
+                                    margin: [0, 10, 0, 10],
+                                    text: accounting.formatNumber(selection.price), alignment: 'right'
+                                },
+                                {
+                                    margin: [0, 10, 0, 10],
+                                    text: selection.amount, alignment: 'center'
+                                },
+                                {
+                                    margin: [0, 10, 0, 10],
+                                    text: accounting.formatNumber(subtotal.toFixed(0)), alignment: 'right'
+                                },
                             ]
                         );
                     });
@@ -558,6 +578,161 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         );
     };
     
+    ctrl.exportOrderPrinting = function (dict) {
+        ctrl.exportingOrderPrinting = true;
+        let q = ctrl.quotation;
+        // console.log(q);
+        //-- build pdf file
+        
+        let numberOfRows = 10;
+        let dd = {
+            content: [
+                //-- datetime
+                {
+                    margin: [188, 36, 0, 0],
+                    text: `${moment().format('DD')}             ${moment().format('MM')}                  ${moment().format('YY')}`,
+                    //alignment: 'center',
+                },
+                //-- so dien thoai cong ty
+                {text: ' '},
+                
+                //-- ten nguoi mua hang
+                {text: ' '},
+                
+                //-- ten don vi
+                {
+                    margin: [60,100,0,0],
+                    text: q.customerContactID.customerID.companyInfo? q.customerContactID.customerID.companyInfo.name : ''},
+                
+                //-- ma so thue
+                {
+                    margin: [60,5,0,0],
+                    text: q.customerContactID.customerID.companyInfo? q.customerContactID.customerID.companyInfo.taxNumber : ''},
+    
+                //-- ma so thue
+                {
+                    margin: [30,5,0,0],
+                    fontSize: 10,
+                    text: q.customerContactID.customerID.companyInfo? q.customerContactID.customerID.companyInfo.address : ''},
+    
+    
+                //-- hinh thuc thanh toan
+                {
+                    margin: [120, 5, 0, 0],
+                    text: 'TM/CK'},
+                
+                {
+                    layout: 'noBorders',
+                    margin: [-30, 48, 10, 15],
+                    table: {
+                        widths: [25, '*', 40, 40, 80, 120],
+                        body: [
+                            [{},{},{},{},{},{}]
+                        ]
+                    }
+                },
+                {
+                    layout: 'noBorders',
+                    margin: [-30, 22, 10, 0],
+                    table: {
+                        widths: [80, '*', 80, '*'],
+                        body: [
+                            [{},{},{},{}]
+                        ]
+                    },
+                },
+            ]
+        };
+        
+        let total = new BigNumber(0);
+        q.selections.forEach(function (selection, index) {
+            // console.log(q);
+            let subtotal = new BigNumber(selection.amount).mul(new BigNumber(selection.price));
+            total = total.add(subtotal);
+            dd.content[7].table.body.push(
+                [
+                    {
+                        margin: [0, 1, 0, 1],
+                        text: `${index + 1}`, alignment: 'left'
+                    },
+                    {
+                        margin: [0, 1, 0, 1],
+                        stack: [
+                            {text: selection.productID.typeID.name + ' ' + selection.productID.model},
+                        ],
+                        alignment: 'left'
+                    },
+                    {
+                        margin: [0, 1, 0, 1],
+                        text: dict.print001,
+                    },
+                    {
+                        margin: [0, 1, 0, 1],
+                        text: selection.amount, alignment: 'center'
+                    },
+                    {
+                        margin: [0, 1, 0, 1],
+                        text: accounting.formatNumber(selection.price), alignment: 'right'
+                    },
+                    {
+                        margin: [0, 1, 0, 1],
+                        text: accounting.formatNumber(subtotal.toFixed(0)), alignment: 'right'
+                    },
+                ]
+            );
+        });
+
+        let rest = numberOfRows - q.selections.length;
+        for (let i=0;i <rest; i++){
+            dd.content[7].table.body.push(
+                [
+                    {text: ' '}, {text: ' '}, {text: ' '}, {text: ' '}, {text: ' '}, {text: ' '}
+                ]
+            );
+        }
+        
+        dd.content[8].table.body = dd.content[8].table.body.concat(
+            [
+                [
+                    {text: '', border: [false, false, false, false],},
+                    {text: '', border: [false, false, false, false],},
+                    {text: '', border: [false, false, false, false],},
+                    {text: accounting.formatNumber(total.toFixed(0)), alignment: 'right'},
+                ],
+                [
+                    {text: '', border: [false, false, false, false],},
+                    {
+                        margin: [20,0,0,0],
+                        text: '10', border: [false, false, false, false],},
+                    {text: '', border: [false, false, false, false],},
+                    {text: accounting.formatNumber(total.mul(0.1).toFixed(0)), alignment: 'right'},
+                ],
+                [
+                    {text: '', border: [false, false, false, false],},
+                    {text: '', border: [false, false, false, false],},
+                    {text: '', border: [false, false, false, false],},
+                    {text: accounting.formatNumber(total.mul(1.1).toFixed(0)), alignment: 'right'},
+                ],
+                [
+                    {text: '', border: [false, false, false, false],},
+                    {
+                        margin: [50,5,0,0],
+                        text: ctrl.capitalizeFirstLetter(ctrl.convertNumberToText(total.mul(1.1).toFixed(0))) + ' ' + dict.print003 + '.', colSpan: 3},
+                    {text: ''},
+                    {text: ''},
+                ]
+            ]
+        );
+        
+        pdfMake.createPdf(dd).download(`${dict.print002} ${ctrl.quotation.outStockOrderID.name}.pdf`);
+        ctrl.exportingOrderPrinting = false;
+        
+    };
+    
+    ctrl.capitalizeFirstLetter = function(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+    
     ctrl.convertNumberToText = function (number) {
         let result = '';
         // console.log('converting: ', number);
@@ -605,7 +780,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
             if (triplet[2] === '0')
                 t += '';
             else if (triplet[2] === '1') {
-                if (triplet[1] === '1' || (triplet[0]==='0' && triplet[1]==='0'))
+                if (triplet[1] === '1' || (triplet[0] === '0' && triplet[1] === '0'))
                     t += ' ' + currencyTextPostfixes['1'][0];
                 else
                     t += ' ' + currencyTextPostfixes['1'][1];
@@ -622,17 +797,17 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         number = String(number);
         let sep = 0;
         let dirty = false;
-        while (number.length>3){
-            let triplet = number.substr(number.length-3, 3);
+        while (number.length > 3) {
+            let triplet = number.substr(number.length - 3, 3);
             if (triplet !== "000") dirty = true;
             triplet = triplet.split('');
             let t = convertTriplet(triplet, true, dirty);
-            result = (t? (t + ' ' + currencyTextPostfixes['separator'][sep]) : '') + ' ' + result;
-            number = number.substr(0, number.length-3);
+            result = (t ? (t + ' ' + currencyTextPostfixes['separator'][sep]) : '') + ' ' + result;
+            number = number.substr(0, number.length - 3);
             sep++;
         }
-        if (number.length === 1) number  = `00${number}`;
-        else if (number.length === 2) number  = `0${number}`;
+        if (number.length === 1) number = `00${number}`;
+        else if (number.length === 2) number = `0${number}`;
         result = convertTriplet(number, false) + ' ' + currencyTextPostfixes['separator'][sep] + ' ' + result;
         
         // console.log('result: ', result);
