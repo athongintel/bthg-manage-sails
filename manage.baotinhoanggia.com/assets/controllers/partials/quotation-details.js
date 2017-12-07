@@ -613,7 +613,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                 {
                     margin: [30,5,0,0],
                     fontSize: 10,
-                    text: q.customerContactID.customerID.companyInfo && q.customerContactID.customerID.companyInfo.taxNumber? q.customerContactID.customerID.companyInfo.address : ' '},
+                    text: q.customerContactID.customerID.companyInfo && q.customerContactID.customerID.companyInfo.address? q.customerContactID.customerID.companyInfo.address : ' '},
     
     
                 //-- hinh thuc thanh toan
