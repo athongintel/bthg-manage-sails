@@ -69,7 +69,7 @@ div.partials_product-search
                     td
                         span(style='white-space: pre') {{$ctrl.calculateStockSumDisplay($ctrl.selectedBranch, product)}}
                     td.text-right
-                        span {{product.lastOutStock? (product.lastOutStock.price | currency : '' : '') : '-'}}
+                        span {{product.price? (product.price | currency : '' : '') : '-'}}
         div.text-center.no-data(ng-show='(!$ctrl.filteredProducts || !$ctrl.filteredProducts.length) && !$ctrl.queryingProduct && !$ctrl.queryFailed')
             span #{__('no_result')}
         div.text-center(ng-show='$ctrl.queryFailed')

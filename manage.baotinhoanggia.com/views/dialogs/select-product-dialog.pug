@@ -1,0 +1,30 @@
+script(type="text/ng-template" id="selectProductDialog")
+    .modal-header(ng-init='init()')
+        button.close(type='button', ng-click='close()') x
+        div.header #{__('add_product_to_order')}
+    .modal-body
+        div.margin-bottom-15px
+            label #{__('stock_available')}
+            input.huge-input.form-control.text-right(ng-disabled='true' cleave="options.global.utils.cleaveOptions.currency" ng-model="options.stockAvailable")
+        div.margin-bottom-15px
+            label #{__('selection')}
+            input.huge-input.form-control.text-right(cleave="options.global.utils.cleaveOptions.currency" ng-model="amount" autofocus)
+        div.margin-bottom-15px
+            label #{__('price_adjust')}
+            input.huge-input.form-control.text-right(cleave="options.global.utils.cleaveOptions.currency" ng-model="priceAdjust")
+        div.margin-bottom-15px.row
+            div.col-xs-6
+                label #{__('price_')}
+                div.huge-input.text-right {{options.oldPrice | currency : '' : ''}}
+            div.col-xs-6
+                label #{__('price_adjusted')}
+                div.huge-input.text-right {{getAdjustedPrice() | currency : '' : ''}}
+        div.margin-bottom-15px
+            label #{__('note_')}
+            textarea.fixed-textarea.form-control(ng-model="note")
+
+        div.text-right
+            button.action.btn.btn-default.margin-right-5px(ng-click='close()')
+                span #{__('close_')}
+            button.action.btn.btn-primary(ng-disabled='!amount' ng-click='selectProduct()')
+                span #{__('OK_')}

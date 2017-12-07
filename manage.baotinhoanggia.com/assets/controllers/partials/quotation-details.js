@@ -714,7 +714,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                 ])
             }
             
-            let rowHeight = 23;
+            let rowHeight = 22;
             let offset = [0, 10];
             //-- calculate starting point
             dd.content[8].canvas.push(

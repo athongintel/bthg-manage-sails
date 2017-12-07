@@ -83,7 +83,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                 },
                 function () {
                     ctrl.loadingProduct = false;
-                    alert($scope.global.utils.errors['NETWORK_ERROR']);
+                    alert(ctrl.global.utils.errors['NETWORK_ERROR']);
                 }
             );
         }
@@ -171,7 +171,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         resolve(response.data.success || ctrl.global.utils.errors[response.data.error.errorName]);
                     },
                     function () {
-                        resolve($scope.global.utils.errors['NETWORK_ERROR']);
+                        resolve(ctrl.global.utils.errors['NETWORK_ERROR']);
                     }
                 )
             });
@@ -203,7 +203,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                 },
                 function () {
                     ctrl.product.isBeingRemoved = false;
-                    alert($scope.global.utils.errors['NETWORK_ERROR']);
+                    alert(ctrl.global.utils.errors['NETWORK_ERROR']);
                 }
             );
         }
@@ -288,8 +288,8 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     }
                 },
                 function () {
-                    alert($scope.global.utils.errors['NETWORK_ERROR']);
-                    resolve($scope.global.utils.errors['NETWORK_ERROR']);
+                    alert(ctrl.global.utils.errors['NETWORK_ERROR']);
+                    resolve(ctrl.global.utils.errors['NETWORK_ERROR']);
                 }
             );
         });
@@ -330,7 +330,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     },
                     function () {
                         image.isBeingRemoved = false;
-                        alert($scope.global.utils.errors['NETWORK_ERROR']);
+                        alert(ctrl.global.utils.errors['NETWORK_ERROR']);
                     }
                 );
             }
@@ -345,7 +345,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                 options: function () {
                     return {
                         global: ctrl.global,
-                        oldValue: product.lastOutStock ? product.lastOutStock.price : "",
+                        oldValue: product.price ? product.price : "",
                         dialogHeader: i18n_change_product_price_dialog_header,
                         oldValueHeader: i18n_old_price,
                         newValueHeader: i18n_new_price,
@@ -366,16 +366,16 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                     function (response) {
                         product.outPriceBeingChanged = false;
                         if (response.data.success) {
-                            product.lastOutStock = response.data.result;
-                            alert($scope.global.utils.errors['SUCCESS']);
+                            product.price = data.newValue;
+                            alert(ctrl.global.utils.errors['SUCCESS']);
                         }
                         else {
-                            alert($scope.global.utils.errors[response.data.error.errorName]);
+                            alert(ctrl.global.utils.errors[response.data.error.errorName]);
                         }
                     },
                     function () {
                         product.outPriceBeingChanged = false;
-                        alert($scope.global.utils.errors['NETWORK_ERROR']);
+                        alert(ctrl.global.utils.errors['NETWORK_ERROR']);
                     }
                 );
             },

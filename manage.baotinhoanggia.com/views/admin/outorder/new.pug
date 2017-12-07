@@ -69,6 +69,11 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                             label #{__('quotation_')}
                             div.panel.panel-default
                                 div.panel-body
+                                    //div.row.flex
+                                        div.col-xs-4.vf-center
+                                            span(style='padding: 8px; font-weight: bold') #{__('price_adjust')}
+                                        div.col-xs-8.vf-center
+                                            input.form-control(ng-model='ctrl.priceAdjust')
                                     div.table-responsive
                                         table.table.table-striped.table-hover
                                             thead(style='white-space: pre')
@@ -78,6 +83,7 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                     th.text-right #{__('note_')}
                                                     th.text-right #{__('amount_')}
                                                     th.text-right #{__('selling_price')}
+                                                    th.text-right #{__('selling_price_adjusted')}
                                                     th.text-right #{__('subtotal_')}
 
                                             tbody
@@ -93,16 +99,16 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                             a.note(href='' editable-textarea='selection.note' buttons="no")
                                                                 span {{selection.note? "#{__('edit_note')}" : "#{__('empty_')}"}}
                                                     td
-                                                        input.text-right.form-control(cleave='global.utils.cleaveOptions.currency' ng-model='selection.amount')
-                                                    //td
-                                                        div.text-right {{(selection.productID.lastOutStock? selection.productID.lastOutStock.price : 0) | currency : '' : ''}}
+                                                        div.text-right {{selection.amount}}
                                                     td
-                                                        input.text-right.form-control(cleave='global.utils.cleaveOptions.currency' ng-model='selection.price')
+                                                        div.text-right {{selection.price | currency : '' : ''}}
                                                     td
-                                                        div.text-right {{selection.price * selection.amount | currency : '' : ''}}
+                                                        div.text-right {{ctrl.getPriceAfterAdjustment(selection) | currency : '' : ''}}
+                                                    td
+                                                        div.text-right {{ctrl.getSubTotal(selection) | currency : '' : ''}}
                                                         //input.form-control(ng-model='selection.note')
                                                 tr(ng-if='ctrl.selectedProducts.length' style='font-size: 20px')
-                                                    td(colspan='5')
+                                                    td(colspan='6')
                                                         div.text-right #{__('total_order_value')}
                                                     td
                                                         div.text-right(style='font-weight: bold')

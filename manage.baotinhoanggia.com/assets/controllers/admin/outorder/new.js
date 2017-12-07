@@ -33,9 +33,22 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
     ctrl.calculateTotalOrderValue = function () {
         let sum = new BigNumber(0);
         ctrl.selectedProducts.forEach(function (selection) {
-            sum = sum.add(new BigNumber(selection.price || "0").mul(selection.amount || "0"));
+            sum = sum.add(ctrl.getSubTotal(selection));
         });
         return sum.toString();
+    };
+    
+    ctrl.getPriceAfterAdjustment = function(selection){
+        if (selection.priceAdjust){
+            return new BigNumber(selection.price || '0').mul(100 + (selection.priceAdjust? (Number(selection.priceAdjust)) : 0)).div(100).toString();
+        }
+        else{
+            return selection.price;
+        }
+    };
+    
+    ctrl.getSubTotal = function(selection){
+        return new BigNumber(ctrl.getPriceAfterAdjustment(selection)).mul(selection.amount).toString();
     };
     
     ctrl.selectProduct = function (product, i18n_select_product_amount, i18n_stock_amount, i18n_wanted_amount, i18n_product_selected) {
@@ -50,16 +63,14 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
             else {
                 // console.log(ctrl.selectedBranch, product.stockSum[ctrl.selectedBranch]);
                 $modal.open({
-                    templateUrl: 'changeValueDialog',
-                    controller: 'ChangeValueDialogController',
+                    templateUrl: 'selectProductDialog',
+                    controller: 'SelectProductDialogController',
                     resolve: {
                         options: function () {
                             return {
-                                dialogHeader: i18n_select_product_amount,
-                                oldValueHeader: i18n_stock_amount,
-                                newValueHeader: i18n_wanted_amount,
                                 global: $scope.global,
-                                oldValue: product.stockSum[ctrl.selectedBranch] ? product.stockSum[ctrl.selectedBranch].sum : 0,
+                                oldPrice: product.price || 0,
+                                stockAvailable: product.stockSum[ctrl.selectedBranch] ? product.stockSum[ctrl.selectedBranch].sum : 0,
                             };
                         }
                     }
@@ -67,8 +78,10 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                     function (data) {
                         ctrl.selectedProducts.push({
                             productID: product,
-                            amount: data.newValue,
-                            price: product.lastOutStock ? product.lastOutStock.price : 0,
+                            amount: data.amount,
+                            price: product.price || '0',
+                            priceAdjust: data.priceAdjust,
+                            note: data.note,
                             sortOrder: ctrl.getHighestSortOrder(ctrl.selectedProducts)
                         });
                         // console.log(ctrl.selectedProducts);
@@ -137,7 +150,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                                 return {
                                     productID: selection.productID._id,
                                     amount: selection.amount,
-                                    price: selection.price,
+                                    price: ctrl.getPriceAfterAdjustment(selection),
                                     sortOrder: selection.sortOrder,
                                     note: selection.note,
                                 }

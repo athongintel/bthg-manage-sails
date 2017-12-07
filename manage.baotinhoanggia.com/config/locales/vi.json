@@ -289,5 +289,11 @@
 	"pay_029": "DNTT",
 	"print_001": "cái",
 	"print_002": "In hoa don",
-	"print_003": "đồng"
+	"print_003": "đồng",
+	"price_adjust": "Điều chỉnh giá (%)",
+	"selling_price_adjusted": "Giá sau điều chỉnh",
+	"add_product_to_order": "Thêm vào đơn hàng",
+	"stock_available": "Tồn kho",
+	"selection": "Số lượng bán",
+	"price_adjusted": "Giá sau điều chỉnh"
 }

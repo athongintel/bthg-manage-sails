@@ -63,6 +63,7 @@ html(ng-app='app')
         script(src="/controllers/dialogs/confirm-order-dialog.js")
         script(src="/controllers/dialogs/login.js")
         script(src="/controllers/dialogs/product-details-dialog.js")
+        script(src="/controllers/dialogs/select-product-dialog.js")
         script(src="/controllers/dialogs/view-photo.js")
         script(src="/controllers/partials/branch-selector.js")
         script(src="/controllers/partials/brand-selector.js")
@@ -82,7 +83,7 @@ html(ng-app='app')
         // SCRIPTS END
 
     body
-        div.container(ng-controller='GlobalController' ng-init='init({' +
+        div.main-container(ng-controller='GlobalController' ng-init='init({' +
             'errors : {' +
                 '"NETWORK_ERROR" : "' + __('NETWORK_ERROR')+ '",' +
                 '"SUCCESS" : "' + __('SUCCESS')+ '",' +
@@ -121,4 +122,5 @@ html(ng-app='app')
             include ./dialogs/view-photo
             include ./dialogs/change-product-type-group
             include ./dialogs/confirm-order-dialog
+            include ./dialogs/select-product-dialog
 

@@ -98,7 +98,7 @@ div.partials_product-details
                         a.margin-left-15px(ng-hide='$ctrl.product.outPriceBeingChanged' href='' ng-click='$ctrl.changeExportPriceManually($ctrl.product,"' + __('change_product_price_dialog_header') + '", "'+__('old_price')+'", "'+__('new_price')+'")') (#{__('change_')})
                     div.col-xs-6
                         div.text-right
-                            span(ng-hide='$ctrl.product.outPriceBeingChanged') {{$ctrl.product.lastOutStock? ($ctrl.product.lastOutStock.price | currency : '' : 0) : '#{__("not_available")}'}}
+                            span(ng-hide='$ctrl.product.outPriceBeingChanged') {{$ctrl.product.price ? ($ctrl.product.price | currency : '' : 0) : '#{__("not_available")}'}}
                             span(ng-show='$ctrl.product.outPriceBeingChanged')
                                 i.fa.fa-spinner.fa-spin
                                 span &nbsp; #{__('is_being_updated')}

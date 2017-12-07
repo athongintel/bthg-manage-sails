@@ -227,5 +227,14 @@
 	"handover_target": "handover_target",
 	"export_handover": "export_handover",
 	"export_payment_request": "export_payment_request",
-	"export_order_print": "export_order_print"
+	"export_order_print": "export_order_print",
+	"ORDER_OPEN": "ORDER_OPEN",
+	"ORDER_CONFIRMED": "ORDER_CONFIRMED",
+	"ORDER_PAYMENT_RECEIVED": "ORDER_PAYMENT_RECEIVED",
+	"ORDER_FINISHED": "ORDER_FINISHED",
+	"ORDER_CANCELED": "ORDER_CANCELED",
+	"new_quotation_version_created": "new_quotation_version_created",
+	"price_adjust": "price_adjust",
+	"edit_note": "edit_note",
+	"empty_": "empty_"
 }

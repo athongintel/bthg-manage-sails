@@ -624,9 +624,11 @@ module.exports = {
                 stockIDs: IDs of selected branches
                 supplierIDs: ID of suppliers
                 description,
+                price: the price
                 
                 photosNumber: number of returned upload urls
                 initInStock: init amount in stock
+                initInPrice: init in stock price
             }
          */
         try {
@@ -639,6 +641,10 @@ module.exports = {
             let product = await _app.model.Product.findOne({typeID: type._id, brandID: brand._id, model: params.model});
             if (product)
                 return sysUtils.returnError(_app.errors.DUPLICATED_ERROR);
+    
+            let initInStock = Number(params.initInStock || "0");
+            let initInPrice = new BigNumber(params.initInPrice || "0");
+            let initOutPrice = new BigNumber(params.price || "0");
             
             let productData = {
                 typeID: type._id,
@@ -647,14 +653,11 @@ module.exports = {
                 stockIDs: params.stockIDs,
                 supplierIDs: params.supplierIDs,
                 description: params.description,
+                price: initOutPrice.toString()
             };
             
             product = new _app.model.Product(productData);
             product = await product.save();
-            
-            let initInStock = Number(params.initInStock || "0");
-            let initInPrice = new BigNumber(params.initInPrice || "0");
-            let initOutPrice = new BigNumber(params.initOutPrice || "0");
             
             product.stockPeek = initInStock;
             
@@ -995,17 +998,21 @@ module.exports = {
             if (!product)
                 return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
             
+            let price = new BigNumber(params.price).toString();
             let outStock = new _app.model.OutStock({
                 productID: product._id,
                 branchID: principal.user.branchID,
                 userID: principal.user._id,
                 quantity: 0,
-                price: new BigNumber(params.price).toString(),
+                price: price,
                 metaInfo: _app.model.OutStock.constants.STOCK_MANUAL_CHANGE
             });
+            await outStock.save();
             
-            outStock = await outStock.save();
-            return sysUtils.returnSuccess(outStock);
+            product.price = price;
+            await product.save();
+            
+            return sysUtils.returnSuccess();
         }
         catch (err) {
             console.log('changeProductPrice:', err);
