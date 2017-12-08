@@ -5,7 +5,7 @@ app.controller('SelectProductDialogController', ['$uibModalInstance', '$scope', 
     };
     
     $scope.selectProduct = function () {
-        $modalInstance.close({amount: $scope.amount, priceAdjust: $scope.priceAdjust, note: $scope.note});
+        $modalInstance.close({amount: $scope.amount, priceAdjust: $scope.priceAdjust || 0, note: $scope.note});
     };
     
     $scope.getAdjustedPrice = function () {
