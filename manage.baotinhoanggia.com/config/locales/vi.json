@@ -330,5 +330,6 @@
 	"stock_manage": "stock_manage",
 	"exim_": "exim_",
 	"stock_exim": "stock_exim",
-	"select_branch": "select_branch"
+	"select_branch": "select_branch",
+	"statistics_": "statistics_"
 }

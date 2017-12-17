@@ -54,7 +54,8 @@ app.controller('AdminSupplierController', ['$scope', '$http', '$uibModal', '$tim
                     ctrl.loadingSupplierInfo = false;
                     if (response.data.success) {
                         //-- load full supplier info
-                        ctrl.selectedSupplier = response.data.result[0].success ? response.data.result[0].result : null;
+                        ctrl.selectedSupplier = supplier;
+                        $scope.global.utils.mergeObject(ctrl.selectedSupplier, response.data.result[0].success ? response.data.result[0].result : null);
                         ctrl.selectedSupplierContacts = response.data.result[1].success ? response.data.result[1].result : null;
                     }
                     else {

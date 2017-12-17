@@ -5,8 +5,21 @@ div(ng-controller='AdminStockEximController as ctrl' ng-init='ctrl.init()')
                 div.panel-header-title #{__('stock_exim')}
 
     div.panel.panel-default.main-panel
-        div.panel-body
-            div.col-xs-12.col-sm-4
-                label #{__('select_branch')}
-                branch-selector(global='global')
-            div.col-xs-12
+        div.panel-body(style='background: white')
+            uib-tabset(active='active')
+                uib-tab()
+                    uib-tab-heading
+                        i.fa.fa-bar-chart
+                        span &nbsp #{__('statistics_')}
+
+                    div.row.margin-top-15px
+                        div.col-xs-12.col-sm-4
+                            label #{__('select_branch')}
+                            branch-selector(global='global')
+                uib-tab()
+                    uib-tab-heading
+                        i.fa.fa-truck
+                        span &nbsp #{__('exim_')}
+
+                    div.row.margin-top-15px
+

@@ -16,8 +16,8 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
             div.text-center(ng-show='ctrl.initializing')
                 i.fa.fa-spinner.fa-spin
             div(ng-hide='ctrl.initializing')
-                label #{__('search_customer')}
                 div(ng-hide='ctrl.showCustomerDetails')
+                    label #{__('search_customer')}
                     div.input-group
                         span.input-group-addon
                             span.glyphicon.glyphicon-search
@@ -38,67 +38,72 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                             i.fa.fa-spinner.fa-spin
 
                         div(ng-show='!ctrl.loadingCustomerInfo')
-                            div.row
-                                div.col-xs-6
-                                    label #{__('customer_info')}
-                                    span.text-danger.margin-left-15px(ng-show='ctrl.selectedCustomer.customerSaveProblem')
-                                        i.fa.fa-exclamation-circle
-                                        span &nbsp;
-                                        span #{__('save_problem')}
-                                div.col-xs-6
-                                    div.text-right
-                                        a(href='' ng-click='customerEditForm.$show()')
-                                            span #{__('edit_')} &nbsp;
-                                            i.fa.fa-pencil
-                            form.row-table.margin-bottom-15px(editable-form='' name='customerEditForm' onbeforesave='ctrl.saveCustomer($data)')
+                            form.margin-bottom-15px(editable-form='' name='customerEditForm' onbeforesave='ctrl.saveCustomer($data)')
                                 div.row
-                                    div.margin-bottom-15px.col-xs-12.col-sm-6
-                                        label #{__('name_')}
-                                        div(editable-text="ctrl.selectedCustomer.name" e-name="name" e-required onbeforesave='checkCustomerAttribute("name", $data, ctrl.selectedCustomer.name)') {{ctrl.selectedCustomer.name}}
+                                    div.col-xs-6
+                                        label #{__('customer_info')}
+                                        span.text-danger.margin-left-15px(ng-show='ctrl.selectedCustomer.customerSaveProblem')
+                                            i.fa.fa-exclamation-circle
+                                            span &nbsp;
+                                            span #{__('save_problem')}
+                                    div.col-xs-6
+                                        div.text-right.margin-bottom-5px
+                                            buton.btn.btn-xs.btn-primary(href='' ng-hide='customerEditForm.$visible' ng-click='customerEditForm.$show()')
+                                                i.fa.fa-pencil
+                                                span &nbsp; #{__('edit_')}
+                                            div(ng-show='customerEditForm.$visible')
+                                                button.btn-xs.btn.btn-default(type="button" ng-disabled='customerEditForm.$waiting' ng-click='customerEditForm.$cancel()')
+                                                    i.fa.fa-ban
+                                                    span &nbsp; #{__('cancel_')}
+                                                button.btn-xs.btn.btn-primary.margin-left-5px(type='submit' ng-disabled='customerEditForm.$waiting')
+                                                    i.fa.fa-save
+                                                    span &nbsp; #{__('save_')}
+                                div.panel.panel-default
+                                    div.panel-body
+                                        div.row
+                                            div.margin-bottom-15px.col-xs-12.col-sm-6
+                                                label #{__('name_')}
+                                                div(editable-text="ctrl.selectedCustomer.name" e-name="name" e-required onbeforesave='checkCustomerAttribute("name", $data, ctrl.selectedCustomer.name)') {{ctrl.selectedCustomer.name}}
 
-                                    div.margin-bottom-15px.col-xs-12.col-sm-6
-                                        label #{__('code_')}
-                                        div(editable-text="ctrl.selectedCustomer.code" e-name="code" e-required onbeforesave='checkCustomerAttribute("code", $data, ctrl.selectedCustomer.code)') {{ctrl.selectedCustomer.code}}
-                                div.row
-                                    div.margin-bottom-15px.col-xs-12.col-sm-6
-                                        label #{__('phone_number')}
-                                        div(editable-text="ctrl.selectedCustomer.phoneNumber" e-name="phoneNumber") {{ctrl.selectedCustomer.phoneNumber ||  '#{__("not_set")}'}}
+                                            div.margin-bottom-15px.col-xs-12.col-sm-6
+                                                label #{__('code_')}
+                                                div(editable-text="ctrl.selectedCustomer.code" e-name="code" e-required onbeforesave='checkCustomerAttribute("code", $data, ctrl.selectedCustomer.code)') {{ctrl.selectedCustomer.code}}
+                                        div.row
+                                            div.margin-bottom-15px.col-xs-12.col-sm-6
+                                                label #{__('phone_number')}
+                                                div(editable-text="ctrl.selectedCustomer.phoneNumber" e-name="phoneNumber") {{ctrl.selectedCustomer.phoneNumber ||  '#{__("not_set")}'}}
 
-                                    div.margin-bottom-15px.col-xs-12.col-sm-6
-                                        label #{__('fax_number')}
-                                        div(editable-text="ctrl.selectedCustomer.faxNumber" e-name="faxNumber") {{ctrl.selectedCustomer.faxNumber ||  '#{__("not_set")}'}}
+                                            div.margin-bottom-15px.col-xs-12.col-sm-6
+                                                label #{__('fax_number')}
+                                                div(editable-text="ctrl.selectedCustomer.faxNumber" e-name="faxNumber") {{ctrl.selectedCustomer.faxNumber ||  '#{__("not_set")}'}}
 
-                                div.margin-bottom-15px
-                                    label #{__('address_')}
-                                    div(editable-text="ctrl.selectedCustomer.address" e-name="address") {{ctrl.selectedCustomer.address ||  '#{__("not_set")}'}}
+                                        div.margin-bottom-15px
+                                            label #{__('address_')}
+                                            div(editable-text="ctrl.selectedCustomer.address" e-name="address") {{ctrl.selectedCustomer.address ||  '#{__("not_set")}'}}
 
-                                div.margin-bottom-15px
-                                    label #{__('company_info')}
-                                    div.panel.panel-default
-                                        div.panel-body
-                                            div.row
-                                                div.col-xs-12.col-sm-6
-                                                    label #{__('company_name')}
-                                                    div(editable-text="ctrl.selectedCustomer.companyInfo.name" e-name='companyInfo_name' ng-model='ctrl.selectedCustomer.companyInfo.name') {{ctrl.selectedCustomer.companyInfo.name ||  '#{__("not_set")}'}}
-                                                div.col-xs-12.col-sm-6
-                                                    label #{__('tax_number')}
-                                                    div(editable-text="ctrl.selectedCustomer.companyInfo.taxNumber" e-name='companyInfo_taxNumber' ng-model='ctrl.selectedCustomer.companyInfo.taxNumber') {{ctrl.selectedCustomer.companyInfo.taxNumber ||  '#{__("not_set")}'}}
-                                            div.margin-top-15px
-                                                label #{__('address_')}
-                                                div(editable-text="ctrl.selectedCustomer.companyInfo.address" e-name='companyInfo_address' ng-model='ctrl.selectedCustomer.companyInfo.address') {{ctrl.selectedCustomer.companyInfo.address ||  '#{__("not_set")}'}}
-
-                                div.text-right(ng-show='customerEditForm.$visible')
-                                    button.btn.btn-default(type="button" ng-disabled='customerEditForm.$waiting' ng-click='customerEditForm.$cancel()')
-                                        span #{__('cancel_')}
-                                    button.btn.btn-primary.margin-left-15px(type='submit' ng-disabled='customerEditForm.$waiting')
-                                        span #{__('save_')}
+                                        div.margin-bottom-15px
+                                            label #{__('company_info')}
+                                            div.panel.panel-default
+                                                div.panel-body
+                                                    div.row
+                                                        div.col-xs-12.col-sm-6
+                                                            label #{__('company_name')}
+                                                            div(editable-text="ctrl.selectedCustomer.companyInfo.name" e-name='companyInfo_name' ng-model='ctrl.selectedCustomer.companyInfo.name') {{ctrl.selectedCustomer.companyInfo.name ||  '#{__("not_set")}'}}
+                                                        div.col-xs-12.col-sm-6
+                                                            label #{__('tax_number')}
+                                                            div(editable-text="ctrl.selectedCustomer.companyInfo.taxNumber" e-name='companyInfo_taxNumber' ng-model='ctrl.selectedCustomer.companyInfo.taxNumber') {{ctrl.selectedCustomer.companyInfo.taxNumber ||  '#{__("not_set")}'}}
+                                                    div.margin-top-15px
+                                                        label #{__('address_')}
+                                                        div(editable-text="ctrl.selectedCustomer.companyInfo.address" e-name='companyInfo_address' ng-model='ctrl.selectedCustomer.companyInfo.address') {{ctrl.selectedCustomer.companyInfo.address ||  '#{__("not_set")}'}}
 
                             div.row
                                 div.col-xs-6
                                     label #{__('customer_contact')}
-                                div.col-xs-6.text-right
-                                    button.btn.btn-primary.btn-sm(ng-click='ctrl.addCustomerContact()')
-                                        span #{__('add_')}
+                                div.col-xs-6
+                                    div.margin-bottom-5px.text-right
+                                        button.btn.btn-primary.btn-xs(ng-click='ctrl.addCustomerContact()')
+                                            i.fa.fa-plus
+                                            span &nbsp; #{__('add_')}
                             div.table-responsive
                                 table.table.table-striped.table-hover
                                     thead

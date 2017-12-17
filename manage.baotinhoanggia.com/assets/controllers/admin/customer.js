@@ -54,7 +54,8 @@ app.controller('AdminCustomerController', ['$scope', '$http', '$uibModal', '$tim
                     ctrl.loadingCustomerInfo = false;
                     if (response.data.success) {
                         //-- load full customer info
-                        ctrl.selectedCustomer = response.data.result[0].success ? response.data.result[0].result : null;
+                        ctrl.selectedCustomer = customer;
+                        $scope.global.utils.mergeObject(ctrl.selectedCustomer, response.data.result[0].success ? response.data.result[0].result : null);
                         ctrl.selectedCustomerContacts = response.data.result[1].success ? response.data.result[1].result : null;
                     }
                     else {

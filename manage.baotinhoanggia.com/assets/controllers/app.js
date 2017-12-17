@@ -88,6 +88,15 @@ app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scop
                 return $scope.global.user.userClass.indexOf(999) >= 0;
             },
             
+            mergeObject: function (dest, source) {
+                if (!dest) dest = {};
+                if (source) {
+                    Object.keys(source).forEach(function(key){
+                        dest[key] = JSON.parse(JSON.stringify(source[key]));
+                    });
+                }
+            },
+            
             cleaveOptions: {
                 currency: {
                     numeral: true
