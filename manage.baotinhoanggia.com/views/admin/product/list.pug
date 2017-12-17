@@ -12,4 +12,4 @@ div.admin-product-list(ng-controller='AdminProductListController as ctrl' ng-ini
                 label #{__('search_product')}
                 div.panel.panel-default
                     div.panel-body
-                        product-search(global='global')
+                        product-search(global='global' on-product-selected='ctrl.showProductDetails(selectedProduct)')

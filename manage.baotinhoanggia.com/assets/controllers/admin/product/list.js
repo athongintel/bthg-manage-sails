@@ -27,4 +27,24 @@ app.controller('AdminProductListController', ['$scope', '$http', '$timeout', '$u
         }
     };
     
+    ctrl.showProductDetails = function (product) {
+        $modal.open({
+            templateUrl: 'productDetailsDialog',
+            controller: 'ProductDetailsDialogController',
+            resolve: {
+                options: function () {
+                    return {
+                        global: $scope.global,
+                        productID: product._id
+                    };
+                }
+            },
+        }).result.then(
+            function () {
+            },
+            function () {
+            }
+        );
+    };
+    
 }]);

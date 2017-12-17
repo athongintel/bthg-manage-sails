@@ -9,7 +9,14 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
     ctrl.selectedBrand = {};
     ctrl.selectedSuppliers = {};
     
+    ctrl.changeSelectedGroup = function (group) {
+        // console.log('new group: ', group);
+        ctrl.selectedGroup = group;
+        ctrl.selectedType = null;
+    };
+    
     ctrl.changeSelectedType = function (type) {
+        // console.log('new type: ', type);
         ctrl.selectedType = type;
     };
     
@@ -27,11 +34,11 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
         if (index >= 0) ctrl.selectedSuppliers.splice(index, 1);
     };
     
-    ctrl.calculateStockSumDisplay = function(branch, product){
-        let calculateAllStocksSum = function(product){
+    ctrl.calculateStockSumDisplay = function (branch, product) {
+        let calculateAllStocksSum = function (product) {
             let sum = 0;
-            if (product && product.stockSum){
-                Object.keys(product.stockSum).forEach(function(key){
+            if (product && product.stockSum) {
+                Object.keys(product.stockSum).forEach(function (key) {
                     sum += product.stockSum[key].sum;
                 });
             }
@@ -46,7 +53,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
         return display;
     };
     
-    ctrl.changeBranches = function(branches){
+    ctrl.changeBranches = function (branches) {
         ctrl.selectedStocks = branches;
     };
     
@@ -73,8 +80,12 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                         ctrl.selectedType = ctrl.product.typeID;
                         ctrl.selectedSuppliers = ctrl.product.supplierIDs;
                         
-                        ctrl.preSelectedBranchIDs = ctrl.product.stockIDs? ctrl.product.stockIDs.map(function(stock){ return stock._id; }) : [];
-                        ctrl.selectedStocks = ctrl.product.stockIDs? ctrl.product.stockIDs.map(function(stock){ return stock._id; }) : [];
+                        ctrl.preSelectedBranchIDs = ctrl.product.stockIDs ? ctrl.product.stockIDs.map(function (stock) {
+                            return stock._id;
+                        }) : [];
+                        ctrl.selectedStocks = ctrl.product.stockIDs ? ctrl.product.stockIDs.map(function (stock) {
+                            return stock._id;
+                        }) : [];
                     }
                     else {
                         alert(ctrl.global.utils.errors[response.data.error.errorName]);
@@ -278,7 +289,7 @@ const ProductDetailsPartialController = function ($scope, $http, $uibModal) {
                                 );
                             }
                         }
-                        else{
+                        else {
                             updateSuccessHook();
                         }
                     }

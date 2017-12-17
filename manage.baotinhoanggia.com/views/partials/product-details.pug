@@ -26,7 +26,7 @@ div.partials_product-details
                                 i.fa.fa-ban
                                 span &nbsp;
                             span #{__('cancel_')}
-                        button.btn.btn-primary.btn-xs(type='submit' ng-disabled='editProductForm.$waiting')
+                        button.btn.btn-primary.btn-xs(type='submit' ng-disabled='editProductForm.$waiting || !$ctrl.selectedGroup || !$ctrl.selectedType')
                             span(ng-show='editProductForm.$waiting')
                                 i.fa.fa-spinner.fa-spin
                                 span &nbsp;
@@ -36,6 +36,14 @@ div.partials_product-details
                             span #{__('save_')}
 
             div.details.margin-top-15px
+                div.row.margin-bottom-5px
+                    div.col-xs-4
+                        label #{__('product_group')}
+                    div.col-xs-8.text-right
+                        span(ng-show='!$ctrl.product.isBeingEdited') {{$ctrl.product.typeID.groupID.name}}
+                        div(ng-show='$ctrl.product.isBeingEdited')
+                            group-selector(global='$ctrl.global' selected-group='$ctrl.selectedGroup' on-group-changed='$ctrl.changeSelectedGroup(selectedGroup)')
+
                 div.row.margin-bottom-5px
                     div.col-xs-4
                         label #{__('product_')}
