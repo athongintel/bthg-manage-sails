@@ -66,3 +66,14 @@
                     li.divider
                     li.li-toggle(ng-class='{active: global.utils.isPath("admin/outorder/new")}')
                         a(href='#/admin/outorder/new') #{__('new_outorder')}
+
+            li(ng-class='{active: global.utils.isPath("admin/stock")}')
+                a.dropdown-toggle(href='', data-toggle='dropdown')
+                    span #{__('stock_manage')}
+                    b.caret
+                ul.dropdown-menu
+                    li.li-toggle(ng-class='{active: global.utils.isPath("admin/stock/stocks")}')
+                        a(href='#/admin/stock/stocks') #{__('stock_manage')}
+                    li.divider
+                    li.li-toggle(ng-class='{active: global.utils.isPath("admin/stock/exim")}')
+                        a(href='#/admin/stock/exim') #{__('exim_')}

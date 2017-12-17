@@ -45,6 +45,10 @@ module.exports.routes = {
         view: 'admin/outorder/new', locals: {layout: false}
     },
     
+    'GET /admin/stock/exim': {
+        view: 'admin/stock/exim', locals: {layout: false}
+    },
+    
     'GET /partials/brand-selector': {
         view: 'partials/brand-selector', locals: {layout: false}
     },

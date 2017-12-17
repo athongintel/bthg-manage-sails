@@ -38,6 +38,9 @@ app.config(function ($routeProvider) {
         .when('/admin/outorder/new', {
             templateUrl: '/admin/outorder/new',
         })
+        .when('/admin/stock/exim', {
+            templateUrl: '/admin/stock/exim',
+        })
 });
 
 app.controller('GlobalController', ['$scope', '$sessionStorage', function ($scope, $sessionStorage) {

@@ -16,7 +16,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                     div.row.flex
                         div.col-xs-6.vf-center
                             label
-                                input(type='checkbox' ng-model='ctrl.keepPage')
+                                input(type='checkbox' ng-model='ctrl.keepPage' ng-change='ctrl.changeKeepPage()')
                                 span &nbsp; #{__('keep_page')}
                         div.col-xs-6.text-right.vf-center
                             button.btn.btn-primary.action(type='submit' ng-disabled='!ctrl.selectedType || !ctrl.selectedBrand')

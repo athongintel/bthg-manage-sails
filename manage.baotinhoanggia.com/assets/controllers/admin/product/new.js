@@ -154,6 +154,10 @@ app.controller('AdminProductAddController', ['$scope', '$http', '$uibModal', '$t
         ctrl.selectedSuppliers.push(supplier);
     };
     
+    ctrl.changeKeepPage = function(){
+        ctrl.keepGroup = ctrl.keepType = ctrl.keepBrand = ctrl.keepPage;
+    };
+    
     ctrl.removeSupplier = function (supplier) {
         let index = ctrl.selectedSuppliers.findIndex(function (supp) {
             return String(supp._id) === supplier.id;

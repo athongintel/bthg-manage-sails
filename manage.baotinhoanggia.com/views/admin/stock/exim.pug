@@ -1,0 +1,12 @@
+div(ng-controller='AdminStockEximController as ctrl' ng-init='ctrl.init()')
+    div
+        div.row
+            div.col-xs-12.col-sm-6
+                div.panel-header-title #{__('stock_exim')}
+
+    div.panel.panel-default.main-panel
+        div.panel-body
+            div.col-xs-12.col-sm-4
+                label #{__('select_branch')}
+                branch-selector(global='global')
+            div.col-xs-12
