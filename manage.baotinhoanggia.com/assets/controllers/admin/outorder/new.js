@@ -39,7 +39,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
     };
     
     ctrl.getPriceAfterAdjustment = function(selection){
-        return new BigNumber(selection.price || '0').add(new BigNumber(selection.priceAdjust)).toString();
+        return new BigNumber(selection.price || '0').add(new BigNumber(selection.priceAdjust || '0')).toString();
     };
     
     ctrl.getSubTotal = function(selection){
@@ -71,12 +71,12 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                     }
                 }).result.then(
                     function (data) {
-                        console.log(data);
+                        // console.log(data);
                         ctrl.selectedProducts.push({
                             productID: product,
                             amount: data.amount,
                             price: product.price || '0',
-                            priceAdjust: data.priceAdjust,
+                            priceAdjust: data.priceAdjust || '0',
                             note: data.note,
                             sortOrder: ctrl.getHighestSortOrder(ctrl.selectedProducts)
                         });

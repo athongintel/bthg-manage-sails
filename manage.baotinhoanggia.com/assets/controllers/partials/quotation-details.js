@@ -12,7 +12,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
     };
     
     ctrl.exportWarrantyTicket = function (selection, dict) {
-        ctrl.exportingWarranty = true;
+        selection.exportingWarranty = true;
         // playground requires you to assign document definition to a variable called dd
         $http.post('/rpc', {
             token: ctrl.global.user.token,
@@ -25,7 +25,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                 if (response.data.success) {
                     let companyInfo = JSON.parse(response.data.result.value);
                     let q = ctrl.quotation;
-                    console.log(selection, q);
+                    // console.log(selection, q);
                     let dd = {
                         content: [
                             {
@@ -244,16 +244,16 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                     };
                     
                     pdfMake.createPdf(dd).download(`${dict.war026} ${selection.productID.typeID.name + ' ' + selection.productID.model}.pdf`);
-                    ctrl.exportingWarranty = false;
+                    selection.exportingWarranty = false;
                     
                 }
                 else {
-                    ctrl.exportingWarranty = false;
+                    selection.exportingWarranty = false;
                     alert(ctrl.global.utils.errors[response.data.error.errorName]);
                 }
             },
             function () {
-                ctrl.exportingWarranty = false;
+                selection.exportingWarranty = false;
                 alert(ctrl.global.utils.errors['NETWORK_ERROR']);
             }
         );
