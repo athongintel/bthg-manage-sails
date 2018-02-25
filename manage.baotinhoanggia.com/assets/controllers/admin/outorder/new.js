@@ -74,10 +74,13 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                         ctrl.selectedProducts.push({
                             productID: product,
                             amount: data.amount,
+                            stockAvailable: data.stockAvailable,
                             price: product.price || '0',
                             priceAdjust: data.priceAdjust || '0',
                             note: data.note,
-                            sortOrder: ctrl.getHighestSortOrder(ctrl.selectedProducts)
+                            sortOrder: ctrl.getHighestSortOrder(ctrl.selectedProducts),
+                            adjustValue: data.adjustValue,
+                            absoluteMode: data.absoluteMode
                         });
                     },
                     function () {
@@ -129,6 +132,67 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                 alert($scope.global.utils.errors['NETWORK_ERROR']);
             }
         );
+    };
+    
+    ctrl.editSelection = function(selection){
+        if (!ctrl.creatingOrder) {
+            let cb = function(){
+                $modal.open({
+                    templateUrl: 'selectProductDialog',
+                    controller: 'SelectProductDialogController',
+                    resolve: {
+                        options: function () {
+                            return {
+                                global: $scope.global,
+                                amount: selection.amount,
+                                oldPrice: selection.price,
+                                stockAvailable: selection.stockAvailable,
+                                note: selection.note,
+                                adjustValue: selection.adjustValue || "",
+                                absoluteMode: selection.absoluteMode,
+                            };
+                        }
+                    }
+                }).result.then(
+                    function (data) {
+                        selection.amount = data.amount;
+                        selection.priceAdjust = data.priceAdjust;
+                        selection.note = data.note;
+                        selection.adjustValue = data.adjustValue;
+                        selection.absoluteMode = data.absoluteMode;
+                    },
+                    function () {
+                        //-- modal dismiss, do nothing
+                    }
+                );
+            };
+            
+            //-- check if stockAvailable is null then fetch it
+            if (selection.stockAvailable === null || selection.stockAvailable === undefined){
+                $http.post('/rpc', {
+                    token: $scope.global.user.token,
+                    name: 'get_product',
+                    params: {
+                        _id: selection.productID._id,
+                        full_info: true,
+                        stock_info: true
+                    }
+                }).then(
+                    function (response) {
+                        if (response.data.success) {
+                            selection.stockAvailable = response.data.result.stockSum[ctrl.selectedBranch]? response.data.result.stockSum[ctrl.selectedBranch].sum : null;
+                        }
+                        cb();
+                    },
+                    function(err){
+                        cb();
+                    }
+                );
+            }
+            else{
+                cb();
+            }
+        }
     };
     
     ctrl.createOrder = function (i18n_create_order_success) {

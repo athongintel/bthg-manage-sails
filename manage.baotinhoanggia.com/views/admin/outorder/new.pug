@@ -87,7 +87,7 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                     th.text-right #{__('subtotal_')}
 
                                             tbody
-                                                tr(ng-repeat='selection in ctrl.selectedProducts')
+                                                tr(ng-repeat='selection in ctrl.selectedProducts' ng-click='ctrl.editSelection(selection)')
                                                     td
                                                         button.btn.btn-danger.btn-xs.margin-right-15px(ng-hide='ctrl.creatingOrder' ng-click='ctrl.removeProductSelection(selection)')
                                                             i.fas.fa-trash
@@ -95,7 +95,9 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                     td
                                                         div {{selection.productID.model}}
                                                     td
-                                                        div.popover-wrapper
+                                                        div.text-center(ng-show='selection.note')
+                                                            i.fas.fa-comment-alt
+                                                        //div.popover-wrapper
                                                             a.note(href='' editable-textarea='selection.note' buttons="no")
                                                                 span {{selection.note? "#{__('edit_note')}" : "#{__('empty_')}"}}
                                                     td

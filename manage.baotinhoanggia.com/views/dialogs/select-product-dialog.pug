@@ -5,7 +5,7 @@ script(type="text/ng-template" id="selectProductDialog")
     .modal-body
         div.margin-bottom-15px
             label #{__('stock_available')}
-            input.huge-input.form-control.text-right(ng-disabled='true' cleave="options.global.utils.cleaveOptions.currency" ng-model="options.stockAvailable")
+            input.huge-input.form-control.text-right(readonly ng-value='options.stockAvailable? (options.stockAvailable | currency : "" : 0) : "N/A"')
         div.margin-bottom-15px
             label #{__('selection')}
             input.huge-input.form-control.text-right(cleave="options.global.utils.cleaveOptions.currency" ng-model="amount" autofocus)

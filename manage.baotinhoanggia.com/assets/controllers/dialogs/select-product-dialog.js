@@ -5,7 +5,7 @@ app.controller('SelectProductDialogController', ['$uibModalInstance', '$scope', 
     };
     
     $scope.selectProduct = function () {
-        $modalInstance.close({amount: $scope.amount, priceAdjust: $scope.priceAdjust || 0, note: $scope.note});
+        $modalInstance.close({amount: $scope.amount, priceAdjust: $scope.priceAdjust || 0, note: $scope.note, stockAvailable: options.stockAvailable, adjustValue: $scope.adjustValue, absoluteMode: $scope.absoluteMode});
     };
     
     $scope.getAdjustedPrice = function () {
@@ -56,5 +56,10 @@ app.controller('SelectProductDialogController', ['$uibModalInstance', '$scope', 
             }
         });
         $scope.absoluteMode = false;
+        $scope.note = options.note || "";
+        $scope.amount = options.amount || "";
+        $scope.adjustValue = options.adjustValue;
+        $scope.absoluteMode = options.absoluteMode;
+        $scope.adjustPrice();
     };
 }]);
