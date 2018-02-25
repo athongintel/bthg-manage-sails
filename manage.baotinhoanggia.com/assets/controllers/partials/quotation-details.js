@@ -11,6 +11,32 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         return sum.toString();
     };
     
+    ctrl.deleteOutOrder = function(i18n_confirm_delete_outorder){
+        let ok = confirm(i18n_confirm_delete_outorder);
+        if (ok){
+            $http.post('/rpc', {
+                token: ctrl.global.user.token,
+                name: 'delete_out_order',
+                params: {
+                    _id: ctrl.orderId
+                }
+            }).then(
+                function (response) {
+                    if (response.data.success) {
+                        alert('Success');
+                        ctrl.onOrderDeleted();
+                    }
+                    else{
+                        alert(ctrl.global.utils.errors[response.data.error.errorName]);
+                    }
+                },
+                function(error){
+                    alert(ctrl.global.utils.errors["NETWORK_ERROR"]);
+                }
+            );
+        }
+    };
+    
     ctrl.exportWarrantyTicket = function (selection, dict) {
         selection.exportingWarranty = true;
         // playground requires you to assign document definition to a variable called dd
@@ -1541,7 +1567,7 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
             resolve: {
                 options: function () {
                     return {
-                        status: ctrl.quotation.outStockOrderID.statusTimestamp ? ctrl.quotation.outStockOrderID.statusTimestamp[ctrl.quotation.outStockOrderID.statusTimestamp.length - 1].status : null,
+                        status: ctrl.quotation && ctrl.quotation.outStockOrderID && ctrl.quotation.outStockOrderID.statusTimestamp ? ctrl.quotation.outStockOrderID.statusTimestamp[ctrl.quotation.outStockOrderID.statusTimestamp.length - 1].status : null,
                         global: ctrl.global,
                     };
                 }
@@ -1554,8 +1580,8 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
                     token: ctrl.global.user.token,
                     name: 'change_order_status',
                     params: {
-                        orderID: ctrl.quotation.outStockOrderID._id,
-                        quotationID: ctrl.quotation._id,
+                        orderID: ctrl.orderId,
+                        quotationID: ctrl.quotation ? ctrl.quotation._id: null,
                         status: result.selectedStatus,
                         metaInfo: result.metaInfo
                     }
@@ -1590,32 +1616,45 @@ const QuotationDetailsPartialController = function ($scope, $timeout, $http, $ui
         );
     };
     
+    ctrl.shouldDisplayRevisionEdit = function(){
+        // console.log(ctrl.quotation.outStockOrderID.statusTimestamp[ctrl.quotation.outStockOrderID.statusTimestamp.length-1]);
+        // console.log(Number(ctrl.quotation.outStockOrderID.statusTimestamp[ctrl.quotation.outStockOrderID.statusTimestamp.length-1]));
+        // console.log([1, 5].indexOf(Number(ctrl.quotation.outStockOrderID.statusTimestamp[ctrl.quotation.outStockOrderID.statusTimestamp.length-1])));
+        return ctrl.quotation && ctrl.quotation.outStockOrderID
+            && (!ctrl.quotation.outStockOrderID.statusTimestamp || (ctrl.quotation.outStockOrderID.statusTimestamp
+            && ["1", "5"].indexOf(String(ctrl.quotation.outStockOrderID.statusTimestamp[ctrl.quotation.outStockOrderID.statusTimestamp.length-1].status)) >=0));
+    };
+    
     ctrl.$onInit = function () {
-        ctrl.loadingQuotation = true;
-        $http.post('/rpc', {
-            token: ctrl.global.user.token,
-            name: 'get_quotation_details',
-            params: {
-                _id: ctrl.quotationId,
-            }
-        }).then(
-            function (response) {
-                ctrl.loadingQuotation = false;
-                if (response.data.success) {
-                    ctrl.quotation = response.data.result;
-                    ctrl.quotation.selections.sort(function (a, b) {
-                        return a.sortOrder - b.sortOrder;
-                    });
+        // console.log(ctrl.orderId);
+        if (ctrl.quotationId) {
+            ctrl.loadingQuotation = true;
+            $http.post('/rpc', {
+                token: ctrl.global.user.token,
+                name: 'get_quotation_details',
+                params: {
+                    _id: ctrl.quotationId,
                 }
-                else {
-                    alert(ctrl.global.utils.errors[response.data.error.errorName]);
+            }).then(
+                function (response) {
+                    ctrl.loadingQuotation = false;
+                    if (response.data.success) {
+                        ctrl.quotation = response.data.result;
+                        ctrl.quotation.selections.sort(function (a, b) {
+                            return a.sortOrder - b.sortOrder;
+                        });
+                    }
+                    else {
+                        alert(ctrl.global.utils.errors[response.data.error.errorName]);
+                    }
+                    // console.log(ctrl.quotation);
+                },
+                function () {
+                    ctrl.loadingQuotation = false;
+                    alert(ctrl.global.utils.errors['NETWORK_ERROR']);
                 }
-            },
-            function () {
-                ctrl.loadingQuotation = false;
-                alert(ctrl.global.utils.errors['NETWORK_ERROR']);
-            }
-        );
+            );
+        }
     }
     
 };
@@ -1626,6 +1665,8 @@ app.component('quotationDetails', {
     bindings: {
         global: '<',
         quotationId: '<',
-        onOrderStatusChanged: '&'
+        orderId: '<',
+        onOrderStatusChanged: '&',
+        onOrderDeleted: '&'
     }
 });

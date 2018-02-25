@@ -66,6 +66,7 @@ const actions = {
     'get_all_branches': {policies: [PO.isAuthenticated, PO.isAdmin], action: BranchService.getAllBranches, validation: {required: []}},
     'get_branch': {policies: [PO.isAuthenticated, PO.isAdmin], action: BranchService.getBranch, validation: {required: ['_id']}},
     
+    'delete_out_order': {policies: [PO.isAuthenticated, PO.isAdmin], action: OutOrderService.deleteOrder, validation: {required: ['_id']}},
     'create_out_order': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.createOrder, validation: {required: ['name', 'customerID', 'branchID']}},
     'get_out_order_details': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.getOutOrderDetails, validation: {required: ['_id']}},
     'get_all_out_orders': {policies: [PO.isAuthenticated, PO.isSuperAdmin], action: OutOrderService.getAllOutOrders, validation: {required: []}},

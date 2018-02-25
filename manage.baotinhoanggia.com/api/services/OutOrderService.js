@@ -4,6 +4,36 @@ const moment = require('moment');
 
 module.exports = {
     
+    deleteOrder: async function(principal, params){
+        "use strict";
+        try{
+            //-- check the order status
+            let order = await _app.model.OutStockOrder.findById(params._id);
+            if (!order)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            if (order.statusTimestamp && [_app.model.OutStockOrder.constants.ORDER_OPEN, _app.model.OutStockOrder.constants.ORDER_CANCELED].indexOf(Number(order.statusTimestamp[order.statusTimestamp.length-1].status)) < 0)
+                return sysUtils.returnError(_app.errors.ORDER_STATUS_NOT_ALLOWED);
+            
+            //-- get all quotations of this order
+            let quotations = await _app.model.Quotation.find({outStockOrderID: params._id}).select('_id');
+            //-- remove all quotation details
+            await _app.model.QuotationDetails.remove({quotationID: {$in: quotations}});
+            
+            //-- remove all quotations
+            await _app.model.Quotation.remove({_id: {$in: quotations}});
+            
+            //-- remove the order itself
+            await _app.model.OutStockOrder.remove({_id: params._id});
+            
+            return sysUtils.returnSuccess();
+        }
+        catch(err){
+            console.log('deleteOrder:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
+    },
+    
     createOrder: async function (principal, params) {
         "use strict";
         /*

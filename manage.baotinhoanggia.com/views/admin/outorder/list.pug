@@ -51,7 +51,7 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
 
                 div(ng-if='!ctrl.loadingOrderDetails && ctrl.orderDetails')
                     label #{__('quotation_details')}
-                    quotation-details(global='global' quotation-id='ctrl.orderDetails.quots[0]._id' on-order-status-changed='ctrl.orderStatusChanged(status)')
+                    quotation-details(global='global' on-order-deleted='ctrl.removeOrder()' order-id='ctrl.orderDetails._id' quotation-id='ctrl.orderDetails.quots[0]._id' on-order-status-changed='ctrl.orderStatusChanged(status)')
                     //div.table-responsive
                         table.table.table-striped.table-hover(style='background: silver')
                             thead
@@ -125,7 +125,7 @@ div(ng-controller='AdminOutOrderListController as ctrl' ng-init='ctrl.init()')
                                         date-range-picker(selected-date-range='ctrl.selectedDateRange' on-date-changed='ctrl.changeDateRange(selectedDateRange)')
                 div
                     label #{__('results_')}
-                    div.panel.penl-default
+                    div.panel.panel-default
                         div.panel-body
                             div.text-center(ng-show='ctrl.filtering')
                                 i.fas.fa-spinner.fa-spin

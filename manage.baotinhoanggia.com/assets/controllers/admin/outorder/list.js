@@ -17,6 +17,19 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
         ctrl.selectedCustomer = customer;
     };
     
+    ctrl.removeOrder = function(){
+        //-- remove selectedOrder from array
+        if (ctrl.filteredResults) {
+            let index = ctrl.filteredResults.findIndex(function (order) {
+                return order._id === ctrl.selectedOrder;
+            });
+            if (index >= 0) {
+                ctrl.filteredResults.splice(index, 1);
+            }
+        }
+        ctrl.selectedOrder = null;
+    };
+    
     ctrl.changeType = function (type) {
         ctrl.selectedType = type;
     };
@@ -43,7 +56,7 @@ app.controller('AdminOutOrderListController', ['$scope', '$http', '$uibModal', f
     };
     
     ctrl.orderStatusChanged = function(status){
-        console.log('status changed', status);
+        // console.log('status changed', status);
         ctrl.orderDetails.statusTimestamp.push(status);
     };
     
