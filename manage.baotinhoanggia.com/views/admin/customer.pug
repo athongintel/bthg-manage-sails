@@ -7,14 +7,14 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                 div.text-right
                     button.action.btn.btn-primary.margin-bottom-15px(ng-click='ctrl.addCustomer()')
                         span
-                            i.fa.fa-plus
+                            i.fas.fa-plus
                             span &nbsp;
                         span #{__('add_customer')}
 
     div.panel.panel-default.main-panel
         div.panel-body
             div.text-center(ng-show='ctrl.initializing')
-                i.fa.fa-spinner.fa-spin
+                i.fas.fa-spinner.fa-spin
             div(ng-hide='ctrl.initializing')
                 div(ng-hide='ctrl.showCustomerDetails')
                     label #{__('search_customer')}
@@ -35,7 +35,7 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                             span #{__('go_back')}
                     div
                         div.text-center(ng-show='ctrl.loadingCustomerInfo')
-                            i.fa.fa-spinner.fa-spin
+                            i.fas.fa-spinner.fa-spin
 
                         div(ng-show='!ctrl.loadingCustomerInfo')
                             form.margin-bottom-15px(editable-form='' name='customerEditForm' onbeforesave='ctrl.saveCustomer($data)')
@@ -43,20 +43,20 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                                     div.col-xs-6
                                         label #{__('customer_info')}
                                         span.text-danger.margin-left-15px(ng-show='ctrl.selectedCustomer.customerSaveProblem')
-                                            i.fa.fa-exclamation-circle
+                                            i.fas.fa-exclamation-circle
                                             span &nbsp;
                                             span #{__('save_problem')}
                                     div.col-xs-6
                                         div.text-right.margin-bottom-5px
                                             buton.btn.btn-xs.btn-primary(href='' ng-hide='customerEditForm.$visible' ng-click='customerEditForm.$show()')
-                                                i.fa.fa-pencil
+                                                i.fas.fa-pencil-alt
                                                 span &nbsp; #{__('edit_')}
                                             div(ng-show='customerEditForm.$visible')
                                                 button.btn-xs.btn.btn-default(type="button" ng-disabled='customerEditForm.$waiting' ng-click='customerEditForm.$cancel()')
-                                                    i.fa.fa-ban
+                                                    i.fas.fa-ban
                                                     span &nbsp; #{__('cancel_')}
                                                 button.btn-xs.btn.btn-primary.margin-left-5px(type='submit' ng-disabled='customerEditForm.$waiting')
-                                                    i.fa.fa-save
+                                                    i.fas.fa-save
                                                     span &nbsp; #{__('save_')}
                                 div.panel.panel-default
                                     div.panel-body
@@ -102,7 +102,7 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                                 div.col-xs-6
                                     div.margin-bottom-5px.text-right
                                         button.btn.btn-primary.btn-xs(ng-click='ctrl.addCustomerContact()')
-                                            i.fa.fa-plus
+                                            i.fas.fa-plus
                                             span &nbsp; #{__('add_')}
                             div.table-responsive
                                 table.table.table-striped.table-hover
@@ -139,11 +139,11 @@ div(ng-controller='AdminCustomerController as ctrl' ng-init='ctrl.init()')
                                             td.text-right
                                                 form.form-buttons.form-inline(editable-form='', name='rowform', onbeforesave='ctrl.updateCustomerContact($data, contact)', ng-show='rowform.$visible', shown='!contact._id')
                                                     button.btn.btn-sm.btn-primary.margin-right-5px(type='submit', ng-disabled='rowform.$waiting')
-                                                        i.fa.fa-floppy-o
+                                                        i.fas.fa-floppy-o
                                                     button.btn.btn-sm.btn-default(type='button', ng-disabled='rowform.$waiting', ng-click='rowform.$cancel(); ctrl.cancelEditCustomerContact(contact)')
-                                                        i.fa.fa-ban
+                                                        i.fas.fa-ban
                                                 .buttons(ng-show='!rowform.$visible')
                                                     button.btn.btn-sm.btn-primary.margin-right-5px(type='button', ng-click='rowform.$show()')
-                                                        i.fa.fa-pencil
+                                                        i.fas.fa-pencil-alt
                                                     button.btn.btn-sm.btn-danger(type='button', ng-click='ctrl.removeCustomerContact(contact, "' + __('remove_customer_contact_prompt') + '")')
-                                                        i.fa.fa-trash
+                                                        i.fas.fa-trash

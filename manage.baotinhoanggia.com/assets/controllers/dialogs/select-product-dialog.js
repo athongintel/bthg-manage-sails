@@ -32,8 +32,8 @@ app.controller('SelectProductDialogController', ['$uibModalInstance', '$scope', 
     };
     
     $scope.switchAbsolute = function () {
-        "use strict";
         $scope.absoluteMode = !$scope.absoluteMode;
+        $scope.adjustPrice();
     };
     
     $scope.init = function () {

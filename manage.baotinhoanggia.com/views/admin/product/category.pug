@@ -7,7 +7,7 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
     div.panel.panel-default.main-panel
         div.panel-body
             div.text-center(ng-show='ctrl.initializing')
-                i.fa.fa-spinner.fa-spin
+                i.fas.fa-spinner.fa-spin
             div(ng-hide='ctrl.initializing')
                 div.row
                     div.col-xs-12.col-sm-6
@@ -17,7 +17,7 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
                                     label #{__('product_category')}
                                 div.col-xs-6.text-right.vf-center
                                     button.btn.btn-default.btn-sm(ng-click='ctrl.addCategory()')
-                                        i.fa.fa-plus
+                                        i.fas.fa-plus
                                         span &nbsp; #{__('add_')}
                             div.margin-top-15px
                                 div.input-group.margin-bottom-15px
@@ -39,8 +39,8 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
                                             div.col-xs-4.vf-center.text-right
                                                 span(ng-show='ctrl.selectedCategory._id === category._id || category.isBeingRemoved')
                                                     button.btn.btn-danger.btn-xs.margin-right-5px(ng-click='ctrl.removeCategory(category)' ng-disabled='category.typeCount > 0 || category.isBeingRemoved')
-                                                        i.fa.fa-trash(ng-hide='category.isBeingRemoved')
-                                                        i.fa.fa-spinner.fa-spin(ng-show='category.isBeingRemoved')
+                                                        i.fas.fa-trash(ng-hide='category.isBeingRemoved')
+                                                        i.fas.fa-spinner.fa-spin(ng-show='category.isBeingRemoved')
                                                 span.badge {{category.typeCount || "0"}}
                     div.col-xs-12.col-sm-6
                         div
@@ -49,7 +49,7 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
                                     label #{__('product_type')}
                                 div.col-xs-6.text-right.vf-center
                                     button.btn.btn-default.btn-sm(ng-disabled='!ctrl.selectedCategory' ng-click='ctrl.addType()')
-                                        i.fa.fa-plus
+                                        i.fas.fa-plus
                                         span &nbsp; #{__('add_')}
                             div.margin-top-15px
                                 div.input-group.margin-bottom-15px
@@ -58,7 +58,7 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
                                     input.form-control(ng-model='ctrl.typeFilter' ng-change='ctrl.filterType()')
 
                                 div.text-center(ng-show='ctrl.loadingTypes')
-                                    i.fa.fa-spinner.fa-spin
+                                    i.fas.fa-spinner.fa-spin
 
                                 div.text-center.no-data(ng-show='!ctrl.loadingTypes && !ctrl.isNewType && (!ctrl.selectedCategory.types || !ctrl.selectedCategory.types.length)')
                                     span #{__('no_data')}
@@ -75,9 +75,9 @@ div.admin-product-category(ng-controller='AdminProductCategoryController as ctrl
                                             div.col-xs-4.vf-center.text-right
                                                 span(ng-show='ctrl.selectedType._id === type._id || type.isBeingRemoved')
                                                     button.btn.btn-default.btn-xs.margin-right-5px(ng-click='ctrl.changeTypeGroup(type)')
-                                                        i.fa.fa-exchange(ng-hide='type.isBeingMoved')
-                                                        i.fa.fa-spinner.fa-spin(ng-show='type.isBeingMoved')
+                                                        i.fas.fa-exchange(ng-hide='type.isBeingMoved')
+                                                        i.fas.fa-spinner.fa-spin(ng-show='type.isBeingMoved')
                                                     button.btn.btn-danger.btn-xs.margin-right-5px(ng-click='ctrl.removeType(type)' ng-disabled='type.size > 0 || type.isBeingRemoved')
-                                                        i.fa.fa-trash(ng-hide='type.isBeingRemoved')
-                                                        i.fa.fa-spinner.fa-spin(ng-show='type.isBeingRemoved')
+                                                        i.fas.fa-trash(ng-hide='type.isBeingRemoved')
+                                                        i.fas.fa-spinner.fa-spin(ng-show='type.isBeingRemoved')
                                                 span.badge {{type.size || "0"}}

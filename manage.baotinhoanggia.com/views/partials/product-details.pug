@@ -2,36 +2,36 @@ div.partials_product-details
     form(editable-form='' name='editProductForm' onbeforesave='$ctrl.updateProduct($data)')
         div
             div.text-center(ng-show='$ctrl.loadingProduct')
-                i.fa.fa-spinner.fa-spin
+                i.fas.fa-spinner.fa-spin
 
         div(ng-show='$ctrl.product && !$ctrl.loadingProduct')
             div.button-controls(ng-show='$ctrl.global.utils.isSuperAdmin()')
                 div.text-right.margin-bottom-15px(ng-hide='$ctrl.product.isBeingEdited || $ctrl.product.isBeingRemoved')
                     button.btn.btn-xs.btn-default(type='button' ng-click='$ctrl.startEditing()')
-                        i.fa.fa-pencil
+                        i.fas.fa-pencil-alt
                         span &nbsp; #{__('edit_')}
                 div.row(ng-show='$ctrl.product.isBeingEdited || $ctrl.product.isBeingRemoved').margin-bottom-5px
                     div.col-xs-3
                         button.btn.btn-danger.btn-xs(ng-disabled='$ctrl.product.isBeingRemoved' type='button' ng-click='$ctrl.removeProduct("' + __('confirm_remove_product') + '")')
                             span(ng-show='$ctrl.product.isBeingRemoved')
-                                i.fa.fa-spinner.fa-spin
+                                i.fas.fa-spinner.fa-spin
                                 span &nbsp;
                             span(ng-hide='$ctrl.product.isBeingRemoved')
-                                i.fa.fa-trash
+                                i.fas.fa-trash
                                 span &nbsp;
                             span #{__('remove_')}
                     div.col-xs-9.text-right(ng-hide='$ctrl.product.isBeingRemoved')
                         button.btn.btn-default.btn-xs.margin-right-5px(type='button' ng-click='$ctrl.cancelEditing()')
                             span
-                                i.fa.fa-ban
+                                i.fas.fa-ban
                                 span &nbsp;
                             span #{__('cancel_')}
                         button.btn.btn-primary.btn-xs(type='submit' ng-disabled='editProductForm.$waiting || !$ctrl.selectedGroup || !$ctrl.selectedType')
                             span(ng-show='editProductForm.$waiting')
-                                i.fa.fa-spinner.fa-spin
+                                i.fas.fa-spinner.fa-spin
                                 span &nbsp;
                             span(ng-hide='editProductForm.$waiting')
-                                i.fa.fa-save
+                                i.fas.fa-save
                                 span &nbsp;
                             span #{__('save_')}
 
@@ -75,7 +75,7 @@ div.partials_product-details
                                 div.text-center.no-data(ng-hide='$ctrl.product.supplierIDs && $ctrl.product.supplierIDs.length') #{__('no_data')}
                                 a.margin-right-15px(target='_blank' ng-repeat='supplier in $ctrl.product.supplierIDs' href='#/admin/supplier?supplierID={{supplier._id}}')
                                     span {{supplier.name}} &nbsp;
-                                    i.fa.fa-external-link-square
+                                    i.fas.fa-external-link-square
 
                 div.margin-bottom-5px(ng-show='$ctrl.global.utils.isSuperAdmin()')
                     label #{__('allowed_branches')}
@@ -108,7 +108,7 @@ div.partials_product-details
                         div.text-right
                             span(ng-hide='$ctrl.product.outPriceBeingChanged') {{$ctrl.product.price ? ($ctrl.product.price | currency : '' : 0) : '#{__("not_available")}'}}
                             span(ng-show='$ctrl.product.outPriceBeingChanged')
-                                i.fa.fa-spinner.fa-spin
+                                i.fas.fa-spinner.fa-spin
                                 span &nbsp; #{__('is_being_updated')}
 
                 div.margin-bottom-5px
@@ -119,17 +119,17 @@ div.partials_product-details
                                 img(ng-click='$ctrl.viewPhoto(image)' ng-if='!image.localPhoto' ng-src='{{image.url+"?decache=" + Date.now()}}' image-on-load='image.loaded = true')
                                 img(ng-if='image.localPhoto' ngf-thumbnail='image.file' image-on-load='image.loaded = true')
                                 span.info-float.close-float.text-danger(ng-click='$ctrl.removeProductImage(image, "' + __('confirm_remove_product_photo') + '")' ng-hide='!$ctrl.product.isBeingEdited || !image.loaded || image.isBeingRemoved || image.isBeingUploaded || image.uploadProceeded')
-                                    i.fa.fa-minus-circle(ng-if='image.localPhoto')
-                                    i.fa.fa-times-circle(ng-if='!image.localPhoto')
+                                    i.fas.fa-minus-circle(ng-if='image.localPhoto')
+                                    i.fas.fa-times-circle(ng-if='!image.localPhoto')
                                 span.info-float(ng-show='image.isBeingUploaded || !image.loaded || image.isBeingRemoved')
-                                    i.fa.fa-refresh.fa-spin
+                                    i.fas.fa-sync-alt.fa-spin
                                 span.info-float.text-success(ng-show='image.uploadSucceeded === true')
-                                    i.fa.fa-check-circle
+                                    i.fas.fa-check-circle
                                 span.info-float.text-warning(ng-show='image.uploadSucceeded === false')
-                                    i.fa.fa-exclamation-circle
+                                    i.fas.fa-exclamation-circle
                             div.img-upload-wrapper(ng-show='$ctrl.product.isBeingEdited && ($ctrl.product.photos && $ctrl.product.photos.length < 5)')
                                 label
-                                    i.fa.fa-plus-circle
+                                    i.fas.fa-plus-circle
                                     input(style='display: none' type='file', ngf-select="$ctrl.addProductPhoto($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'")
 
                 div.margin-bottom-5px

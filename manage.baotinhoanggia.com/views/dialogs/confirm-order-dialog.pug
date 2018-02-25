@@ -19,7 +19,7 @@ script(type="text/ng-template" id="confirmOrderDialog")
             div.text-right
                 button.btn.btn-primary(ng-disabled='!selectedStatus || !checkValid()' ng-click='confirmStatus()')
                     span(ng-show='processing')
-                        i.fa.fa-spinner.fa-spin
+                        i.fas.fa-spinner.fa-spin
                         span &nbsp;
                     span #{__('confirm_')}
 

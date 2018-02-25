@@ -7,7 +7,7 @@ div.admin-product-brand(ng-controller='AdminProductBrandController as ctrl' ng-i
     div.panel.panel-default.main-panel
         div.panel-body
             div.text-center(ng-show='ctrl.initializing')
-                i.fa.fa-spinner.fa-spin
+                i.fas.fa-spinner.fa-spin
             div(ng-hide='ctrl.initializing')
                 div.row
                     div.col-xs-12.col-sm-6
@@ -17,7 +17,7 @@ div.admin-product-brand(ng-controller='AdminProductBrandController as ctrl' ng-i
                                     label #{__('product_brand')}
                                 div.col-xs-6.text-right.vf-center
                                     button.btn.btn-default.btn-sm(ng-click='ctrl.addBrand()')
-                                        i.fa.fa-plus
+                                        i.fas.fa-plus
                                         span &nbsp; #{__('add_')}
                             div.margin-top-15px
                                 div.input-group.margin-bottom-15px
@@ -49,14 +49,14 @@ div.admin-product-brand(ng-controller='AdminProductBrandController as ctrl' ng-i
                                                         span(ng-show='ctrl.selectedBrand._id === brand._id || brand.isBeingRemoved')
                                                             span.buttons(ng-show='rowform.$visible')
                                                                 button.btn.btn-primary.btn-xs.margin-right-5px(type='submit', ng-disabled='rowform.$waiting')
-                                                                    i.fa.fa-floppy-o
+                                                                    i.fas.fa-floppy-o
                                                                 button.btn.btn-default.btn-xs.margin-right-5px(type='button', ng-disabled='rowform.$waiting', ng-click='rowform.$cancel(); ctrl.cancelBrand(brand)')
-                                                                    i.fa.fa-ban
+                                                                    i.fas.fa-ban
                                                             span.buttons(ng-show='!rowform.$visible')
                                                                 button.btn.btn-primary.btn-xs.margin-right-5px(type='button', ng-click='rowform.$show()')
-                                                                    i.fa.fa-pencil
+                                                                    i.fas.fa-pencil-alt
                                                                 button.btn.btn-danger.btn-xs.margin-right-5px(ng-click='ctrl.removeBrand(brand)' ng-disabled='brand.isBeingRemoved || brand.size > 0')
-                                                                    i.fa.fa-trash(ng-hide='brand.isBeingRemoved')
-                                                                    i.fa.fa-spinner.fa-spin(ng-show='brand.isBeingRemoved')
+                                                                    i.fas.fa-trash(ng-hide='brand.isBeingRemoved')
+                                                                    i.fas.fa-spinner.fa-spin(ng-show='brand.isBeingRemoved')
 
                                                         span.badge {{brand.size || "0"}}

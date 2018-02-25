@@ -82,10 +82,12 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
     ctrl.filterByModel = function(){
         let regex = new RegExp(`.*${ctrl.productFilter ? ctrl.global.utils.regexEscape(ctrl.global.utils.removeAccent(ctrl.productFilter)) : ''}.*`, 'i');
         // console.log(regex);
-        ctrl.filteredProducts = ctrl.allProducts.filter(function (p) {
-            // console.log(ctrl.global.utils.removeAccent(p.model));
-            return !!regex.exec(ctrl.global.utils.removeAccent(p.model));
-        });
+        if (ctrl.allProducts) {
+            ctrl.filteredProducts = ctrl.allProducts.filter(function (p) {
+                // console.log(ctrl.global.utils.removeAccent(p.model));
+                return !!regex.exec(ctrl.global.utils.removeAccent(p.model));
+            });
+        }
     };
     
     ctrl.filterProduct = function () {

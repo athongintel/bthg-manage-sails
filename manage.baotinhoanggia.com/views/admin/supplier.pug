@@ -6,13 +6,13 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
             div.col-xs-12.col-sm-6
                 div.text-right
                     button.action.btn.btn-primary.margin-bottom-15px(ng-click='ctrl.addSupplier()')
-                        i.fa.fa-plus
+                        i.fas.fa-plus
                         span &nbsp; #{__('add_supplier')}
 
     div.panel.panel-default.main-panel
         div.panel-body
             div.text-center(ng-show='ctrl.initializing')
-                i.fa.fa-spinner.fa-spin
+                i.fas.fa-spinner.fa-spin
             div(ng-hide='ctrl.initializing')
                 div(ng-hide='ctrl.showSupplierDetails')
                     label #{__('search_supplier')}
@@ -34,7 +34,7 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
                     form.margin-bottom-15px(editable-form='' name='supplierEditForm' onbeforesave='ctrl.saveSupplier($data)')
                         div
                             div.text-center(ng-show='ctrl.loadingSupplierInfo')
-                                i.fa.fa-spinner.fa-spin
+                                i.fas.fa-spinner.fa-spin
 
                             div(ng-show='!ctrl.loadingSupplierInfo')
                                 div.row
@@ -42,15 +42,15 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
                                         label #{__('supplier_info')}
                                     div.col-xs-6.text-right.margin-bottom-5px
                                         button.btn.btn-xs.btn-default(type='button' ng-hide='supplierEditForm.$visible' ng-click='supplierEditForm.$show()')
-                                            i.fa.fa-pencil
+                                            i.fas.fa-pencil-alt
                                             span &nbsp; #{__('edit_')}
 
                                         div(ng-show='supplierEditForm.$visible')
                                             button.btn.btn-default.btn-xs(type='button' ng-disabled='supplierEditForm.$waiting' ng-click='supplierEditForm.$cancel()')
-                                                i.fa.fa-ban
+                                                i.fas.fa-ban
                                                 span &nbsp; #{__('cancel_')}
                                             button.btn.btn-primary.margin-left-5px.btn-xs(type='submit' ng-disabled='supplierEditForm.$waiting')
-                                                i.fa.fa-save
+                                                i.fas.fa-save
                                                 span &nbsp; #{__('save_')}
 
                             div.panel.panel-default
@@ -94,7 +94,7 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
                             label #{__('supplier_contact')}
                         div.col-xs-6.text-right.margin-bottom-5px
                             button.btn.btn-xs.btn-primary(ng-click='ctrl.addSupplierContact()')
-                                i.fa.fa-plus
+                                i.fas.fa-plus
                                 span &nbsp; #{__('add_')}
                     div.table-responsive
                         table.table.table-striped.table-hover(style='background: silver')
@@ -129,11 +129,11 @@ div(ng-controller='AdminSupplierController as ctrl' ng-init='ctrl.init()')
                                     td.text-right
                                         form.form-buttons.form-inline(editable-form='', name='rowform', onbeforesave='ctrl.updateSupplierContact($data, contact)', ng-show='rowform.$visible', shown='!contact._id')
                                             button.btn.btn-sm.btn-primary.margin-right-5px(type='submit', ng-disabled='rowform.$waiting')
-                                                i.fa.fa-floppy-o
+                                                i.fas.fa-floppy-o
                                             button.btn.btn-sm.btn-default(type='button', ng-disabled='rowform.$waiting', ng-click='rowform.$cancel(); ctrl.cancelEditSupplierContact(contact)')
-                                                i.fa.fa-ban
+                                                i.fas.fa-ban
                                         .buttons(ng-show='!rowform.$visible')
                                             button.btn.btn-sm.btn-primary.margin-right-5px(type='button', ng-click='rowform.$show()')
-                                                i.fa.fa-pencil
+                                                i.fas.fa-pencil-alt
                                             button.btn.btn-sm.btn-danger(type='button', ng-click='ctrl.removeSupplierContact(contact, "' + __('remove_supplier_contact_prompt') + '")')
-                                                i.fa.fa-trash
+                                                i.fas.fa-trash

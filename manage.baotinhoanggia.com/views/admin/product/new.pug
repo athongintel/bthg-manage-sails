@@ -21,7 +21,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                         div.col-xs-6.text-right.vf-center
                             button.btn.btn-primary.action(type='submit' ng-disabled='!ctrl.selectedType || !ctrl.selectedBrand')
                                 span(ng-show='ctrl.addingProduct')
-                                    i.fa.fa-spin.fa-spinner
+                                    i.fas.fa-spin.fa-spinner
                                     span &nbsp;
                                 span #{__('add_')}
                     div.row.margin-top-15px
@@ -93,16 +93,16 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                                             div.img-wrapper(ng-repeat='image in ctrl.productImages')
                                                 img(ngf-thumbnail="image" image-on-load='image.loaded = true')
                                                 span.info-float.close-float.text-danger(ng-click='ctrl.removeProductImage(image)' ng-hide='image.isBeingUploaded || !image.loaded || image.uploadProceeded')
-                                                    i.fa.fa-minus-circle
+                                                    i.fas.fa-minus-circle
                                                 span.info-float(ng-show='image.isBeingUploaded || !image.loaded')
-                                                    i.fa.fa-refresh.fa-spin
+                                                    i.fas.fa-sync-alt.fa-spin
                                                 span.info-float.text-success(ng-show='image.uploadSucceeded === true')
-                                                    i.fa.fa-check-circle
+                                                    i.fas.fa-check-circle
                                                 span.info-float.text-warning(ng-show='image.uploadSucceeded === false')
-                                                    i.fa.fa-exclamation-circle
+                                                    i.fas.fa-exclamation-circle
                                             div.img-upload-wrapper(ng-hide='ctrl.productImages && ctrl.productImages.length === 5 || ctrl.addingProduct')
                                                 label
-                                                    i.fa.fa-plus-circle
+                                                    i.fas.fa-plus-circle
                                                     input(style='display: none' type='file', ngf-select="ctrl.loadProductFiles($files)", ngf-multiple='true' ngf-max-files='5', ngf-pattern="'image/*'")
 
                     div.margin-bottom-15px
@@ -114,7 +114,7 @@ div.admin-product-new(ng-controller='AdminProductAddController as ctrl' ng-init=
                         div.col-xs-6.text-right.vf-center
                             button.btn.btn-primary.action(type='submit' ng-disabled='!ctrl.selectedType || !ctrl.selectedBrand')
                                 span(ng-show='ctrl.addingProduct')
-                                    i.fa.fa-spin.fa-spinner
+                                    i.fas.fa-spin.fa-spinner
                                     span &nbsp;
                                 span #{__('add_')}
 

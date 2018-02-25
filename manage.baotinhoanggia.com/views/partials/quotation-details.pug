@@ -1,6 +1,6 @@
 div.partials_quotation-details
     div.text-center(ng-show='$ctrl.loadingQuotation')
-        i.fa.fa-spinner.fa-spin
+        i.fas.fa-spinner.fa-spin
     div(ng-hide='$ctrl.loadingQuotation')
         div.table-responsive
             table.table.table-striped.table-hover
@@ -51,11 +51,11 @@ div.partials_quotation-details
                                     '})' style='margin-right: 5px; margin-bottom: 5px')
                                         span(ng-show='selection.exportingWarranty')
                                             span &nbsp;
-                                            i.fa.fa-spinner.fa-spin
+                                            i.fas.fa-spinner.fa-spin
                                             span &nbsp;
                                         span(ng-hide='selection.exportingWarranty')
                                             span &nbsp;
-                                            i.fa.fa-wrench
+                                            i.fas.fa-wrench
                                             span &nbsp;
                                 span {{selection.productID.typeID.name}}
                         td
@@ -83,10 +83,10 @@ div.partials_quotation-details
             div.col-xs-9.text-left
                 button.btn-sm.btn.btn-success(ng-disabled='$ctrl.changingOrderStatus' style='margin-right: 5px; margin-bottom: 5px' ng-click='$ctrl.confirmOrder()')
                     span(ng-show='$ctrl.changingOrderStatus')
-                        i.fa.fa-spinner.fa-spin
+                        i.fas.fa-spinner.fa-spin
                         span &nbsp;
                     span(ng-hide='$ctrl.changingOrderStatus')
-                        i.fa.fa-handshake-o
+                        i.far.fa-handshake
                         span &nbsp;
                     span #{__('confirm_order')}
                 button.btn-sm.btn.btn-default.margin-bottom-5px(style='margin-right: 5px; margin-bottom: 5px' ng-disabled='$ctrl.exportingPDF' ng-click='$ctrl.exportPDF({' +
@@ -124,10 +124,10 @@ div.partials_quotation-details
                 '"quo032":"' + __("quotation_032") + '",' +
                 '})')
                     span(ng-show='$ctrl.exportingPDF')
-                        i.fa.fa-spinner.fa-spin
+                        i.fas.fa-spinner.fa-spin
                         span &nbsp;
                     span(ng-hide='$ctrl.exportingPDF')
-                        i.fa.fa-download
+                        i.fas.fa-download
                         span &nbsp;
                     span #{__('export_pdf')}
 
@@ -174,10 +174,10 @@ div.partials_quotation-details
                         '"han_target": "' + __("handover_target", '{{target}}') + '",' +
                     '})')
                         span(ng-show='$ctrl.exportingHandOver')
-                            i.fa.fa-spinner.fa-spin
+                            i.fas.fa-spinner.fa-spin
                             span &nbsp;
                         span(ng-hide='$ctrl.exportingHandOver')
-                            i.fa.fa-truck
+                            i.fas.fa-truck
                             span &nbsp;
                         span #{__('export_handover')}
 
@@ -217,10 +217,10 @@ div.partials_quotation-details
                     '"pay_amount_text": "' + __("pay_amount_text", '{{amountText}}') + '",' +
                     '})')
                         span(ng-show='$ctrl.exportingPaymentRequest')
-                            i.fa.fa-spinner.fa-spin
+                            i.fas.fa-spinner.fa-spin
                             span &nbsp;
                         span(ng-hide='$ctrl.exportingPaymentRequest')
-                            i.fa.fa-money
+                            i.far.fa-money-bill-alt
                             span &nbsp;
                         span #{__('export_payment_request')}
 
@@ -230,10 +230,10 @@ div.partials_quotation-details
                     '"print003":"' + __("print_003") + '",' +
                     '})' style='margin-right: 5px; margin-bottom: 5px')
                         span(ng-show='$ctrl.exportingOrderPrinting')
-                            i.fa.fa-spinner.fa-spin
+                            i.fas.fa-spinner.fa-spin
                             span &nbsp;
                         span(ng-hide='$ctrl.exportingOrderPrinting')
-                            i.fa.fa-print
+                            i.fas.fa-print
                             span &nbsp;
                         span #{__('export_order_print')}
             div.col-xs-3.text-right

@@ -7,7 +7,7 @@ div.partials_product-search
                         label #{__('product_group')}
                     div.col-xs-3.text-right
                         button.btn.btn-xs.btn-default(ng-click='$ctrl.changeSelectedGroup(null)')
-                            i.fa.fa-window-close.text-danger
+                            i.fas.fa-window-close.text-danger
                 group-selector(global='$ctrl.global' selected-group='$ctrl.selectedGroup' on-group-changed='$ctrl.changeSelectedGroup(selectedGroup)')
 
         div.col-xs-12.col-sm-6
@@ -17,7 +17,7 @@ div.partials_product-search
                         label #{__('product_type')}
                     div.col-xs-3.text-right
                         button.btn.btn-xs.btn-default(ng-click='$ctrl.changeSelectedType(null)')
-                            i.fa.fa-window-close.text-danger
+                            i.fas.fa-window-close.text-danger
                 type-selector(global='$ctrl.global' selected-type='$ctrl.selectedType' selected-group='$ctrl.selectedGroup' on-type-changed='$ctrl.changeSelectedType(selectedType)')
     div.row
         div.col-xs-12.col-sm-6
@@ -27,7 +27,7 @@ div.partials_product-search
                         label #{__('product_brand')}
                     div.col-xs-3.text-right
                         button.btn.btn-xs.btn-default(ng-click='$ctrl.changeSelectedBrand(null)')
-                            i.fa.fa-window-close.text-danger
+                            i.fas.fa-window-close.text-danger
                 brand-selector(global='$ctrl.global' selected-brand='$ctrl.selectedBrand' on-brand-changed='$ctrl.changeSelectedBrand(selectedBrand)')
         div.col-xs-12.col-sm-6
             div.margin-bottom-15px
@@ -36,7 +36,7 @@ div.partials_product-search
                         label #{__('supplier_')}
                     div.col-xs-3.text-right
                         button.btn.btn-xs.btn-default(ng-click='$ctrl.changeSelectedSupplier(null)')
-                            i.fa.fa-window-close.text-danger
+                            i.fas.fa-window-close.text-danger
                 supplier-selector(global='$ctrl.global' selected-supplier='$ctrl.selectedSupplier' on-supplier-changed='$ctrl.changeSelectedSupplier(selectedSupplier)')
 
     div.row
@@ -46,7 +46,7 @@ div.partials_product-search
                     label #{__('model_filter')}
                 div.col-xs-3.text-right
                     button.btn.btn-xs.btn-default(ng-click='$ctrl.filterProduct()')
-                        i.fa.fa-refresh
+                        i.fas.fa-sync-alt
                         //span &nbsp; #{__('refresh_')}
             div.input-group.margin-bottom-15px
                 span.input-group-addon
@@ -62,7 +62,7 @@ div.partials_product-search
                 tr(ng-click='$ctrl.selectProduct(product)' ng-repeat='product in $ctrl.filteredProducts track by $index' ng-class='{selected: product === $ctrl.selectedProduct}' )
                     td
                         button.btn.btn-xs.btn-default.margin-right-5px(ng-click='$ctrl.showProductDetails(product); $event.stopPropagation();')
-                            i.fa.fa-question-circle
+                            i.fas.fa-question-circle
                         span {{product.typeID.name}}
                     td
                         span {{product.model}}
@@ -74,8 +74,8 @@ div.partials_product-search
             span #{__('no_result')}
         div.text-center(ng-show='$ctrl.queryFailed')
             span.text-danger
-                i.fa.fa-exclamation-triangle
+                i.fas.fa-exclamation-triangle
                 span &nbsp; {{$ctrl.queryFailed}}
         div.text-center(ng-show='$ctrl.queryingProduct')
             span
-                i.fa.fa-spinner.fa-spin
+                i.fas.fa-spinner.fa-spin

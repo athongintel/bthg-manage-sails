@@ -25,11 +25,11 @@
             li(ng-show='global.user')
                 a(href='' ng-click='ctrl.logout()')
                     span {{global.user.username}} &nbsp;
-                    i.fa.fa-sign-out
+                    i.fas.fa-sign-out-alt
 
             li(ng-show='!global.user')
                 a(href='' ng-click='ctrl.login()')
-                    i.fa.fa-sign-in
+                    i.fas.fa-sign-in-alt
                     span &nbsp; #{__('login_')}
 
         ul.nav.navbar-nav(ng-cloak ng-show='global.user && global.utils.isPath("admin")')

@@ -71,7 +71,6 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                     }
                 }).result.then(
                     function (data) {
-                        // console.log(data);
                         ctrl.selectedProducts.push({
                             productID: product,
                             amount: data.amount,
@@ -80,7 +79,6 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                             note: data.note,
                             sortOrder: ctrl.getHighestSortOrder(ctrl.selectedProducts)
                         });
-                        // console.log(ctrl.selectedProducts);
                     },
                     function () {
                         //-- modal dismiss, do nothing
@@ -91,6 +89,19 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
     };
     
     ctrl.createNewQuotation = function () {
+        
+        //-- add priceAdjust to price
+        let details = [];
+        ctrl.selectedProducts.forEach(function (product){
+            details.push({
+                productID: product.productID._id,
+                amount: product.amount,
+                price: new BigNumber(product.price).plus(product.priceAdjust || 0).toString(),
+                sortOrder: product.sortOrder,
+                note: product.note,
+            });
+        });
+        // console.log('selectedProducts', ctrl.selectedProducts);
         ctrl.orderIsBeingCreated = true;
         $http.post('/rpc', {
             token: $scope.global.user.token,
@@ -98,7 +109,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
             params: {
                 orderName: ctrl.orderName, //-- order name might change
                 outStockOrderID: ctrl.orderID,
-                details: ctrl.selectedProducts,
+                details: details,
                 customerContactID: ctrl.selectedCustomerContact,
                 terms: ctrl.orderTerms
             }

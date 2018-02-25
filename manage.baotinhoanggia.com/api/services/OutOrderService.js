@@ -337,6 +337,7 @@ module.exports = {
             //-- create details
             let quotationDetails = [];
             params.details.forEach(detail => {
+                // console.log('detail', detail);
                 quotationDetails.push(new _app.model.QuotationDetails({
                     quotationID: quotation._id,
                     productID: detail.productID,
