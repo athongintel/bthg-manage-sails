@@ -236,5 +236,15 @@
 	"new_quotation_version_created": "new_quotation_version_created",
 	"price_adjust": "price_adjust",
 	"edit_note": "edit_note",
-	"empty_": "empty_"
+	"empty_": "empty_",
+	"ORDER_STATUS_NOT_ALLOWED": "ORDER_STATUS_NOT_ALLOWED",
+	"settings_": "settings_",
+	"logout_": "logout_",
+	"stock_manage": "stock_manage",
+	"exim_": "exim_",
+	"add_product_to_order": "add_product_to_order",
+	"stock_available": "stock_available",
+	"selection": "selection",
+	"price_adjusted": "price_adjusted",
+	"system_tools": "system_tools"
 }

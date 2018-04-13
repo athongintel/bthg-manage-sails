@@ -8,7 +8,29 @@
         a.navbar-brand(href='') #{__('bthg_manage')}
     .collapse.navbar-collapse
         ul.nav.navbar-nav.navbar-right(ng-cloak)
-            li()
+            li(ng-show='global.user')
+                a.dropdown-toggle(href='', data-toggle='dropdown')
+                    span {{global.user.username}} &nbsp;
+                    b.caret
+                ul.dropdown-menu
+                    li
+                        a(href='#/admin/settings')
+                            div.flex.justify-content-between.align-items-center
+                                i.fas.fa-cog
+                                span #{__('settings_')} &nbsp;
+
+                    li
+                        a(href='' ng-click='ctrl.logout()')
+                            div.flex.justify-content-between.align-items-center
+                                i.fas.fa-sign-out-alt
+                                span #{__('logout_')} &nbsp;
+
+            li(ng-show='!global.user')
+                a(href='' ng-click='ctrl.login()')
+                    i.fas.fa-sign-in-alt
+                    span &nbsp; #{__('login_')}
+
+            li
                 a.dropdown-toggle(href='', data-toggle='dropdown')
                     img.img-language(ng-src='/images/flags_icon/{{global.locale}}.svg')
                     b.caret
@@ -22,15 +44,6 @@
                             img.img-language( src='/images/flags_icon/vi.svg' )
                             span #{__('vietnamese_')}
 
-            li(ng-show='global.user')
-                a(href='' ng-click='ctrl.logout()')
-                    span {{global.user.username}} &nbsp;
-                    i.fas.fa-sign-out-alt
-
-            li(ng-show='!global.user')
-                a(href='' ng-click='ctrl.login()')
-                    i.fas.fa-sign-in-alt
-                    span &nbsp; #{__('login_')}
 
         ul.nav.navbar-nav(ng-cloak ng-show='global.user && global.utils.isPath("admin")')
             li.li-toggle(ng-class='{active: global.utils.isPath("admin/index")}')

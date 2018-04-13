@@ -334,5 +334,11 @@
 	"statistics_": "statistics_",
 	"delete_": "Xoá đơn hàng",
 	"confirm_delete_out_order": "Xoá đơn hàng này và các báo giá?",
-	"ORDER_STATUS_NOT_ALLOWED": "Không thể xoá đơn hàng với trạng thái này"
+	"ORDER_STATUS_NOT_ALLOWED": "Không thể xoá đơn hàng với trạng thái này",
+	"settings_": "Cài đặt",
+	"logout_": "Đăng xuất",
+	"change_password": "Đổi mật khẩu",
+	"current_password": "Mật khẩu hiện tại",
+	"new_password": "Mật khẩu mới",
+	"confirm_new_password": "Nhập lại mật khẩu mới"
 }

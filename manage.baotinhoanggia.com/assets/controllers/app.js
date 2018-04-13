@@ -14,6 +14,9 @@ app.config(function ($routeProvider) {
         .when('/admin/index', {
             templateUrl: '/admin/index',
         })
+        .when('/admin/settings', {
+            templateUrl: '/admin/settings',
+        })
         .when('/admin/customer', {
             templateUrl: '/admin/customer',
         })

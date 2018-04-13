@@ -121,5 +121,48 @@ module.exports = {
             console.log('login:', err);
             return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
         }
+    },
+    
+    changePassword: async function (principal, params) {
+        "use strict";
+        /*
+			params:{
+			    [required] oldPassword: user's old password
+				[required] newPassword: user's new password
+			}
+			
+			return:{
+				success: true,
+			}
+		 */
+        try {
+            let auth = await _app.model.Auth.findOne({
+                userID: principal.user._id,
+                authMethod: _app.model.Auth.constants.AUTH_USERNAME
+            });
+            if (!auth)
+                return sysUtils.returnError(_app.errors.NOT_FOUND_ERROR);
+            
+            
+            //-- check username and password
+            let passWithSalt = `${params.oldPassword}${auth.extra3}`;
+            let result = await bcryptUtils.compare(passWithSalt, auth.extra2);
+            
+            if (!result)
+                return sysUtils.returnError(_app.errors.WRONG_PASSWORD_ERROR);
+            
+            //-- change the password
+            let salt = randomstring.generate(sails.config.SALT_LENGTH);
+            auth.extra2 = await bcryptUtils.hash(`${params.newPassword}${salt}`);
+            auth.extra3 = salt;
+            
+            await auth.save();
+            
+            return sysUtils.returnSuccess();
+        }
+        catch (err) {
+            console.log('changePassword:', err);
+            return sysUtils.returnError(_app.errors.SYSTEM_ERROR);
+        }
     }
 };

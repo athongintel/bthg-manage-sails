@@ -10,6 +10,7 @@ const sysUtils = require('../../utils/system');
 
 const actions = {
     'login': {policies: [], action: UserService.login, validation: {required: ['username', 'authMethod', 'authData']}},
+    'change_password': {policies: [PO.isAuthenticated], action: UserService.changePassword, validation: {required: ['oldPassword', 'newPassword']}},
     'check_attribute': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.checkAttribute, validation: {required: ['collection', 'pairs']}},
     'filter_collection': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.filterCollection, validation: {required: ['collection', 'filter']}},
     'get_system_variable': {policies: [PO.isAuthenticated, PO.isAdmin], action: SystemService.getSystemVariable, validation: {required: ['name']}},
@@ -173,7 +174,7 @@ module.exports = {
          *   }
          */
         "use strict";
-        console.log(JSON.stringify(req.body));
+        // console.log(JSON.stringify(req.body));
         new Promise(async (resolve, reject) => {
             try {
                 req.principal.req = req;
@@ -235,7 +236,7 @@ module.exports = {
          *   }
          */
         "use strict";
-        console.log(JSON.stringify(req.body));
+        // console.log(JSON.stringify(req.body));
         new Promise(async (resolve, reject) => {
             try {
                 req.principal.req = req;

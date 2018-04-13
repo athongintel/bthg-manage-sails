@@ -9,6 +9,10 @@ module.exports.routes = {
         view: 'app', locals: {layout: false}
     },
     
+    'GET /admin/settings': {
+        view: 'admin/settings/index', locals: {layout: false}
+    },
+    
     'GET /admin/index': {
         view: 'admin/index', locals: {layout: false}
     },

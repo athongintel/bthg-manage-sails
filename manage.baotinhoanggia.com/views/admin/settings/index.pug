@@ -1,0 +1,33 @@
+div(ng-controller='AdminSettingsController as ctrl' ng-init='ctrl.init()')
+    div
+        div.row
+            div.col-xs-12.col-sm-6
+                div.panel-header-title #{__('settings_')}
+            div.col-xs-12.col-sm-6
+                div.text-right
+
+
+    div.panel.panel-default.main-panel
+        div.panel-body
+            div.row
+                div.col-xs-6
+                    label #{__('change_password')}
+                    div.panel.panel-default
+                        div.panel-body
+                            fieldset(ng-disabled='processing')
+                                div
+                                    label #{__('current_password')}
+                                    input.form-control(type='password' ng-model='ctrl.models.currentPassword')
+                                div.margin-top-5px
+                                    label #{__('new_password')}
+                                    input.form-control(type='password' ng-model='ctrl.models.newPassword')
+                                div.margin-top-5px
+                                    label #{__('confirm_new_password')}
+                                    input.form-control(ng-class='{"not_matched" : ctrl.models.newPassword!==ctrl.models.confirmNewPassword}' type='password' ng-model='ctrl.models.confirmNewPassword')
+                                div.text-right.margin-top-15px
+                                    button.btn.btn-danger(ng-disabled='!ctrl.models.currentPassword || !ctrl.models.newPassword || ctrl.models.newPassword!==ctrl.models.confirmNewPassword' ng-click='ctrl.changePassword()')
+                                        span(ng-show='processing')
+                                            i.fas.fa-spinner.fa-spin
+                                            span &nbsp;
+                                        span #{__('change_')}
+
