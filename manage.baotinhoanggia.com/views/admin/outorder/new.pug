@@ -75,7 +75,7 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                         div.col-xs-8.vf-center
                                             input.form-control(ng-model='ctrl.priceAdjust')
                                     div.table-responsive
-                                        table.table.table-striped.table-hover
+                                        table#product-table.table.table-striped.table-hover
                                             thead(style='white-space: pre')
                                                 tr
                                                     th #{__('type_')}
@@ -85,15 +85,21 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                     th.text-right #{__('selling_price')}
                                                     th.text-right #{__('selling_price_adjusted')}
                                                     th.text-right #{__('subtotal_')}
+                                                    th
 
                                             tbody
-                                                tr(ng-repeat='selection in ctrl.selectedProducts' ng-click='ctrl.editSelection(selection)')
+                                                tr(ng-repeat='selection in ctrl.selectedProducts')
                                                     td
                                                         button.btn.btn-danger.btn-xs.margin-right-15px(ng-hide='ctrl.creatingOrder' ng-click='ctrl.removeProductSelection(selection)')
                                                             i.fas.fa-trash
                                                         span {{selection.productID.typeID.name}}
-                                                    td
-                                                        div {{selection.productID.model}}
+                                                    td.model
+                                                        div.move
+                                                            button.btn.btn-default.btn-xs(ng-click='ctrl.resortOrder(selection, ctrl.selectedProducts, true)' ng-disabled='selection.sortOrder === ctrl.getMinSortOrder(ctrl.selectedProducts)')
+                                                                i.fas.fa-chevron-up
+                                                            button.btn.btn-default.btn-xs.margin-right-15px(ng-click='ctrl.resortOrder(selection, ctrl.selectedProducts, false)' ng-disabled='selection.sortOrder === ctrl.getMaxSortOrder(ctrl.selectedProducts)')
+                                                                i.fas.fa-chevron-down
+                                                        span {{selection.productID.model}}
                                                     td
                                                         div.text-center(ng-show='selection.note')
                                                             i.fas.fa-comment-alt
@@ -109,12 +115,13 @@ div(ng-controller='AdminOutOrderNewController as ctrl' ng-init='ctrl.init()')
                                                     td
                                                         div.text-right {{ctrl.getSubTotal(selection) | currency : '' : ''}}
                                                         //input.form-control(ng-model='selection.note')
-                                                tr(ng-if='ctrl.selectedProducts.length' style='font-size: 20px')
-                                                    td(colspan='6')
-                                                        div.text-right #{__('total_order_value')}
                                                     td
-                                                        div.text-right(style='font-weight: bold')
-                                                            span {{ctrl.calculateTotalOrderValue() | currency : '' : ''}}
+                                                        button.btn.btn-info.btn-xs.margin-right-15px(ng-hide='ctrl.creatingOrder' ng-click='ctrl.editSelection(selection)')
+                                                            i.fas.fa-pencil-alt
+                                    div(ng-if='ctrl.selectedProducts.length' style='font-size: 20px')
+                                        div.text-right #{__('total_order_value')}
+                                        div.text-right(style='font-weight: bold')
+                                            span {{ctrl.calculateTotalOrderValue() | currency : '' : ''}}
 
                     div.text-right
                         button.btn.btn-primary(ng-click='ctrl.mode==="edit"? ctrl.createNewQuotation("' + __('new_quotation_version_created') + '") : ctrl.createOrder("' + __('create_order_success') + '")' ng-disabled='!ctrl.selectedProducts.length || !ctrl.selectedCustomer || !ctrl.selectedCustomerContact || ctrl.creatingOrder')

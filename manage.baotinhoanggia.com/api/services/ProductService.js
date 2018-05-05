@@ -919,7 +919,7 @@ module.exports = {
                             //-- check whether path is array
                             if (!value || value[path] === null || value[path] === undefined) return false;
                             value = value[path];
-                            console.log(value);
+                            // console.log(value);
                         });
                         // console.log('comparision: ', value, pair.value, value === pair.value);
                         passed = passed && (String(value) === String(pair.value));

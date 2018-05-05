@@ -75,7 +75,7 @@ div.partials_product-details
                                 div.text-center.no-data(ng-hide='$ctrl.product.supplierIDs && $ctrl.product.supplierIDs.length') #{__('no_data')}
                                 a.margin-right-15px(target='_blank' ng-repeat='supplier in $ctrl.product.supplierIDs' href='#/admin/supplier?supplierID={{supplier._id}}')
                                     span {{supplier.name}} &nbsp;
-                                    i.fas.fa-external-link-square
+                                    i.fas.fa-external-link-alt
 
                 div.margin-bottom-5px(ng-show='$ctrl.global.utils.isSuperAdmin()')
                     label #{__('allowed_branches')}

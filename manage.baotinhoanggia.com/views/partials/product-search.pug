@@ -56,26 +56,27 @@ div.partials_product-search
             label #{__('stock_filter')}
             branch-selector(global='$ctrl.global' select-disabled='!$ctrl.global.utils.isSuperAdmin()' selected-branch='$ctrl.selectedBranch' on-branch-changed='$ctrl.changeBranch(selectedBranch)')
 
-    div.table-responsive.margin-bottom-5px(style='max-height:250px; overflow-x: auto')
-        table.table.table-striped.table-hover.custom-table(style='max-height:300px' ng-show='!$ctrl.queryingProduct && $ctrl.filteredProducts && $ctrl.filteredProducts.length')
-            tbody
-                tr(ng-click='$ctrl.selectProduct(product)' ng-repeat='product in $ctrl.filteredProducts track by $index' ng-class='{selected: product === $ctrl.selectedProduct}' )
-                    td
-                        button.btn.btn-xs.btn-default.margin-right-5px(ng-click='$ctrl.showProductDetails(product); $event.stopPropagation();')
-                            i.fas.fa-question-circle
-                        span {{product.typeID.name}}
-                    td
-                        span {{product.model}}
-                    td
-                        span(style='white-space: pre') {{$ctrl.calculateStockSumDisplay($ctrl.selectedBranch, product)}}
-                    td.text-right
-                        span {{product.price? (product.price | currency : '' : '') : '-'}}
-        div.text-center.no-data(ng-show='(!$ctrl.filteredProducts || !$ctrl.filteredProducts.length) && !$ctrl.queryingProduct && !$ctrl.queryFailed')
-            span #{__('no_result')}
-        div.text-center(ng-show='$ctrl.queryFailed')
-            span.text-danger
-                i.fas.fa-exclamation-triangle
-                span &nbsp; {{$ctrl.queryFailed}}
-        div.text-center(ng-show='$ctrl.queryingProduct')
-            span
-                i.fas.fa-spinner.fa-spin
+    div.table-wraper(style='margin-top: 10px; overflow: scroll; -webkit-overflow-scrolling: touch; max-height:250px;')
+        div.table-responsive.margin-bottom-5px()
+            table.table.table-striped.table-hover.custom-table(style='max-height:300px' ng-show='!$ctrl.queryingProduct && $ctrl.filteredProducts && $ctrl.filteredProducts.length')
+                tbody
+                    tr(ng-click='$ctrl.selectProduct(product)' ng-repeat='product in $ctrl.filteredProducts track by $index' ng-class='{selected: product === $ctrl.selectedProduct}' )
+                        td
+                            button.btn.btn-xs.btn-default.margin-right-5px(ng-click='$ctrl.showProductDetails(product); $event.stopPropagation();')
+                                i.fas.fa-question-circle
+                            span {{product.typeID.name}}
+                        td
+                            span {{product.model}}
+                        td
+                            span(style='white-space: pre') {{$ctrl.calculateStockSumDisplay($ctrl.selectedBranch, product)}}
+                        td.text-right
+                            span {{product.price? (product.price | currency : '' : '') : '-'}}
+            div.text-center.no-data(ng-show='(!$ctrl.filteredProducts || !$ctrl.filteredProducts.length) && !$ctrl.queryingProduct && !$ctrl.queryFailed')
+                span #{__('no_result')}
+            div.text-center(ng-show='$ctrl.queryFailed')
+                span.text-danger
+                    i.fas.fa-exclamation-triangle
+                    span &nbsp; {{$ctrl.queryFailed}}
+            div.text-center(ng-show='$ctrl.queryingProduct')
+                span
+                    i.fas.fa-spinner.fa-spin

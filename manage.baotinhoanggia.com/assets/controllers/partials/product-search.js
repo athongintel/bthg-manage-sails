@@ -9,17 +9,13 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
         ctrl.selectedType = {};
         ctrl.selectedSupplier = {};
         
-        //ctrl.refreshProducts();
     };
     
     ctrl.changeBranch = function (branch) {
         ctrl.selectedBranch = branch._id;
-        // console.log('ctrl.selectedBranch', ctrl.selectedBranch);
     };
     
     ctrl.calculateStockSumDisplay = function (branch, product) {
-        // console.log('calculate for branch ', branch);
-        // console.log('calculate for product ', product);
         let calculateAllStocksSum = function (product) {
             let sum = 0;
             if (product && product.stockSum) {
@@ -52,7 +48,6 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
                     }
                     else {
                         alert(ctrl.global.utils.errors[response.data.error.errorName]);
-                        // console.log(repsonse.data.error);
                     }
                 },
                 function () {
@@ -79,13 +74,15 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
         ctrl.filterProduct();
     };
     
-    ctrl.filterByModel = function(){
+    ctrl.filterByModel = function () {
         let regex = new RegExp(`.*${ctrl.productFilter ? ctrl.global.utils.regexEscape(ctrl.global.utils.removeAccent(ctrl.productFilter)) : ''}.*`, 'i');
-        // console.log(regex);
         if (ctrl.allProducts) {
             ctrl.filteredProducts = ctrl.allProducts.filter(function (p) {
                 // console.log(ctrl.global.utils.removeAccent(p.model));
                 return !!regex.exec(ctrl.global.utils.removeAccent(p.model));
+            });
+            ctrl.filteredProducts.sort(function (product1, product2) {
+                return (product1.typeID.name + product1.model) < (product2.typeID.name + product2.model) ? -1 : 1;
             });
         }
     };
@@ -125,31 +122,6 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
                     if (response.data.success) {
                         ctrl.allProducts = response.data.result;
                         ctrl.filterByModel();
-                        // console.log(ctrl.filteredProducts);
-                        //-- then regex filtering
-                        
-                        // ctrl.filteredProducts = ctrl.filteredProducts.filter(function (p) {
-                        //     let passed = true;
-                        //     filter.forEach(function (pair) {
-                        //         let attrPath = pair.attr.split('.');
-                        //         let value = p;
-                        //         attrPath.some(function (path) {
-                        //             //-- check whether path is array
-                        //             if (!value || value[path] === null || value[path] === undefined) return false;
-                        //             value = value[path]
-                        //         });
-                        //         passed = passed && (value === pair.value);
-                        //     });
-                        //     return passed;
-                        // });
-                        
-                        // if (ctrl.selectedSupplier && ctrl.selectedSupplier._id) {
-                        //     ctrl.filteredProducts = ctrl.filteredProducts.filter(function (p) {
-                        //         return p.supplierIDs.findIndex(function (supp) {
-                        //             return String(supp) === ctrl.selectedSupplier._id;
-                        //         }) >= 0;
-                        //     });
-                        // }
                     }
                     else {
                         ctrl.queryFailed = ctrl.global.utils.errors[response.data.error.errorName];
@@ -182,38 +154,6 @@ const ProductSearchPartialController = function ($scope, $http, $uibModal) {
             }
         );
     };
-    
-    // ctrl.refreshProducts = function () {
-    //     ctrl.queryFailed = false;
-    //     ctrl.queryingProduct = true;
-    //     ctrl.allProducts = [];
-    //     ctrl.filteredProducts = [];
-    //     ctrl.selectedProduct = null;
-    //
-    //     $http.post('/rpc', {
-    //         token: ctrl.global.user.token,
-    //         name: 'get_all_products_with_details',
-    //         params: {
-    //             stock_info: true
-    //         }
-    //     }).then(
-    //         function (response) {
-    //             ctrl.queryingProduct = false;
-    //             if (response.data.success) {
-    //                 ctrl.allProducts = response.data.result;
-    //                 // console.log(ctrl.allProducts);
-    //                 ctrl.filterProduct();
-    //             }
-    //             else {
-    //                 ctrl.queryFailed = ctrl.global.utils.errors[response.data.error.errorName];
-    //             }
-    //         },
-    //         function () {
-    //             ctrl.queryingProduct = false;
-    //             ctrl.queryFailed = $scope.global.utils.errors['NETWORK_ERROR'];
-    //         }
-    //     )
-    // };
     
     ctrl.selectProduct = function (product) {
         ctrl.selectedProduct = product;

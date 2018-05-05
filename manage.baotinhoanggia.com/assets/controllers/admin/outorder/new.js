@@ -1,16 +1,67 @@
-app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', function ($scope, $modal, $http) {
+app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', '$timeout', function ($scope, $modal, $http, $timeout) {
     "use strict";
     
     const ctrl = this;
     
-    ctrl.getHighestSortOrder = function(selections){
+    ctrl.getNextSortOrder = function (selections) {
         let value = 0;
-        if (selections && selections.length){
-            selections.forEach(function(selection){
+        if (selections && selections.length) {
+            selections.forEach(function (selection) {
                 if (value < selection.sortOrder) value = selection.sortOrder;
             });
         }
         return value + 1;
+    };
+    
+    ctrl.resortOrder = function (selection, selections, isUp) {
+        let currentIndex = selections.indexOf(selection);
+        //-- get index of the swap target
+        let nextIndex = null;
+        let arSortOrder = [];
+        
+        selections.forEach(function (s, index) {
+            arSortOrder.push({index, sortOrder: s.sortOrder});
+        });
+        arSortOrder.sort(function (e1, e2) {
+            return e1.sortOrder - e2.sortOrder;
+        });
+        arSortOrder.forEach(function (e) {
+            if (isUp && e.sortOrder < selection.sortOrder)
+                nextIndex = e.index;
+            else if (!isUp && nextIndex === null && e.sortOrder > selection.sortOrder)
+                nextIndex = e.index;
+        });
+        
+        if (nextIndex !== null) {
+            //-- do swap
+            let tmp = selection.sortOrder;
+            selection.sortOrder = selections[nextIndex].sortOrder;
+            selections[nextIndex].sortOrder = tmp;
+            
+            tmp = selections[currentIndex];
+            selections[currentIndex] = selections[nextIndex];
+            selections[nextIndex] = tmp;
+        }
+    };
+    
+    ctrl.getMinSortOrder = function (selections) {
+        let min = 0;
+        if (selections && selections.length) {
+            selections.forEach(function (selection) {
+                if (!min || min > selection.sortOrder) min = selection.sortOrder;
+            });
+        }
+        return min;
+    };
+    
+    ctrl.getMaxSortOrder = function (selections) {
+        let max = 0;
+        if (selections && selections.length) {
+            selections.forEach(function (selection) {
+                if (!max || max < selection.sortOrder) max = selection.sortOrder;
+            });
+        }
+        return max;
     };
     
     ctrl.selectCustomer = function (customer) {
@@ -38,11 +89,11 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
         return sum.toString();
     };
     
-    ctrl.getPriceAfterAdjustment = function(selection){
+    ctrl.getPriceAfterAdjustment = function (selection) {
         return new BigNumber(selection.price || '0').add(new BigNumber(selection.priceAdjust || '0')).toString();
     };
     
-    ctrl.getSubTotal = function(selection){
+    ctrl.getSubTotal = function (selection) {
         return new BigNumber(ctrl.getPriceAfterAdjustment(selection)).mul(selection.amount).toString();
     };
     
@@ -78,10 +129,11 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                             price: product.price || '0',
                             priceAdjust: data.priceAdjust || '0',
                             note: data.note,
-                            sortOrder: ctrl.getHighestSortOrder(ctrl.selectedProducts),
+                            sortOrder: ctrl.getNextSortOrder(ctrl.selectedProducts),
                             adjustValue: data.adjustValue,
                             absoluteMode: data.absoluteMode
                         });
+                        // $timeout(ctrl.enableSortable);
                     },
                     function () {
                         //-- modal dismiss, do nothing
@@ -91,11 +143,18 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
         }
     };
     
+    // ctrl.enableSortable = function(){
+    //     //-- re-enabling jquery sortable
+    //     $('#product-table tbody').sortable({
+    //         handle: 'span.move'
+    //     });
+    // };
+    //
     ctrl.createNewQuotation = function () {
         
         //-- add priceAdjust to price
         let details = [];
-        ctrl.selectedProducts.forEach(function (product){
+        ctrl.selectedProducts.forEach(function (product) {
             details.push({
                 productID: product.productID._id,
                 amount: product.amount,
@@ -134,9 +193,9 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
         );
     };
     
-    ctrl.editSelection = function(selection){
+    ctrl.editSelection = function (selection) {
         if (!ctrl.creatingOrder) {
-            let cb = function(){
+            let cb = function () {
                 $modal.open({
                     templateUrl: 'selectProductDialog',
                     controller: 'SelectProductDialogController',
@@ -168,7 +227,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
             };
             
             //-- check if stockAvailable is null then fetch it
-            if (selection.stockAvailable === null || selection.stockAvailable === undefined){
+            if (selection.stockAvailable === null || selection.stockAvailable === undefined) {
                 $http.post('/rpc', {
                     token: $scope.global.user.token,
                     name: 'get_product',
@@ -180,16 +239,16 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                 }).then(
                     function (response) {
                         if (response.data.success) {
-                            selection.stockAvailable = response.data.result.stockSum[ctrl.selectedBranch]? response.data.result.stockSum[ctrl.selectedBranch].sum : null;
+                            selection.stockAvailable = response.data.result.stockSum[ctrl.selectedBranch] ? response.data.result.stockSum[ctrl.selectedBranch].sum : null;
                         }
                         cb();
                     },
-                    function(err){
+                    function (err) {
                         cb();
                     }
                 );
             }
-            else{
+            else {
                 cb();
             }
         }
@@ -348,6 +407,7 @@ app.controller('AdminOutOrderNewController', ['$scope', '$uibModal', '$http', fu
                                         return a.sortOrder - b.sortOrder;
                                     });
                                 }
+                                // $timeout(ctrl.enableSortable);
                             }
                         }
                         else {
