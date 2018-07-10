@@ -1,0 +1,15 @@
+stages:
+  - build-frontend
+  - build-docs
+  - run
+
+run-pro:
+  stage: run
+  script:
+    - cd ./manage.baotinhoanggia.com
+    - npm install
+    - bash -c "pm2 stop pro-api || :"
+    - NODE_ENV=production pm2 start --name=pro-api app.js --update-env
+
+  only:
+    - master
